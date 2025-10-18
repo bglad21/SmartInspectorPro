@@ -1,0 +1,4590 @@
+# Smart Inspector Pro - Build Checklist
+
+> This checklist provides a systematic, step-by-step guide to build Smart Inspector Pro from scratch to production launch. Each task is designed to be completed in a single request/session with clear goals, Copilot prompts, acceptance criteria, and evidence requirements. Tasks build incrementally to ensure proper architecture validation at each stage.
+
+**Version**: 1.0.0
+**Last Updated**: October 18, 2025
+**Total Phases**: 20
+**Estimated Timeline**: 85-110 days
+
+---
+
+## Standard Copilot Operating Procedures (SOPs)
+
+Before starting any task, the Copilot must adhere to the following SOPs:
+
+### **Standard Copilot Operating Procedure**
+
+For every task assigned, the Copilot will adhere to the following protocol to ensure consistency, accuracy, and comprehensive project documentation.
+
+1. **Acknowledge & Analyze:** The Copilot will first acknowledge the task ID (e.g., "Acknowledged P1-T01"). It will then review all documents listed in **Global References** and task-specific **Copilot Reference** sections.
+
+2. **Plan & Execute:** The Copilot will state a clear, step-by-step plan before making changes. It will execute steps sequentially, announcing each step as performed.
+
+3. **Test & Validate (Local First):** Before external integrations, perform full local validation including unit tests, integration tests, and diagnostic tools. Evidence of local validation must be provided before external integration.
+
+4. **Verify & Document:** Work through each **Acceptance Criteria** systematically. Generate required **Evidence** for each criterion before marking complete `[x]`.
+
+5. **Handle Blockers:** If a step fails, **STOP**. Do not retry without changing approach. Analyze error, propose debugging plan, document in `DECISION_LOG.md`.
+
+6. **Update & Finalize:** After all criteria are met, update all documents specified in **Documents to Update** section.
+
+---
+
+## Global References
+
+**Primary Documentation:**
+- `Smart_Inspector_Pro_Build_Layout.md` - Complete app specification (2,189 lines)
+- `IMPLEMENTATION_ROADMAP.md` - Detailed 20-phase roadmap
+- `APP_STRUCTURE_OVERVIEW.md` - Project architecture
+- `CODE_STANDARDS.md` - Development standards
+- `API_DOCUMENTATION.md` - Backend API reference
+
+**Data Files:**
+- `Single_Family.csv` - Main inspection data (33,432 items)
+- `single_family_sample.csv` - Sample data for testing (2,504 items)
+
+**AWS Infrastructure:**
+- `AWS_INFRASTRUCTURE_COMPLETED.md` - AWS setup documentation
+- `AWS_Services_Inventory.md` - Services checklist
+- `CLOUDFRONT_SETUP_COMPLETE.md` - CDN configuration
+
+**Configuration:**
+- `PROJECT_CONFIGURATION.md` - Project decisions and settings
+- `MEMBERSHIP_TIERS_REVISED.md` - Subscription tiers
+- `.github/copilot-instructions.md` - AI agent instructions
+
+---
+
+## Documents to Update
+
+**During Build:**
+- `CHANGELOG.md` - Document all changes, features, fixes
+- `DECISION_LOG.md` - Record architectural decisions (create if needed)
+- `BUILD_NOTES.md` - Track build progress and issues (create if needed)
+
+**Upon Completion:**
+- `DEPLOYMENT_GUIDE.md` - Add deployment instructions
+- `TROUBLESHOOTING.md` - Add common issues and solutions
+- `TESTING_GUIDELINES.md` - Document testing procedures
+
+---
+
+## Governance & Repo Hygiene
+
+**Git Workflow:**
+- Commit after each completed task
+- Use conventional commit messages: `feat:`, `fix:`, `docs:`, `test:`, `refactor:`
+- Create feature branches for major phases
+- Tag releases: `v1.0.0-alpha`, `v1.0.0-beta`, `v1.0.0`
+
+**Code Quality:**
+- Run TypeScript type checking: `npx tsc --noEmit`
+- Run linter: `npm run lint`
+- Format code: `npm run format` (Prettier)
+- Keep bundle size under 50MB
+
+---
+
+## Architectural Principles
+
+1. **Offline-First**: SQLite as primary data store, sync to cloud
+2. **CSV-Driven**: 6-level hierarchy (Section → System → Location → Component → Material → Condition)
+3. **Premium AI**: GPT-4 Vision for photo analysis (Enterprise tier)
+4. **RBAC**: Role-based access (Team Leader, Senior Inspector, Assistant)
+5. **Multi-Tenant**: User/team data isolation
+6. **Security**: AWS Cognito auth, JWT tokens, S3 encryption
+
+---
+
+## Prerequisites
+
+Before starting Phase 1, ensure you have:
+
+- [ ] macOS with Xcode 14+ installed
+- [ ] Android Studio with SDK 31+ installed
+- [ ] Node.js 18+ and npm 9+ installed
+- [ ] VS Code with recommended extensions
+- [ ] AWS account with credentials configured
+- [ ] OpenAI API key available
+- [ ] GitHub repository created (`SmartInspectorPro`)
+- [ ] Basic understanding of React Native, TypeScript, AWS
+
+---
+
+## Phase 1: Development Environment Setup (Days 1-2)
+
+### ✅ P1-T01: Install Core Development Tools
+
+- **Copilot Prompt:**
+  ```
+  Please complete task P1-T01: Install Core Development Tools.
+
+  Follow the Standard Copilot Operating Procedures (SOPs) outlined in BUILD_CHECKLIST.md:
+  1. Acknowledge & Analyze this task
+  2. Plan & Execute the steps
+  3. Test & Validate locally
+  4. Verify & Document with evidence
+  5. Handle any blockers
+  6. Update & Finalize documentation
+
+  TASK: Set up the development environment for Smart Inspector Pro, a React Native mobile app. Please guide me through installing:
+  1. React Native CLI and dependencies
+  2. iOS development tools (Xcode, CocoaPods)
+  3. Android development tools (Android Studio, SDK, JDK)
+  4. Essential VS Code extensions for React Native/TypeScript development
+
+  Reference: IMPLEMENTATION_ROADMAP.md Phase 1, Section 1.1
+  Platform: macOS
+
+  For each tool, provide installation commands and verification steps.
+
+  After completing all acceptance criteria with evidence, check off this task: [x] P1-T01
+  ```
+
+- **Goal:** Install all required development tools for React Native development on macOS
+
+- **Prerequisites:** macOS with admin access, internet connection
+
+- **SOP Reminder:** Follow Standard Copilot Operating Procedure above. Acknowledge task, plan, execute, validate, document.
+
+- **Copilot Reference:**
+  - `IMPLEMENTATION_ROADMAP.md` - Phase 1, Section 1.1
+  - `DEVELOPMENT_SETUP_GUIDE.md`
+
+- **Steps:**
+  1. [x] Install Homebrew (if not already installed)
+  2. [x] Install Node.js 18+ via Homebrew: `brew install node`
+  3. [x] Install Watchman: `brew install watchman`
+  4. [x] Install React Native CLI: `npm install -g react-native-cli`
+  5. [x] Install CocoaPods: `sudo gem install cocoapods`
+  6. [x] Verify Xcode installation and command line tools
+  7. [x] Install Android Studio and configure SDK (API 31+)
+  8. [x] Configure environment variables (ANDROID_HOME, JAVA_HOME)
+  9. [x] Install VS Code extensions (React Native Tools, ESLint, Prettier, TypeScript)
+  10. [x] Verify all installations with version checks
+
+- **Acceptance Criteria:**
+  - [x] Node.js version >= 18.0.0 (`node --version`)
+  - [x] npm version >= 9.0.0 (`npm --version`)
+  - [x] React Native CLI installed (`react-native --version`)
+  - [x] Watchman installed (`watchman --version`)
+  - [x] CocoaPods installed (`pod --version`)
+  - [x] Xcode 14+ with command line tools
+  - [x] Android Studio with SDK 31+ configured
+  - [x] ANDROID_HOME environment variable set
+  - [x] JAVA_HOME environment variable set
+  - [x] VS Code with 5+ recommended extensions
+
+- **Evidence Required:**
+  - Screenshot or terminal output of all version checks
+  - Output of `xcode-select -p` showing Xcode path
+  - Output of `echo $ANDROID_HOME` showing SDK path
+  - VS Code extensions list (`code --list-extensions`)
+
+- **Documents to Update:**
+  - `DECISION_LOG.md` - Note any installation issues or custom configurations
+  - `BUILD_NOTES.md` - Record setup time and any deviations from standard
+
+- **Comments or Follow-ups:**
+  - If using Windows/Linux, adjust commands accordingly
+  - Save environment variable configurations in shell profile (~/.zshrc or ~/.bash_profile)
+
+---
+
+### ✅ P1-T02: Configure iOS Development Environment
+
+- **Copilot Prompt:**
+  ```
+  Please complete task P1-T02: Configure iOS Development Environment.
+
+  Follow the Standard Copilot Operating Procedures (SOPs) outlined in BUILD_CHECKLIST.md:
+  1. Acknowledge & Analyze this task
+  2. Plan & Execute the steps
+  3. Test & Validate locally
+  4. Verify & Document with evidence
+  5. Handle any blockers
+  6. Update & Finalize documentation
+
+  TASK: Configure the iOS development environment for Smart Inspector Pro. Please help me:
+  1. Verify Xcode installation and command line tools
+  2. Install iOS simulators (iPhone 14, iPhone SE, iPad Pro)
+  3. Configure signing certificates and provisioning profiles
+  4. Test iOS simulator launch
+
+  Reference: IMPLEMENTATION_ROADMAP.md Phase 1, Section 1.2
+
+  Provide verification steps for each configuration.
+
+  After completing all acceptance criteria with evidence, check off this task: [x] P1-T02
+  ```
+
+- **Goal:** Configure complete iOS development environment with simulators and signing
+
+- **Prerequisites:** P1-T01 complete, Xcode installed
+
+- **Copilot Reference:**
+  - `IMPLEMENTATION_ROADMAP.md` - Phase 1, Section 1.2
+
+- **Steps:**
+  1. [x] Open Xcode and accept license agreement
+  2. [x] Install additional iOS simulators via Xcode preferences
+  3. [x] Create Apple Developer account (if not exists)
+  4. [x] Configure signing in Xcode (use automatic signing for development)
+  5. [x] Launch iPhone 14 simulator to test
+  6. [x] Launch iPad Pro simulator to test
+  7. [x] Configure simulator settings (timezone, language)
+
+- **Acceptance Criteria:**
+  - [x] Xcode opens without errors
+  - [x] At least 3 iOS simulators installed (iPhone 14, iPhone SE, iPad)
+  - [x] Apple Developer account configured in Xcode
+  - [x] Simulators launch successfully
+  - [x] Can install test app on simulator
+
+- **Evidence Required:**
+  - Screenshot of Xcode with installed simulators
+  - Screenshot of running iPhone 14 simulator
+  - Output of `xcrun simctl list devices` showing available simulators
+
+- **Documents to Update:**
+  - `BUILD_NOTES.md` - Document simulator configurations
+
+---
+
+### ✅ P1-T03: Configure Android Development Environment
+
+- **Copilot Prompt:**
+  ```
+  Please complete task P1-T03: Configure Android Development Environment.
+
+  Follow the Standard Copilot Operating Procedures (SOPs) outlined in BUILD_CHECKLIST.md:
+  1. Acknowledge & Analyze this task
+  2. Plan & Execute the steps
+  3. Test & Validate locally
+  4. Verify & Document with evidence
+  5. Handle any blockers
+  6. Update & Finalize documentation
+
+  TASK: Configure the Android development environment for Smart Inspector Pro. Please help me:
+  1. Verify Android Studio installation and SDK Manager setup
+  2. Install Android SDK 31, 32, 33, 34
+  3. Install Android emulators (Pixel 5, Pixel Tablet)
+  4. Configure Android Virtual Devices (AVDs)
+  5. Test emulator launch
+
+  Reference: IMPLEMENTATION_ROADMAP.md Phase 1, Section 1.3
+
+  Provide verification steps for each configuration.
+
+  After completing all acceptance criteria with evidence, check off this task: [x] P1-T03
+  ```
+
+- **Goal:** Configure complete Android development environment with emulators
+
+- **Prerequisites:** P1-T01 complete, Android Studio installed
+
+- **Copilot Reference:**
+  - `IMPLEMENTATION_ROADMAP.md` - Phase 1, Section 1.3
+
+- **Steps:**
+  1. [x] Open Android Studio and complete setup wizard
+  2. [x] Open SDK Manager and install SDK Platform 31, 32, 33, 34
+  3. [x] Install Android SDK Build-Tools 33+
+  4. [x] Install Android Emulator and Intel HAXM (or ARM for M1/M2 Macs)
+  5. [x] Create AVD for Pixel 5 (API 33)
+  6. [x] Create AVD for Pixel Tablet (API 33)
+  7. [x] Launch Pixel 5 emulator to test
+  8. [x] Configure emulator settings (RAM, storage)
+
+- **Acceptance Criteria:**
+  - [x] Android Studio opens without errors
+  - [x] SDK Platform 31+ installed
+  - [x] Build-Tools 33+ installed
+  - [x] At least 2 AVDs created (phone + tablet)
+  - [x] Emulators launch successfully
+  - [x] Can install test app on emulator
+
+- **Evidence Required:**
+  - Screenshot of Android Studio SDK Manager
+  - Screenshot of AVD Manager showing created devices
+  - Screenshot of running Pixel 5 emulator
+  - Output of `adb devices` showing emulator connected
+
+- **Documents to Update:**
+  - `BUILD_NOTES.md` - Document emulator configurations and performance settings
+
+---
+
+## Phase 2: Project Initialization (Days 3-5)
+
+### P2-T01: Initialize React Native Project
+
+- **Copilot Prompt:**
+  ```
+  Please complete task P2-T01: Initialize React Native Project.
+
+  Follow the Standard Copilot Operating Procedures (SOPs) outlined in BUILD_CHECKLIST.md:
+  1. Acknowledge & Analyze this task
+  2. Plan & Execute the steps
+  3. Test & Validate locally
+  4. Verify & Document with evidence
+  5. Handle any blockers
+  6. Update & Finalize documentation
+
+  TASK: Initialize the Smart Inspector Pro React Native project with TypeScript. Please help me:
+  1. Create new React Native project with TypeScript template
+  2. Configure project structure following Smart Inspector Pro architecture
+  3. Update package.json with project metadata
+  4. Initialize Git repository and create .gitignore
+  5. Test that the project builds on both iOS and Android
+
+  Reference: IMPLEMENTATION_ROADMAP.md Phase 2, Section 2.1
+  Reference: APP_STRUCTURE_OVERVIEW.md for folder structure
+
+  Project Name: SmartInspectorPro
+  Bundle ID (iOS): com.smartinspectorpro.app
+  Package Name (Android): com.smartinspectorpro
+
+  After completing all acceptance criteria with evidence, check off this task: [x] P2-T01
+  ```
+
+- **Goal:** Create and configure base React Native project with TypeScript
+
+- **Prerequisites:** P1-T01, P1-T02, P1-T03 complete
+
+- **Copilot Reference:**
+  - `IMPLEMENTATION_ROADMAP.md` - Phase 2, Section 2.1
+  - `APP_STRUCTURE_OVERVIEW.md`
+  - `PROJECT_CONFIGURATION.md`
+
+- **Steps:**
+  1. [ ] Run `npx react-native init SmartInspectorPro --template react-native-template-typescript`
+  2. [ ] Verify project creation in `/Users/brandongladysz/GitHub/SmartInspectorPro`
+  3. [ ] Update `package.json` with project metadata (description, author, version 0.1.0)
+  4. [ ] Initialize Git: `git init`
+  5. [ ] Create comprehensive `.gitignore`
+  6. [ ] Make initial commit: `git commit -m "feat: initialize React Native TypeScript project"`
+  7. [ ] Test iOS build: `cd ios && pod install && cd .. && npx react-native run-ios`
+  8. [ ] Test Android build: `npx react-native run-android`
+
+- **Acceptance Criteria:**
+  - [ ] Project directory created at correct path
+  - [ ] TypeScript configuration present (`tsconfig.json`)
+  - [ ] Git repository initialized with proper `.gitignore`
+  - [ ] iOS app builds and runs on simulator without errors
+  - [ ] Android app builds and runs on emulator without errors
+  - [ ] Package.json contains correct project metadata
+  - [ ] Initial commit made with conventional commit message
+
+- **Evidence Required:**
+  - Output of `npx react-native run-ios` showing successful build
+  - Output of `npx react-native run-android` showing successful build
+  - Screenshot of app running on iOS simulator
+  - Screenshot of app running on Android emulator
+  - Output of `git log --oneline` showing initial commit
+
+- **Documents to Update:**
+  - `CHANGELOG.md` - Add entry for v0.1.0 initialization
+  - `BUILD_NOTES.md` - Document any build issues encountered
+
+---
+
+### P2-T02: Install Core Dependencies
+
+- **Copilot Prompt:**
+  ```
+  Please complete task P2-T02: Install Core Dependencies.
+
+  Follow the Standard Copilot Operating Procedures (SOPs) outlined in BUILD_CHECKLIST.md:
+  1. Acknowledge & Analyze this task
+  2. Plan & Execute the steps
+  3. Test & Validate locally
+  4. Verify & Document with evidence
+  5. Handle any blockers
+  6. Update & Finalize documentation
+
+  TASK: Install all core dependencies for Smart Inspector Pro. Please help me install:
+
+  **State Management:**
+  - @reduxjs/toolkit
+  - react-redux
+
+  **Navigation:**
+  - @react-navigation/native
+  - @react-navigation/native-stack
+  - react-native-screens
+  - react-native-safe-area-context
+
+  **UI Components:**
+  - react-native-elements
+  - react-native-paper
+  - react-native-vector-icons
+
+  **Local Storage:**
+  - react-native-sqlite-storage
+
+  **File Handling:**
+  - papaparse
+  - @types/papaparse
+
+  **AWS Integration:**
+  - aws-amplify
+  - @aws-amplify/auth
+  - @aws-amplify/storage
+
+  **Image Handling:**
+  - react-native-image-picker
+  - react-native-image-resizer
+  - react-native-fs
+
+  Reference: IMPLEMENTATION_ROADMAP.md Phase 2, Section 2.2
+
+  After installation, verify that the project still builds on both platforms.
+
+  After completing all acceptance criteria with evidence, check off this task: [x] P2-T02
+  ```
+
+- **Goal:** Install all required npm packages for the app
+
+- **Prerequisites:** P2-T01 complete
+
+- **Copilot Reference:**
+  - `IMPLEMENTATION_ROADMAP.md` - Phase 2, Section 2.2
+
+- **Steps:**
+  1. [ ] Install state management: `npm install @reduxjs/toolkit react-redux`
+  2. [ ] Install navigation: `npm install @react-navigation/native @react-navigation/native-stack react-native-screens react-native-safe-area-context`
+  3. [ ] Install UI libraries: `npm install react-native-elements react-native-paper react-native-vector-icons`
+  4. [ ] Install local storage: `npm install react-native-sqlite-storage`
+  5. [ ] Install file handling: `npm install papaparse && npm install --save-dev @types/papaparse`
+  6. [ ] Install AWS: `npm install aws-amplify @aws-amplify/auth @aws-amplify/storage`
+  7. [ ] Install image handling: `npm install react-native-image-picker react-native-image-resizer react-native-fs`
+  8. [ ] Link native modules: `cd ios && pod install && cd ..`
+  9. [ ] Configure vector icons for iOS and Android
+  10. [ ] Test builds: `npx react-native run-ios` and `npx react-native run-android`
+
+- **Acceptance Criteria:**
+  - [ ] All packages installed without errors
+  - [ ] `package.json` shows all dependencies with correct versions
+  - [ ] iOS pods installed successfully
+  - [ ] iOS build succeeds after pod install
+  - [ ] Android build succeeds
+  - [ ] No TypeScript errors: `npx tsc --noEmit`
+  - [ ] App launches on both platforms
+
+- **Evidence Required:**
+  - Output of `npm list --depth=0` showing installed packages
+  - Output of `pod install` showing successful installation
+  - Output of successful iOS and Android builds
+  - Screenshot showing app still runs
+
+- **Documents to Update:**
+  - `CHANGELOG.md` - Add dependencies installation
+  - `BUILD_NOTES.md` - Note any linking issues
+
+- **Comments or Follow-ups:**
+  - If builds fail, check React Native compatibility table
+  - May need to configure Gradle for Android native modules
+
+---
+
+### P2-T03: Create Folder Structure
+
+- **Copilot Prompt:**
+  ```
+  Please complete task P2-T03: Create Folder Structure.
+
+  Follow the Standard Copilot Operating Procedures (SOPs) outlined in BUILD_CHECKLIST.md:
+  1. Acknowledge & Analyze this task
+  2. Plan & Execute the steps
+  3. Test & Validate locally
+  4. Verify & Document with evidence
+  5. Handle any blockers
+  6. Update & Finalize documentation
+
+  TASK: Create the complete folder structure for Smart Inspector Pro following best practices for React Native with TypeScript. Please create the following structure:
+
+  mobile/
+  ├── src/
+  │   ├── components/
+  │   │   ├── common/
+  │   │   ├── inspection/
+  │   │   └── data/
+  │   ├── screens/
+  │   │   ├── home/
+  │   │   ├── inspection/
+  │   │   ├── workflow/
+  │   │   ├── business/
+  │   │   ├── settings/
+  │   │   └── auth/
+  │   ├── navigation/
+  │   ├── redux/
+  │   │   └── slices/
+  │   ├── services/
+  │   ├── hooks/
+  │   ├── utils/
+  │   ├── theme/
+  │   ├── types/
+  │   ├── data/
+  │   └── config/
+  ├── backend/
+  │   ├── routes/
+  │   ├── controllers/
+  │   ├── models/
+  │   ├── middleware/
+  │   └── services/
+  └── database/
+      └── migrations/
+
+  Reference: IMPLEMENTATION_ROADMAP.md Phase 2, Section 2.3
+  Reference: APP_STRUCTURE_OVERVIEW.md
+
+  Also create README.md files in key directories explaining their purpose.
+
+  After completing all acceptance criteria with evidence, check off this task: [x] P2-T03
+  ```
+
+- **Goal:** Establish complete project folder structure
+
+- **Prerequisites:** P2-T01, P2-T02 complete
+
+- **Copilot Reference:**
+  - `IMPLEMENTATION_ROADMAP.md` - Phase 2, Section 2.3
+  - `APP_STRUCTURE_OVERVIEW.md`
+
+- **Steps:**
+  1. [ ] Create `mobile/src/` directory
+  2. [ ] Create component directories with README.md files
+  3. [ ] Create screen directories for each major feature
+  4. [ ] Create redux/slices directory for state management
+  5. [ ] Create services directory for API clients
+  6. [ ] Create types directory for TypeScript interfaces
+  7. [ ] Create data directory and copy CSV files
+  8. [ ] Create config directory for environment variables
+  9. [ ] Create backend directory structure
+  10. [ ] Update `tsconfig.json` with path aliases (@components, @screens, etc.)
+
+- **Acceptance Criteria:**
+  - [ ] All directories created as specified
+  - [ ] README.md files exist in major directories
+  - [ ] CSV files copied to `mobile/src/data/`
+  - [ ] Path aliases configured in `tsconfig.json`
+  - [ ] No TypeScript errors with new structure
+  - [ ] Project still builds successfully
+
+- **Evidence Required:**
+  - Output of `tree -L 3 mobile/src/` or `find mobile/src -type d`
+  - Content of `tsconfig.json` showing path aliases
+  - Output of `npx tsc --noEmit` showing no errors
+
+- **Documents to Update:**
+  - `APP_STRUCTURE_OVERVIEW.md` - Update with actual created structure
+  - `BUILD_NOTES.md` - Note folder structure completion
+
+---
+
+## Phase 3: AWS Infrastructure Integration (Days 6-8)
+
+### P3-T01: Configure AWS Amplify
+
+- **Copilot Prompt:**
+  ```
+  Please complete task P3-T01: Configure AWS Amplify.
+
+  Follow the Standard Copilot Operating Procedures (SOPs) outlined in BUILD_CHECKLIST.md:
+  1. Acknowledge & Analyze this task
+  2. Plan & Execute the steps
+  3. Test & Validate locally
+  4. Verify & Document with evidence
+  5. Handle any blockers
+  6. Update & Finalize documentation
+
+  TASK: Configure AWS Amplify for Smart Inspector Pro to connect to existing AWS infrastructure. Please help me:
+
+  1. Initialize Amplify in the project
+  2. Configure Amplify to use existing AWS resources:
+     - Cognito User Pool (already created)
+     - S3 bucket (already created)
+     - API Gateway endpoints (already created)
+  3. Create amplify configuration file
+  4. Test authentication connection
+
+  Reference: IMPLEMENTATION_ROADMAP.md Phase 3, Section 3.1
+  Reference: AWS_INFRASTRUCTURE_COMPLETED.md for resource ARNs
+
+  Do not create new AWS resources - only configure connection to existing infrastructure.
+
+  After completing all acceptance criteria with evidence, check off this task: [x] P3-T01
+  ```
+
+- **Goal:** Configure Amplify to connect to existing AWS infrastructure
+
+- **Prerequisites:** P2-T03 complete, AWS infrastructure deployed
+
+- **Copilot Reference:**
+  - `IMPLEMENTATION_ROADMAP.md` - Phase 3
+  - `AWS_INFRASTRUCTURE_COMPLETED.md`
+  - `AWS_Services_Inventory.md`
+
+- **Steps:**
+  1. [ ] Install Amplify CLI: `npm install -g @aws-amplify/cli`
+  2. [ ] Configure AWS credentials: `amplify configure`
+  3. [ ] Create `mobile/src/config/aws-config.ts` with existing resource IDs
+  4. [ ] Configure Cognito User Pool ID and Client ID
+  5. [ ] Configure S3 bucket name and region
+  6. [ ] Configure API Gateway endpoints
+  7. [ ] Create Amplify initialization in `App.tsx`
+  8. [ ] Test configuration with simple auth check
+
+- **Acceptance Criteria:**
+  - [ ] Amplify configured without creating new resources
+  - [ ] `aws-config.ts` contains all required AWS resource IDs
+  - [ ] Amplify initializes without errors on app launch
+  - [ ] Can connect to Cognito User Pool
+  - [ ] Can connect to S3 bucket
+  - [ ] TypeScript types for AWS config defined
+
+- **Evidence Required:**
+  - Content of `mobile/src/config/aws-config.ts`
+  - Console log output showing successful Amplify initialization
+  - Test output showing Cognito connection successful
+
+- **Documents to Update:**
+  - `DEPLOYMENT_GUIDE.md` - Add AWS configuration instructions
+  - `BUILD_NOTES.md` - Document AWS connection setup
+
+---
+
+### P3-T02: Configure S3 Integration
+
+- **Copilot Prompt:**
+  ```
+  Please complete task P3-T02: Configure S3 Integration.
+
+  Follow the Standard Copilot Operating Procedures (SOPs) outlined in BUILD_CHECKLIST.md:
+  1. Acknowledge & Analyze this task
+  2. Plan & Execute the steps
+  3. Test & Validate locally
+  4. Verify & Document with evidence
+  5. Handle any blockers
+  6. Update & Finalize documentation
+
+  TASK: Configure S3 integration for photo uploads in Smart Inspector Pro. Please help me:
+
+  1. Create S3 service wrapper with upload, download, and delete methods
+  2. Configure S3 with existing bucket from AWS_INFRASTRUCTURE_COMPLETED.md
+  3. Implement upload progress tracking
+  4. Implement CloudFront URL generation (if CloudFront configured)
+  5. Add error handling and retry logic
+  6. Create TypeScript interfaces for S3 operations
+
+  Reference: IMPLEMENTATION_ROADMAP.md Phase 3, Section 3.2
+  Reference: CLOUDFRONT_SETUP_COMPLETE.md for CDN configuration
+
+  File: mobile/src/services/s3.service.ts
+
+  After completing all acceptance criteria with evidence, check off this task: [x] P3-T02
+  ```
+
+- **Goal:** Create S3 service for photo upload/download with progress tracking
+
+- **Prerequisites:** P3-T01 complete
+
+- **Copilot Reference:**
+  - `IMPLEMENTATION_ROADMAP.md` - Phase 3, Section 3.2
+  - `CLOUDFRONT_SETUP_COMPLETE.md`
+  - `AWS_INFRASTRUCTURE_COMPLETED.md`
+
+- **Steps:**
+  1. [ ] Create `mobile/src/services/s3.service.ts`
+  2. [ ] Implement upload method with progress callback
+  3. [ ] Implement download method
+  4. [ ] Implement delete method
+  5. [ ] Add CloudFront URL generation logic
+  6. [ ] Add retry logic for failed uploads
+  7. [ ] Create TypeScript interfaces for S3 operations
+  8. [ ] Write unit tests for S3 service
+
+- **Acceptance Criteria:**
+  - [ ] S3 service class created with upload/download/delete methods
+  - [ ] Progress tracking functional
+  - [ ] CloudFront URLs generated correctly
+  - [ ] Error handling implemented
+  - [ ] TypeScript types defined
+  - [ ] Unit tests written and passing
+
+- **Evidence Required:**
+  - Content of `mobile/src/services/s3.service.ts`
+  - Test output showing S3 operations work
+  - Example of progress callback in action
+
+- **Documents to Update:**
+  - `API_DOCUMENTATION.md` - Add S3 service documentation
+  - `BUILD_NOTES.md` - Note S3 integration completion
+
+---
+
+## Phase 4: Authentication System (Days 9-12)
+
+### P4-T01: Create Authentication Service
+
+- **Copilot Prompt:**
+  ```
+  Please complete task P4-T01: Create Authentication Service.
+
+  Follow the Standard Copilot Operating Procedures (SOPs) outlined in BUILD_CHECKLIST.md:
+  1. Acknowledge & Analyze this task
+  2. Plan & Execute the steps
+  3. Test & Validate locally
+  4. Verify & Document with evidence
+  5. Handle any blockers
+  6. Update & Finalize documentation
+
+  TASK: Create the authentication service for Smart Inspector Pro using AWS Cognito. Please help me:
+
+  1. Create auth service with sign up, sign in, sign out, forgot password methods
+  2. Implement JWT token management (store, refresh, validate)
+  3. Add automatic token refresh logic
+  4. Create user profile retrieval method
+  5. Add error handling for common Cognito errors
+  6. Create TypeScript interfaces for auth operations
+
+  Reference: IMPLEMENTATION_ROADMAP.md Phase 4, Section 4.1
+  Reference: AWS_INFRASTRUCTURE_COMPLETED.md for Cognito configuration
+
+  File: mobile/src/services/auth.service.ts
+
+  After completing all acceptance criteria with evidence, check off this task: [x] P4-T01
+  ```
+
+- **Goal:** Create complete authentication service using AWS Cognito
+
+- **Prerequisites:** P3-T01 complete, Cognito User Pool configured
+
+- **Copilot Reference:**
+  - `IMPLEMENTATION_ROADMAP.md` - Phase 4
+  - `AWS_INFRASTRUCTURE_COMPLETED.md`
+
+- **Steps:**
+  1. [ ] Create `mobile/src/services/auth.service.ts`
+  2. [ ] Implement sign up method with email verification
+  3. [ ] Implement sign in method returning JWT tokens
+  4. [ ] Implement sign out method
+  5. [ ] Implement forgot password flow
+  6. [ ] Add token storage using AsyncStorage
+  7. [ ] Add automatic token refresh
+  8. [ ] Create user profile fetch method
+  9. [ ] Add TypeScript interfaces
+  10. [ ] Write unit tests
+
+- **Acceptance Criteria:**
+  - [ ] Auth service created with all CRUD methods
+  - [ ] JWT tokens stored securely
+  - [ ] Token refresh works automatically
+  - [ ] Error handling for all Cognito errors
+  - [ ] TypeScript types defined
+  - [ ] Unit tests passing
+
+- **Evidence Required:**
+  - Content of `mobile/src/services/auth.service.ts`
+  - Test output showing successful authentication flow
+  - Token refresh working in tests
+
+- **Documents to Update:**
+  - `API_DOCUMENTATION.md` - Add auth service documentation
+  - `SECURITY.md` - Document token management (create if needed)
+
+---
+
+### P4-T02: Create Redux Auth Slice
+
+- **Copilot Prompt:**
+  ```
+  Please complete task P4-T02: Create Redux Auth Slice.
+
+  Follow the Standard Copilot Operating Procedures (SOPs) outlined in BUILD_CHECKLIST.md:
+  1. Acknowledge & Analyze this task
+  2. Plan & Execute the steps
+  3. Test & Validate locally
+  4. Verify & Document with evidence
+  5. Handle any blockers
+  6. Update & Finalize documentation
+
+  TASK: Create the Redux auth slice for Smart Inspector Pro to manage authentication state globally. Please help me:
+
+  1. Create auth slice with login, logout, refresh token actions
+  2. Add user state (user object, isAuthenticated, loading, error)
+  3. Implement async thunks for auth operations
+  4. Add token expiration checking
+  5. Integrate with auth service created in P4-T01
+  6. Create TypeScript types for auth state
+
+  Reference: IMPLEMENTATION_ROADMAP.md Phase 4, Section 4.2
+
+  File: mobile/src/redux/slices/auth.slice.ts
+
+  After completing all acceptance criteria with evidence, check off this task: [x] P4-T02
+  ```
+
+- **Goal:** Create Redux slice for authentication state management
+
+- **Prerequisites:** P4-T01 complete, Redux Toolkit installed
+
+- **Copilot Reference:**
+  - `IMPLEMENTATION_ROADMAP.md` - Phase 4, Section 4.2
+  - `CODE_STANDARDS.md` - Redux patterns
+
+- **Steps:**
+  1. [ ] Create `mobile/src/redux/slices/auth.slice.ts`
+  2. [ ] Define auth state interface
+  3. [ ] Create async thunks (login, logout, register, refresh)
+  4. [ ] Implement reducers for each action
+  5. [ ] Add error handling in reducers
+  6. [ ] Create selectors for auth state
+  7. [ ] Configure Redux store
+  8. [ ] Write unit tests for slice
+
+- **Acceptance Criteria:**
+  - [ ] Auth slice created with all actions
+  - [ ] Async thunks working correctly
+  - [ ] State updates properly on auth actions
+  - [ ] Error states handled
+  - [ ] TypeScript types complete
+  - [ ] Unit tests passing
+
+- **Evidence Required:**
+  - Content of `mobile/src/redux/slices/auth.slice.ts`
+  - Test output showing state updates correctly
+
+- **Documents to Update:**
+  - `CODE_STANDARDS.md` - Add Redux slice patterns
+  - `BUILD_NOTES.md` - Document Redux setup
+
+---
+
+### P4-T03: Create Authentication Screens
+
+- **Copilot Prompt:**
+  ```
+  Please complete task P4-T03: Create Authentication Screens.
+
+  Follow the Standard Copilot Operating Procedures (SOPs) outlined in BUILD_CHECKLIST.md:
+  1. Acknowledge & Analyze this task
+  2. Plan & Execute the steps
+  3. Test & Validate locally
+  4. Verify & Document with evidence
+  5. Handle any blockers
+  6. Update & Finalize documentation
+
+  TASK: Create the authentication screens for Smart Inspector Pro. Please create:
+
+  1. LoginScreen with email/password fields
+  2. RegisterScreen with business name, email, password fields
+  3. ForgotPasswordScreen with email field
+  4. VerifyEmailScreen for email verification code
+
+  Each screen should:
+  - Use ThemedView and ThemedText components (to be created)
+  - Integrate with Redux auth slice
+  - Show loading states and error messages
+  - Have proper form validation
+  - Follow design from Smart_Inspector_Pro_Build_Layout.md
+
+  Reference: IMPLEMENTATION_ROADMAP.md Phase 4, Section 4.3
+  Reference: Smart_Inspector_Pro_Build_Layout.md Phase 10 for UI design
+
+  Files:
+  - mobile/src/screens/auth/LoginScreen.tsx
+  - mobile/src/screens/auth/RegisterScreen.tsx
+  - mobile/src/screens/auth/ForgotPasswordScreen.tsx
+  - mobile/src/screens/auth/VerifyEmailScreen.tsx
+
+  After completing all acceptance criteria with evidence, check off this task: [x] P4-T03
+  ```
+
+- **Goal:** Create all authentication UI screens
+
+- **Prerequisites:** P4-T02 complete, navigation configured
+
+- **Copilot Reference:**
+  - `IMPLEMENTATION_ROADMAP.md` - Phase 4, Section 4.3
+  - `Smart_Inspector_Pro_Build_Layout.md` - Phase 10
+
+- **Steps:**
+  1. [ ] Create themed components (ThemedView, ThemedText, TextInput, Button)
+  2. [ ] Create LoginScreen with form and validation
+  3. [ ] Create RegisterScreen with business name field
+  4. [ ] Create ForgotPasswordScreen
+  5. [ ] Create VerifyEmailScreen
+  6. [ ] Integrate each screen with Redux auth actions
+  7. [ ] Add loading spinners and error displays
+  8. [ ] Test full auth flow (register → verify → login)
+
+- **Acceptance Criteria:**
+  - [ ] All 4 auth screens created
+  - [ ] Forms validate input correctly
+  - [ ] Redux actions dispatched on form submission
+  - [ ] Loading states display during async operations
+  - [ ] Error messages display correctly
+  - [ ] Can complete full registration flow
+  - [ ] Can login with registered account
+  - [ ] Password reset flow works
+
+- **Evidence Required:**
+  - Screenshots of all 4 auth screens
+  - Video or screenshots showing complete auth flow
+  - Test output of successful registration and login
+
+- **Documents to Update:**
+  - `COMPONENT_LIBRARY.md` - Document themed components
+  - `BUILD_NOTES.md` - Note auth UI completion
+
+---
+
+## Phase 5: Data Layer & CSV Management (Days 13-16)
+
+### P5-T01: Create SQLite Database Schema
+
+- **Copilot Prompt:**
+  ```
+  Please complete task P5-T01: Create SQLite Database Schema.
+
+  Follow the Standard Copilot Operating Procedures (SOPs) outlined in BUILD_CHECKLIST.md:
+  1. Acknowledge & Analyze this task
+  2. Plan & Execute the steps
+  3. Test & Validate locally
+  4. Verify & Document with evidence
+  5. Handle any blockers
+  6. Update & Finalize documentation
+
+  TASK: Create the SQLite database schema for Smart Inspector Pro to support offline-first architecture. Please help me:
+
+  1. Design database schema for:
+     - Users table
+     - Inspections table
+     - InspectionRecords table
+     - Workflows table
+     - CSVData table (for Single_Family.csv)
+     - SyncQueue table (for offline sync)
+
+  2. Create database initialization and migration system
+  3. Implement database service with CRUD operations
+  4. Add indexes for frequently queried columns
+
+  Reference: IMPLEMENTATION_ROADMAP.md Phase 5, Section 5.1
+  Reference: Smart_Inspector_Pro_Build_Layout.md Phase 2.1 for database schema
+
+  File: mobile/src/services/database.service.ts
+
+  After completing all acceptance criteria with evidence, check off this task: [x] P5-T01
+  ```
+
+- **Goal:** Create complete SQLite database with schema and service layer
+
+- **Prerequisites:** P2-T02 complete (react-native-sqlite-storage installed)
+
+- **Copilot Reference:**
+  - `IMPLEMENTATION_ROADMAP.md` - Phase 5
+  - `Smart_Inspector_Pro_Build_Layout.md` - Phase 2.1
+
+- **Steps:**
+  1. [ ] Design database schema matching backend PostgreSQL
+  2. [ ] Create `mobile/src/services/database.service.ts`
+  3. [ ] Implement database initialization on app first launch
+  4. [ ] Create tables with proper constraints
+  5. [ ] Add indexes for performance
+  6. [ ] Implement CRUD methods for each table
+  7. [ ] Add transaction support
+  8. [ ] Write unit tests for database operations
+
+- **Acceptance Criteria:**
+  - [ ] All tables created with correct schema
+  - [ ] Indexes added to foreign keys and frequently queried columns
+  - [ ] CRUD operations work for all tables
+  - [ ] Transactions work correctly
+  - [ ] Database persists across app restarts
+  - [ ] Unit tests passing
+
+- **Evidence Required:**
+  - SQL schema definition
+  - Content of `database.service.ts`
+  - Test output showing CRUD operations working
+  - Output showing database file exists: `find . -name "*.db"`
+
+- **Documents to Update:**
+  - `API_DOCUMENTATION.md` - Add database schema documentation
+  - `BUILD_NOTES.md` - Document database setup
+
+---
+
+### P5-T02: Create CSV Parser Service
+
+- **Copilot Prompt:**
+  ```
+  Please complete task P5-T02: Create CSV Parser Service.
+
+  Follow the Standard Copilot Operating Procedures (SOPs) outlined in BUILD_CHECKLIST.md:
+  1. Acknowledge & Analyze this task
+  2. Plan & Execute the steps
+  3. Test & Validate locally
+  4. Verify & Document with evidence
+  5. Handle any blockers
+  6. Update & Finalize documentation
+
+  TASK: Create a CSV parser service for Smart Inspector Pro to load and process Single_Family.csv. Please help me:
+
+  1. Create CSV parser using Papa Parse library
+  2. Implement CSV loading from app bundle
+  3. Parse CSV into TypeScript interfaces matching 6-level hierarchy
+  4. Store parsed data in SQLite database
+  5. Create query methods to filter by Section, System, Component, Material, Condition
+  6. Optimize for large dataset (33,432 items)
+
+  CSV Structure:
+  - Section → System → Location → Component → Material → Condition
+
+  Reference: IMPLEMENTATION_ROADMAP.md Phase 5, Section 5.2
+  Reference: Single_Family.csv for data structure
+
+  File: mobile/src/services/csv-parser.service.ts
+
+  After completing all acceptance criteria with evidence, check off this task: [x] P5-T02
+  ```
+
+- **Goal:** Create CSV parser to load inspection data into local database
+
+- **Prerequisites:** P5-T01 complete, Papa Parse installed
+
+- **Copilot Reference:**
+  - `IMPLEMENTATION_ROADMAP.md` - Phase 5, Section 5.2
+  - `Single_Family.csv`
+  - `.github/copilot-instructions.md` - CSV structure
+
+- **Steps:**
+  1. [ ] Copy `single_family_sample.csv` to `mobile/src/data/`
+  2. [ ] Create `mobile/src/types/csv.types.ts` with interfaces
+  3. [ ] Create `mobile/src/services/csv-parser.service.ts`
+  4. [ ] Implement CSV loading from bundle
+  5. [ ] Implement Papa Parse configuration
+  6. [ ] Create database insert methods (batch insert for performance)
+  7. [ ] Add progress tracking for large CSV
+  8. [ ] Create query methods with filtering
+  9. [ ] Test with sample CSV (2,504 items) first
+  10. [ ] Write unit tests
+
+- **Acceptance Criteria:**
+  - [ ] CSV parser loads sample data successfully
+  - [ ] All 2,504 rows parsed correctly
+  - [ ] Data stored in SQLite database
+  - [ ] Query methods return correct filtered data
+  - [ ] Progress tracking works during parse
+  - [ ] Performance: Parse completes in < 5 seconds
+  - [ ] Unit tests passing
+
+- **Evidence Required:**
+  - Content of `csv-parser.service.ts`
+  - Console output showing parse progress
+  - Database query showing CSV data loaded
+  - Performance benchmark output
+
+- **Documents to Update:**
+  - `API_DOCUMENTATION.md` - Add CSV parser documentation
+  - `BUILD_NOTES.md` - Document CSV loading performance
+
+---
+
+### P5-T03: Create Offline Sync Service
+
+- **Copilot Prompt:**
+  ```
+  Please complete task P5-T03: Create Offline Sync Service.
+
+  Follow the Standard Copilot Operating Procedures (SOPs) outlined in BUILD_CHECKLIST.md:
+  1. Acknowledge & Analyze this task
+  2. Plan & Execute the steps
+  3. Test & Validate locally
+  4. Verify & Document with evidence
+  5. Handle any blockers
+  6. Update & Finalize documentation
+
+  TASK: Create an offline sync service for Smart Inspector Pro to synchronize local SQLite data with backend PostgreSQL. Please help me:
+
+  1. Create sync queue for offline changes
+  2. Implement conflict resolution (last-write-wins)
+  3. Add background sync scheduling
+  4. Track sync status per record
+  5. Handle network errors gracefully
+  6. Implement delta sync (only changed records)
+
+  Reference: IMPLEMENTATION_ROADMAP.md Phase 5, Section 5.3
+
+  File: mobile/src/services/sync.service.ts
+
+  After completing all acceptance criteria with evidence, check off this task: [x] P5-T03
+  ```
+
+- **Goal:** Create offline-first sync system between SQLite and backend
+
+- **Prerequisites:** P5-T01, P5-T02 complete
+
+- **Copilot Reference:**
+  - `IMPLEMENTATION_ROADMAP.md` - Phase 5, Section 5.3
+
+- **Steps:**
+  1. [ ] Create `mobile/src/services/sync.service.ts`
+  2. [ ] Design sync queue table in SQLite
+  3. [ ] Implement "add to queue" when offline changes occur
+  4. [ ] Create sync loop to process queue
+  5. [ ] Add conflict resolution logic
+  6. [ ] Implement retry mechanism for failed syncs
+  7. [ ] Add network status monitoring
+  8. [ ] Create sync status tracking
+  9. [ ] Write unit tests
+
+- **Acceptance Criteria:**
+  - [ ] Sync queue stores offline changes
+  - [ ] Sync processes queue when online
+  - [ ] Conflicts resolved using last-write-wins
+  - [ ] Failed syncs retry automatically
+  - [ ] Network changes trigger sync
+  - [ ] Unit tests passing
+
+- **Evidence Required:**
+  - Content of `sync.service.ts`
+  - Test showing offline changes queue correctly
+  - Test showing sync when back online
+
+- **Documents to Update:**
+  - `API_DOCUMENTATION.md` - Add sync service documentation
+  - `TROUBLESHOOTING.md` - Add sync issues section
+
+---
+
+## Phase 6: Theme System Implementation (Days 17-19)
+
+### P6-T01: Create Theme System
+
+- **Copilot Prompt:**
+  ```
+  Please complete task P6-T01: Create Theme System.
+
+  Follow the Standard Copilot Operating Procedures (SOPs) outlined in BUILD_CHECKLIST.md:
+  1. Acknowledge & Analyze this task
+  2. Plan & Execute the steps
+  3. Test & Validate locally
+  4. Verify & Document with evidence
+  5. Handle any blockers
+  6. Update & Finalize documentation
+
+  TASK: Create a comprehensive theme system for Smart Inspector Pro with light/dark mode support. Please help me:
+
+  1. Define theme structure (colors, typography, spacing, shadows)
+  2. Create light and dark theme objects
+  3. Create ThemeContext and ThemeProvider
+  4. Implement theme switching functionality
+  5. Persist theme preference to AsyncStorage
+  6. Create theme hook (useTheme)
+
+  Colors:
+  - Primary: #2E5BBA (blue)
+  - Background Light: #F8F9FA
+  - Background Dark: #121212
+  - Success: #4CAF50
+  - Warning: #FF9800
+  - Error: #F44336
+
+  Reference: IMPLEMENTATION_ROADMAP.md Phase 6
+  Reference: Smart_Inspector_Pro_Build_Layout.md Phase 10 for design specs
+
+  Files:
+  - mobile/src/theme/types.ts
+  - mobile/src/theme/lightTheme.ts
+  - mobile/src/theme/darkTheme.ts
+  - mobile/src/theme/ThemeContext.tsx
+
+  After completing all acceptance criteria with evidence, check off this task: [x] P6-T01
+  ```
+
+- **Goal:** Create complete theme system with light/dark mode
+
+- **Prerequisites:** P2-T03 complete (folder structure created)
+
+- **Copilot Reference:**
+  - `IMPLEMENTATION_ROADMAP.md` - Phase 6
+  - `Smart_Inspector_Pro_Build_Layout.md` - Phase 10
+  - `THEMING_IMPLEMENTATION_SUMMARY.md`
+
+- **Steps:**
+  1. [ ] Create theme type definitions in `types.ts`
+  2. [ ] Create `lightTheme.ts` with complete color palette
+  3. [ ] Create `darkTheme.ts` with dark mode colors
+  4. [ ] Create `ThemeContext.tsx` with provider
+  5. [ ] Add theme switching toggle function
+  6. [ ] Persist preference to AsyncStorage
+  7. [ ] Create `useTheme` custom hook
+  8. [ ] Wrap App in ThemeProvider
+  9. [ ] Test theme switching works
+
+- **Acceptance Criteria:**
+  - [ ] Theme types defined
+  - [ ] Light theme complete with all colors
+  - [ ] Dark theme complete
+  - [ ] Theme context provides current theme
+  - [ ] Theme switching works instantly
+  - [ ] Theme preference persists across app restarts
+  - [ ] useTheme hook returns theme and toggleTheme
+
+- **Evidence Required:**
+  - Content of all theme files
+  - Screenshot of app in light mode
+  - Screenshot of app in dark mode
+  - Video showing theme toggle working
+
+- **Documents to Update:**
+  - `THEMING_IMPLEMENTATION_SUMMARY.md` - Update with final implementation
+  - `COMPONENT_LIBRARY.md` - Add theme usage examples
+
+---
+
+### P6-T02: Create Themed UI Components
+
+- **Copilot Prompt:**
+  ```
+  Please complete task P6-T02: Create Themed UI Components.
+
+  Follow the Standard Copilot Operating Procedures (SOPs) outlined in BUILD_CHECKLIST.md:
+  1. Acknowledge & Analyze this task
+  2. Plan & Execute the steps
+  3. Test & Validate locally
+  4. Verify & Document with evidence
+  5. Handle any blockers
+  6. Update & Finalize documentation
+
+  TASK: Create a library of themed UI components for Smart Inspector Pro. Please create:
+
+  1. ThemedView - View that respects theme background
+  2. ThemedText - Text with theme typography variants (h1-h6, body, caption)
+  3. Button - Themed button with variants (primary, secondary, outline)
+  4. TextInput - Themed input with label and error states
+  5. Card - Themed card container
+  6. Badge - Status badge with color variants
+  7. Modal - Themed modal overlay
+
+  Each component should:
+  - Use useTheme hook for styling
+  - Support theme color overrides via props
+  - Have proper TypeScript interfaces
+  - Include accessibility props
+
+  Reference: IMPLEMENTATION_ROADMAP.md Phase 6, Section 6.2
+  Reference: COMPONENT_LIBRARY.md for component specs
+
+  Directory: mobile/src/components/common/
+
+  After completing all acceptance criteria with evidence, check off this task: [x] P6-T02
+  ```
+
+- **Goal:** Create reusable themed component library
+
+- **Prerequisites:** P6-T01 complete
+
+- **Copilot Reference:**
+  - `IMPLEMENTATION_ROADMAP.md` - Phase 6, Section 6.2
+  - `COMPONENT_LIBRARY.md`
+
+- **Steps:**
+  1. [ ] Create `ThemedView.tsx` with theme background
+  2. [ ] Create `ThemedText.tsx` with typography variants
+  3. [ ] Create `Button.tsx` with multiple variants
+  4. [ ] Create `TextInput.tsx` with label and validation
+  5. [ ] Create `Card.tsx` with shadow and padding
+  6. [ ] Create `Badge.tsx` with status colors
+  7. [ ] Create `Modal.tsx` with overlay
+  8. [ ] Create `LoadingSpinner.tsx`
+  9. [ ] Create `EmptyState.tsx`
+  10. [ ] Write Storybook stories or demo screen
+
+- **Acceptance Criteria:**
+  - [ ] All components created with theme support
+  - [ ] Components render correctly in light and dark modes
+  - [ ] TypeScript interfaces defined for all props
+  - [ ] Accessibility props added (accessibilityLabel, etc.)
+  - [ ] Components work on iOS and Android
+  - [ ] Demo screen shows all components
+
+- **Evidence Required:**
+  - Screenshots of all components in light mode
+  - Screenshots of all components in dark mode
+  - Content of component files showing theme integration
+
+- **Documents to Update:**
+  - `COMPONENT_LIBRARY.md` - Add all component documentation
+  - `CODE_STANDARDS.md` - Add component creation patterns
+
+---
+
+## Phase 7: Core UI Components (Days 20-23)
+
+### P7-T01: Create Inspection Components
+
+- **Copilot Prompt:**
+  ```
+  Please complete task P7-T01: Create Inspection Components.
+
+  Follow the Standard Copilot Operating Procedures (SOPs) outlined in BUILD_CHECKLIST.md:
+  1. Acknowledge & Analyze this task
+  2. Plan & Execute the steps
+  3. Test & Validate locally
+  4. Verify & Document with evidence
+  5. Handle any blockers
+  6. Update & Finalize documentation
+
+  TASK: Create inspection-specific UI components for Smart Inspector Pro. Please create:
+
+  1. InspectionCard - Display inspection summary with status badge
+  2. PhotoThumbnail - Display photo with loading/error states
+  3. HierarchySelector - Dropdown component for Section/System/Component selection
+  4. ConditionBadge - Color-coded badge for 5 condition types
+  5. CommentsList - Display pre-written comments with selection
+  6. InspectionProgress - Progress indicator for inspection completion
+
+  Each component should:
+  - Use themed components from P6-T02
+  - Support touch interactions
+  - Include TypeScript interfaces
+  - Handle loading and error states
+
+  Reference: IMPLEMENTATION_ROADMAP.md Phase 7, Section 7.1
+  Reference: Smart_Inspector_Pro_Build_Layout.md Phase 9 for UI design
+
+  Directory: mobile/src/components/inspection/
+
+  After completing all acceptance criteria with evidence, check off this task: [x] P7-T01
+  ```
+
+- **Goal:** Create inspection-specific reusable components
+
+- **Prerequisites:** P6-T02 complete (themed components available)
+
+- **Copilot Reference:**
+  - `IMPLEMENTATION_ROADMAP.md` - Phase 7
+  - `Smart_Inspector_Pro_Build_Layout.md` - Phase 9
+  - `COMPONENT_LIBRARY.md`
+
+- **Steps:**
+  1. [ ] Create `InspectionCard.tsx` with status, date, address
+  2. [ ] Create `PhotoThumbnail.tsx` with image optimization
+  3. [ ] Create `HierarchySelector.tsx` with dropdown list
+  4. [ ] Create `ConditionBadge.tsx` with 5 condition colors
+  5. [ ] Create `CommentsList.tsx` with selectable items
+  6. [ ] Create `InspectionProgress.tsx` with circular progress
+  7. [ ] Write unit tests for each component
+  8. [ ] Create demo screen showing all components
+
+- **Acceptance Criteria:**
+  - [ ] All 6 components created
+  - [ ] Components render correctly on iOS and Android
+  - [ ] Touch interactions work smoothly
+  - [ ] TypeScript interfaces defined
+  - [ ] Loading and error states display
+  - [ ] Demo screen shows all variations
+  - [ ] Unit tests passing
+
+- **Evidence Required:**
+  - Screenshots of all components
+  - Video of touch interactions
+  - Test output showing all tests passing
+
+- **Documents to Update:**
+  - `COMPONENT_LIBRARY.md` - Add inspection components documentation
+  - `BUILD_NOTES.md` - Note component library expansion
+
+---
+
+### P7-T02: Create Data Display Components
+
+- **Copilot Prompt:**
+  ```
+  Please complete task P7-T02: Create Data Display Components.
+
+  Follow the Standard Copilot Operating Procedures (SOPs) outlined in BUILD_CHECKLIST.md:
+  1. Acknowledge & Analyze this task
+  2. Plan & Execute the steps
+  3. Test & Validate locally
+  4. Verify & Document with evidence
+  5. Handle any blockers
+  6. Update & Finalize documentation
+
+  TASK: Create data display components for Smart Inspector Pro. Please create:
+
+  1. CSVDataTable - Display CSV data in scrollable table
+  2. FilterChips - Chips for Section/System/Component filtering
+  3. HierarchyNavigator - Breadcrumb navigation for CSV hierarchy
+  4. SearchBar - Search component with debouncing
+  5. SortableHeader - Table header with sort indicators
+  6. EmptyState - Display when no data available
+
+  Each component should:
+  - Handle large datasets efficiently (virtualization)
+  - Support touch gestures for mobile
+  - Include TypeScript interfaces
+  - Use theme colors
+
+  Reference: IMPLEMENTATION_ROADMAP.md Phase 7, Section 7.2
+
+  Directory: mobile/src/components/data/
+
+  After completing all acceptance criteria with evidence, check off this task: [x] P7-T02
+  ```
+
+- **Goal:** Create components for displaying and filtering CSV data
+
+- **Prerequisites:** P7-T01 complete
+
+- **Copilot Reference:**
+  - `IMPLEMENTATION_ROADMAP.md` - Phase 7, Section 7.2
+
+- **Steps:**
+  1. [ ] Create `CSVDataTable.tsx` with FlatList virtualization
+  2. [ ] Create `FilterChips.tsx` with multi-select
+  3. [ ] Create `HierarchyNavigator.tsx` breadcrumb
+  4. [ ] Create `SearchBar.tsx` with 300ms debounce
+  5. [ ] Create `SortableHeader.tsx` with ascending/descending
+  6. [ ] Create `EmptyState.tsx` with icon and message
+  7. [ ] Test with 2,504 CSV rows
+  8. [ ] Optimize render performance
+
+- **Acceptance Criteria:**
+  - [ ] All 6 components created
+  - [ ] Table handles 2,504 rows smoothly (60fps)
+  - [ ] Filter chips work with multi-select
+  - [ ] Search debounces correctly
+  - [ ] Sort works on all columns
+  - [ ] Empty state displays appropriately
+  - [ ] Performance benchmarks met
+
+- **Evidence Required:**
+  - Screenshots of all components with data
+  - Performance metrics (frame rate, render time)
+  - Video showing smooth scrolling
+
+- **Documents to Update:**
+  - `COMPONENT_LIBRARY.md` - Add data components
+  - `TESTING_GUIDELINES.md` - Add performance testing section
+
+---
+
+### P7-T03: Create Collapsible Section Component
+
+- **Copilot Prompt:**
+  ```
+  Please complete task P7-T03: Create Collapsible Section Component.
+
+  Follow the Standard Copilot Operating Procedures (SOPs) outlined in BUILD_CHECKLIST.md:
+  1. Acknowledge & Analyze this task
+  2. Plan & Execute the steps
+  3. Test & Validate locally
+  4. Verify & Document with evidence
+  5. Handle any blockers
+  6. Update & Finalize documentation
+
+  TASK: Create CollapsibleSection component for Smart Inspector Pro home screen. This is a CRITICAL component used throughout the app. Please create:
+
+  1. CollapsibleSection - Expandable/collapsible container with:
+     - Header with icon and title
+     - Expand/collapse animation
+     - Content area for child components
+     - Persistence of expanded state
+
+  Component should:
+  - Support smooth animations (spring or ease-out)
+  - Save expanded state to AsyncStorage
+  - Support custom header colors and icons
+  - Work with any child content
+  - Have proper TypeScript interfaces
+
+  Reference: IMPLEMENTATION_ROADMAP.md Phase 7, Section 7.3
+  Reference: Smart_Inspector_Pro_Build_Layout.md Phase 9.1 for design
+
+  File: mobile/src/components/common/CollapsibleSection.tsx
+
+  After completing all acceptance criteria with evidence, check off this task: [x] P7-T03
+  ```
+
+- **Goal:** Create collapsible section component for home screen
+
+- **Prerequisites:** P6-T02 complete
+
+- **Copilot Reference:**
+  - `IMPLEMENTATION_ROADMAP.md` - Phase 7, Section 7.3
+  - `Smart_Inspector_Pro_Build_Layout.md` - Phase 9.1
+
+- **Steps:**
+  1. [ ] Create `CollapsibleSection.tsx` with Animated API
+  2. [ ] Implement expand/collapse animation (200ms duration)
+  3. [ ] Add chevron icon rotation
+  4. [ ] Persist expanded state per section ID
+  5. [ ] Support custom header styling
+  6. [ ] Add ripple effect on press (Android)
+  7. [ ] Test with various content types
+  8. [ ] Write unit tests
+
+- **Acceptance Criteria:**
+  - [ ] Component created with smooth animation
+  - [ ] Expanded state persists across app restarts
+  - [ ] Custom styling works (colors, icons)
+  - [ ] Works with any child content
+  - [ ] Performance: 60fps during animation
+  - [ ] TypeScript interfaces complete
+  - [ ] Unit tests passing
+
+- **Evidence Required:**
+  - Video showing expand/collapse animation
+  - Screenshot showing persistence after restart
+  - Performance metrics during animation
+
+- **Documents to Update:**
+  - `COMPONENT_LIBRARY.md` - Add CollapsibleSection docs
+  - `BUILD_NOTES.md` - Note completion of core components
+
+---
+
+## Phase 8: Navigation & Screen Structure (Days 24-27)
+
+### P8-T01: Configure React Navigation
+
+- **Copilot Prompt:**
+  ```
+  Please complete task P8-T01: Configure React Navigation.
+
+  Follow the Standard Copilot Operating Procedures (SOPs) outlined in BUILD_CHECKLIST.md:
+  1. Acknowledge & Analyze this task
+  2. Plan & Execute the steps
+  3. Test & Validate locally
+  4. Verify & Document with evidence
+  5. Handle any blockers
+  6. Update & Finalize documentation
+
+  TASK: Configure React Navigation for Smart Inspector Pro with authentication flow. Please set up:
+
+  1. NavigationContainer with theme integration
+  2. Auth Stack (Login, Register, ForgotPassword, VerifyEmail)
+  3. Main Stack (Home, other screens)
+  4. Conditional rendering based on authentication state
+  5. Deep linking configuration
+  6. Navigation types for type-safe navigation
+
+  Reference: IMPLEMENTATION_ROADMAP.md Phase 8, Section 8.1
+  Reference: Smart_Inspector_Pro_Build_Layout.md Phase 9.1
+
+  Files:
+  - mobile/src/navigation/index.tsx
+  - mobile/src/navigation/AuthStack.tsx
+  - mobile/src/navigation/MainStack.tsx
+  - mobile/src/navigation/types.ts
+
+  After completing all acceptance criteria with evidence, check off this task: [x] P8-T01
+  ```
+
+- **Goal:** Set up React Navigation with auth flow
+
+- **Prerequisites:** P4-T03 complete (auth screens created)
+
+- **Copilot Reference:**
+  - `IMPLEMENTATION_ROADMAP.md` - Phase 8
+  - `Smart_Inspector_Pro_Build_Layout.md` - Phase 9.1
+
+- **Steps:**
+  1. [ ] Create `navigation/index.tsx` with NavigationContainer
+  2. [ ] Create `AuthStack.tsx` with auth screens
+  3. [ ] Create `MainStack.tsx` for authenticated screens
+  4. [ ] Integrate theme with navigation
+  5. [ ] Add conditional rendering based on Redux auth state
+  6. [ ] Configure deep linking for inspection sharing
+  7. [ ] Create navigation types for type safety
+  8. [ ] Test navigation flow
+
+- **Acceptance Criteria:**
+  - [ ] Navigation configured without errors
+  - [ ] Auth flow works (login → main stack)
+  - [ ] Logout returns to auth stack
+  - [ ] Theme colors apply to navigation
+  - [ ] Deep linking configured
+  - [ ] TypeScript types prevent navigation errors
+  - [ ] Can navigate between all auth screens
+
+- **Evidence Required:**
+  - Video showing complete auth flow navigation
+  - Screenshot of themed navigation headers
+  - Test of deep link opening app
+
+- **Documents to Update:**
+  - `APP_STRUCTURE_OVERVIEW.md` - Update navigation structure
+  - `BUILD_NOTES.md` - Document navigation setup
+
+---
+
+### P8-T02: Create Home Screen
+
+- **Copilot Prompt:**
+  ```
+  Please complete task P8-T02: Create Home Screen.
+
+  Follow the Standard Copilot Operating Procedures (SOPs) outlined in BUILD_CHECKLIST.md:
+  1. Acknowledge & Analyze this task
+  2. Plan & Execute the steps
+  3. Test & Validate locally
+  4. Verify & Document with evidence
+  5. Handle any blockers
+  6. Update & Finalize documentation
+
+  TASK: Create the Home Screen for Smart Inspector Pro. This is the MAIN screen users see after login. Please create:
+
+  1. HomeScreen with ScrollView layout
+  2. Header with user greeting and notifications icon
+  3. Six CollapsibleSection components:
+     - Inspection Management (Create, Continue, Join Team)
+     - Smart Inspector (Start inspection workflow)
+     - Workflow Editor (Create/edit workflows)
+     - Business Tools (Calendar, Contacts, Accounting)
+     - Data Management (Cloud Sync, Storage, Export)
+     - Resources (Marketplace, Help, Settings)
+
+  Each section should:
+  - Use CollapsibleSection component from P7-T03
+  - Contain navigation cards with icons
+  - Navigate to respective screens (to be created)
+
+  Reference: IMPLEMENTATION_ROADMAP.md Phase 8, Section 8.2
+  Reference: Smart_Inspector_Pro_Build_Layout.md Phase 9.1 for exact layout
+
+  File: mobile/src/screens/home/HomeScreen.tsx
+
+  After completing all acceptance criteria with evidence, check off this task: [x] P8-T02
+  ```
+
+- **Goal:** Create main home screen with collapsible sections
+
+- **Prerequisites:** P7-T03 complete (CollapsibleSection component)
+
+- **Copilot Reference:**
+  - `IMPLEMENTATION_ROADMAP.md` - Phase 8, Section 8.2
+  - `Smart_Inspector_Pro_Build_Layout.md` - Phase 9.1 (ASCII layout)
+
+- **Steps:**
+  1. [ ] Create `HomeScreen.tsx` with ScrollView
+  2. [ ] Add header with user greeting from Redux auth state
+  3. [ ] Add notifications icon (placeholder for now)
+  4. [ ] Create "Inspection Management" section with 3 cards
+  5. [ ] Create "Smart Inspector" section with 1 card
+  6. [ ] Create "Workflow Editor" section with 2 cards
+  7. [ ] Create "Business Tools" section with 3 cards
+  8. [ ] Create "Data Management" section with 3 cards
+  9. [ ] Create "Resources" section with 3 cards
+  10. [ ] Add navigation handlers (show alerts for now)
+  11. [ ] Test section persistence
+
+- **Acceptance Criteria:**
+  - [ ] Home screen renders with all 6 sections
+  - [ ] Each section expands/collapses smoothly
+  - [ ] User greeting displays correct name
+  - [ ] All cards are tappable (show alerts)
+  - [ ] Expanded states persist after app restart
+  - [ ] Screen scrolls smoothly
+  - [ ] Layout matches Build Layout specification
+
+- **Evidence Required:**
+  - Screenshot of complete home screen
+  - Video showing all sections expanding/collapsing
+  - Screenshot showing persistence after restart
+
+- **Documents to Update:**
+  - `APP_STRUCTURE_OVERVIEW.md` - Add home screen structure
+  - `BUILD_NOTES.md` - Document home screen completion
+
+---
+
+### P8-T03: Create Placeholder Screens
+
+- **Copilot Prompt:**
+  ```
+  Please complete task P8-T03: Create Placeholder Screens.
+
+  Follow the Standard Copilot Operating Procedures (SOPs) outlined in BUILD_CHECKLIST.md:
+  1. Acknowledge & Analyze this task
+  2. Plan & Execute the steps
+  3. Test & Validate locally
+  4. Verify & Document with evidence
+  5. Handle any blockers
+  6. Update & Finalize documentation
+
+  TASK: Create placeholder screens for all major features to test navigation. Please create:
+
+  1. CreateInspectionScreen
+  2. ContinueInspectionScreen
+  3. JoinTeamInspectionScreen
+  4. SmartInspectorScreen
+  5. WorkflowEditorScreen
+  6. CalendarScreen
+  7. ContactsScreen
+  8. AccountingScreen
+  9. CloudSyncScreen
+  10. MarketplaceScreen
+  11. SettingsScreen
+
+  Each screen should:
+  - Display screen title
+  - Show "Under Construction" message
+  - Have back button navigation
+  - Use ThemedView and ThemedText
+
+  Reference: IMPLEMENTATION_ROADMAP.md Phase 8, Section 8.3
+
+  Directory: mobile/src/screens/
+
+  After completing all acceptance criteria with evidence, check off this task: [x] P8-T03
+  ```
+
+- **Goal:** Create placeholder screens to enable full navigation testing
+
+- **Prerequisites:** P8-T02 complete
+
+- **Copilot Reference:**
+  - `IMPLEMENTATION_ROADMAP.md` - Phase 8, Section 8.3
+
+- **Steps:**
+  1. [ ] Create all 11 placeholder screens
+  2. [ ] Add screens to MainStack navigator
+  3. [ ] Connect home screen cards to navigation
+  4. [ ] Test navigation to each screen
+  5. [ ] Verify back button works
+  6. [ ] Add TypeScript navigation types
+  7. [ ] Test navigation type safety
+
+- **Acceptance Criteria:**
+  - [ ] All 11 screens created
+  - [ ] All screens added to navigator
+  - [ ] Home screen navigation works to all screens
+  - [ ] Back button returns to home
+  - [ ] TypeScript prevents navigation errors
+  - [ ] No navigation warnings in console
+
+- **Evidence Required:**
+  - Video navigating to all 11 screens
+  - Screenshot of each placeholder screen
+  - TypeScript compile with no errors
+
+- **Documents to Update:**
+  - `APP_STRUCTURE_OVERVIEW.md` - Add all screen routes
+  - `BUILD_NOTES.md` - Document navigation completion
+
+---
+
+## Phase 9: Inspection Workflow - Part 1 (Days 28-32)
+
+### P9-T01: Create Inspection State Management
+
+- **Copilot Prompt:**
+  ```
+  Please complete task P9-T01: Create Inspection State Management.
+
+  Follow the Standard Copilot Operating Procedures (SOPs) outlined in BUILD_CHECKLIST.md:
+  1. Acknowledge & Analyze this task
+  2. Plan & Execute the steps
+  3. Test & Validate locally
+  4. Verify & Document with evidence
+  5. Handle any blockers
+  6. Update & Finalize documentation
+
+  TASK: Create Redux slice for inspection state management. Please create:
+
+  1. Inspection slice with actions:
+     - createInspection
+     - updateInspection
+     - addInspectionRecord
+     - updateInspectionRecord
+     - deleteInspectionRecord
+     - setCurrentInspection
+
+  2. State structure:
+     - inspections: Inspection[]
+     - currentInspection: Inspection | null
+     - loading: boolean
+     - error: string | null
+
+  3. Selectors for:
+     - All inspections
+     - Current inspection
+     - Inspection by ID
+     - Inspection records count
+
+  Reference: IMPLEMENTATION_ROADMAP.md Phase 9, Section 9.1
+  Reference: Smart_Inspector_Pro_Build_Layout.md Phase 2.1 for data models
+
+  Files:
+  - mobile/src/redux/slices/inspection.slice.ts
+  - mobile/src/types/inspection.types.ts
+
+  After completing all acceptance criteria with evidence, check off this task: [x] P9-T01
+  ```
+
+- **Goal:** Create Redux state management for inspections
+
+- **Prerequisites:** P4-T02 complete (Redux configured)
+
+- **Copilot Reference:**
+  - `IMPLEMENTATION_ROADMAP.md` - Phase 9
+  - `Smart_Inspector_Pro_Build_Layout.md` - Phase 2.1
+
+- **Steps:**
+  1. [ ] Create `inspection.types.ts` with interfaces
+  2. [ ] Create `inspection.slice.ts` with actions and reducers
+  3. [ ] Define Inspection interface
+  4. [ ] Define InspectionRecord interface
+  5. [ ] Implement async thunks for CRUD operations
+  6. [ ] Create selectors
+  7. [ ] Add slice to Redux store
+  8. [ ] Write unit tests
+
+- **Acceptance Criteria:**
+  - [ ] Inspection types defined
+  - [ ] Slice created with all actions
+  - [ ] State updates correctly
+  - [ ] Selectors return correct data
+  - [ ] Async thunks integrated with database service
+  - [ ] Unit tests passing
+
+- **Evidence Required:**
+  - Content of inspection types and slice files
+  - Test output showing state updates work
+
+- **Documents to Update:**
+  - `API_DOCUMENTATION.md` - Add inspection state documentation
+  - `BUILD_NOTES.md` - Document inspection state management
+
+---
+
+### P9-T02: Build Create Inspection Screen
+
+- **Copilot Prompt:**
+  ```
+  Please complete task P9-T02: Build Create Inspection Screen.
+
+  Follow the Standard Copilot Operating Procedures (SOPs) outlined in BUILD_CHECKLIST.md:
+  1. Acknowledge & Analyze this task
+  2. Plan & Execute the steps
+  3. Test & Validate locally
+  4. Verify & Document with evidence
+  5. Handle any blockers
+  6. Update & Finalize documentation
+
+  TASK: Build Create Inspection Screen for starting new inspections. Please create form with:
+
+  - Property Address (text input with autocomplete)
+  - Inspection Date (date picker)
+  - Inspector Name (auto-filled from user profile)
+  - Workflow Selection (dropdown of custom workflows)
+  - Client Name (optional)
+  - Client Email (optional)
+
+  With validation, Redux integration, and SQLite persistence.
+
+  Reference: IMPLEMENTATION_ROADMAP.md Phase 9, Section 9.2
+  Reference: Smart_Inspector_Pro_Build_Layout.md Phase 3.1
+
+  File: mobile/src/screens/inspection/CreateInspectionScreen.tsx
+
+  After completing all acceptance criteria with evidence, check off this task: [x] P9-T02
+  ```
+
+- **Goal:** Create form screen for starting new inspections
+
+- **Prerequisites:** P9-T01 complete
+
+- **Copilot Reference:**
+  - `IMPLEMENTATION_ROADMAP.md` - Phase 9, Section 9.2
+  - `Smart_Inspector_Pro_Build_Layout.md` - Phase 3.1
+
+- **Steps:**
+  1. [ ] Create CreateInspectionScreen with form fields
+  2. [ ] Add form validation
+  3. [ ] Integrate date picker component
+  4. [ ] Add workflow dropdown
+  5. [ ] Implement form submission
+  6. [ ] Dispatch Redux action
+  7. [ ] Save to SQLite database
+  8. [ ] Navigate to Smart Inspector screen
+
+- **Acceptance Criteria:**
+  - [ ] Form renders with all fields
+  - [ ] Validation works for all fields
+  - [ ] Creates inspection in Redux and SQLite
+  - [ ] Navigates to Smart Inspector after creation
+  - [ ] Can create inspection offline
+
+- **Evidence Required:**
+  - Screenshots of form
+  - Video of complete inspection creation
+  - Database query showing created inspection
+
+- **Documents to Update:**
+  - `BUILD_NOTES.md` - Document create inspection flow
+
+---
+
+### P9-T03: Build Smart Inspector Screen (6-Step Workflow)
+
+- **Copilot Prompt:**
+  ```
+  Please complete task P9-T03: Build Smart Inspector Screen (6-Step Workflow).
+
+  Follow the Standard Copilot Operating Procedures (SOPs) outlined in BUILD_CHECKLIST.md:
+  1. Acknowledge & Analyze this task
+  2. Plan & Execute the steps
+  3. Test & Validate locally
+  4. Verify & Document with evidence
+  5. Handle any blockers
+  6. Update & Finalize documentation
+
+  TASK: Build Smart Inspector Screen with 8-step hierarchical workflow (Section → System → Location → Component → Material → Condition → Comment). This is the CORE inspection screen.
+
+  Features:
+  - Photo capture (placeholder for now)
+  - Hierarchical CSV filtering at each step
+  - Progress indicator
+  - Back button navigation
+  - Save complete records to Redux and SQLite
+
+  Reference: IMPLEMENTATION_ROADMAP.md Phase 9, Section 9.3
+  Reference: Smart_Inspector_Pro_Build_Layout.md Phase 4 for workflow design
+  Reference: .github/copilot-instructions.md for CSV hierarchy pattern
+
+  File: mobile/src/screens/inspection/SmartInspectorScreen.tsx
+
+  After completing all acceptance criteria with evidence, check off this task: [x] P9-T03
+  ```
+
+- **Goal:** Create the core inspection workflow screen
+
+- **Prerequisites:** P9-T02 complete, P5-T02 complete (CSV data loaded)
+
+- **Copilot Reference:**
+  - `IMPLEMENTATION_ROADMAP.md` - Phase 9, Section 9.3
+  - `Smart_Inspector_Pro_Build_Layout.md` - Phase 4
+  - `.github/copilot-instructions.md` - CSV structure
+
+- **Steps:**
+  1. [ ] Create SmartInspectorScreen with multi-step layout
+  2. [ ] Implement step navigation
+  3. [ ] Build Section selector
+  4. [ ] Build System selector (filtered by Section)
+  5. [ ] Build Location selector (optional)
+  6. [ ] Build Component selector (filtered)
+  7. [ ] Build Material selector (filtered)
+  8. [ ] Build Condition selector
+  9. [ ] Build Comment selector
+  10. [ ] Implement hierarchical filtering logic
+  11. [ ] Add progress indicator
+  12. [ ] Save complete record
+
+- **Acceptance Criteria:**
+  - [ ] All 8 steps functional
+  - [ ] Hierarchical filtering works correctly
+  - [ ] Progress indicator accurate
+  - [ ] Complete record saves to database
+  - [ ] Can complete multiple records in succession
+
+- **Evidence Required:**
+  - Video showing complete 8-step workflow
+  - Screenshots of each step
+  - Database query showing saved records
+
+- **Documents to Update:**
+  - `BUILD_NOTES.md` - Document Smart Inspector workflow
+
+---
+
+## Phase 10: Photo Management & S3 (Days 33-36)
+
+### P10-T01: Integrate Camera and Image Picker
+
+- **Copilot Prompt:**
+  ```
+  Please complete task P10-T01: Integrate Camera and Image Picker.
+
+  Follow the Standard Copilot Operating Procedures (SOPs) outlined in BUILD_CHECKLIST.md:
+  1. Acknowledge & Analyze this task
+  2. Plan & Execute the steps
+  3. Test & Validate locally
+  4. Verify & Document with evidence
+  5. Handle any blockers
+  6. Update & Finalize documentation
+
+  TASK: Integrate camera and image picker for photo capture in Smart Inspector.
+
+  Features:
+  - Launch camera to capture photo
+  - Launch gallery to select photo
+  - Request camera/storage permissions
+  - Image compression for upload
+  - Replace photo placeholder from P9-T03
+
+  Reference: IMPLEMENTATION_ROADMAP.md Phase 10, Section 10.1
+
+  Files:
+  - mobile/src/services/camera.service.ts
+  - mobile/src/screens/inspection/SmartInspectorScreen.tsx (update)
+
+  After completing all acceptance criteria with evidence, check off this task: [x] P10-T01
+  ```
+
+- **Goal:** Add camera and image picker functionality
+
+- **Prerequisites:** P9-T03 complete
+
+- **Copilot Reference:**
+  - `IMPLEMENTATION_ROADMAP.md` - Phase 10
+
+- **Steps:**
+  1. [ ] Create camera.service.ts wrapper
+  2. [ ] Configure iOS permissions in Info.plist
+  3. [ ] Configure Android permissions
+  4. [ ] Implement launchCamera method
+  5. [ ] Implement launchImageLibrary method
+  6. [ ] Add image compression
+  7. [ ] Update SmartInspectorScreen
+  8. [ ] Test on both platforms
+
+- **Acceptance Criteria:**
+  - [ ] Camera launches on iOS and Android
+  - [ ] Gallery picker works
+  - [ ] Permissions requested appropriately
+  - [ ] Photo displays after capture
+  - [ ] Images compressed to <500KB
+
+- **Evidence Required:**
+  - Video of camera capture on both platforms
+  - Screenshot showing photo preview
+  - File size of compressed image
+
+- **Documents to Update:**
+  - `BUILD_NOTES.md` - Document camera integration
+
+---
+
+### P10-T02: Implement Photo Upload to S3
+
+- **Copilot Prompt:**
+  ```
+  Please complete task P10-T02: Implement Photo Upload to S3.
+
+  Follow the Standard Copilot Operating Procedures (SOPs) outlined in BUILD_CHECKLIST.md:
+  1. Acknowledge & Analyze this task
+  2. Plan & Execute the steps
+  3. Test & Validate locally
+  4. Verify & Document with evidence
+  5. Handle any blockers
+  6. Update & Finalize documentation
+
+  TASK: Implement photo upload to AWS S3 with progress tracking and offline support.
+
+  Features:
+  - Upload photo to S3 after inspection record saved
+  - Track upload progress
+  - Queue photos for upload when offline
+  - Auto-upload when connection restored
+  - Generate CloudFront URL
+
+  Reference: IMPLEMENTATION_ROADMAP.md Phase 10, Section 10.2
+  Reference: P3-T02 (S3 service created)
+
+  Files:
+  - mobile/src/services/photo-upload.service.ts
+  - mobile/src/redux/slices/inspection.slice.ts (update)
+
+  After completing all acceptance criteria with evidence, check off this task: [x] P10-T02
+  ```
+
+- **Goal:** Enable photo uploads to S3 with offline queueing
+
+- **Prerequisites:** P10-T01 complete, P3-T02 complete
+
+- **Copilot Reference:**
+  - `IMPLEMENTATION_ROADMAP.md` - Phase 10, Section 10.2
+
+- **Steps:**
+  1. [ ] Create photo-upload.service.ts
+  2. [ ] Implement upload queue in SQLite
+  3. [ ] Add upload method with progress
+  4. [ ] Integrate with S3 service
+  5. [ ] Add network status monitoring
+  6. [ ] Implement auto-upload on reconnect
+  7. [ ] Display upload progress in UI
+  8. [ ] Test offline queueing
+
+- **Acceptance Criteria:**
+  - [ ] Photos upload to S3 successfully
+  - [ ] Upload progress displays (0-100%)
+  - [ ] Photos queue when offline
+  - [ ] Auto-upload works when back online
+  - [ ] CloudFront URL generated
+
+- **Evidence Required:**
+  - Screenshot of S3 bucket showing uploaded photo
+  - Video of upload progress indicator
+  - Test showing offline queueing works
+
+- **Documents to Update:**
+  - `API_DOCUMENTATION.md` - Add photo upload documentation
+
+---
+
+### P10-T03: Create Photo Gallery Component
+
+- **Copilot Prompt:**
+  ```
+  Please complete task P10-T03: Create Photo Gallery Component.
+
+  Follow the Standard Copilot Operating Procedures (SOPs) outlined in BUILD_CHECKLIST.md:
+  1. Acknowledge & Analyze this task
+  2. Plan & Execute the steps
+  3. Test & Validate locally
+  4. Verify & Document with evidence
+  5. Handle any blockers
+  6. Update & Finalize documentation
+
+  TASK: Create photo gallery component to display all inspection photos.
+
+  Features:
+  - Grid layout of photo thumbnails
+  - Lightbox for full-screen viewing
+  - Pinch-to-zoom functionality
+  - Swipe to navigate between photos
+  - Display photo metadata
+  - Delete and share options
+
+  Reference: IMPLEMENTATION_ROADMAP.md Phase 10, Section 10.3
+
+  Files:
+  - mobile/src/components/inspection/PhotoGallery.tsx
+  - mobile/src/components/inspection/PhotoLightbox.tsx
+
+  After completing all acceptance criteria with evidence, check off this task: [x] P10-T03
+  ```
+
+- **Goal:** Create photo gallery for viewing inspection photos
+
+- **Prerequisites:** P10-T02 complete
+
+- **Copilot Reference:**
+  - `IMPLEMENTATION_ROADMAP.md` - Phase 10, Section 10.3
+
+- **Steps:**
+  1. [ ] Create PhotoGallery.tsx with FlatList
+  2. [ ] Create PhotoLightbox.tsx with modal
+  3. [ ] Implement grid layout
+  4. [ ] Add lazy loading
+  5. [ ] Implement pinch-to-zoom
+  6. [ ] Add swipe gesture navigation
+  7. [ ] Display photo metadata
+  8. [ ] Add delete and share functionality
+
+- **Acceptance Criteria:**
+  - [ ] Gallery displays all inspection photos
+  - [ ] Tap opens full-screen lightbox
+  - [ ] Pinch-to-zoom works smoothly
+  - [ ] Swipe navigates between photos
+  - [ ] Metadata displays correctly
+  - [ ] Delete and share work
+
+- **Evidence Required:**
+  - Screenshots of photo gallery
+  - Video showing lightbox and zoom
+
+- **Documents to Update:**
+  - `COMPONENT_LIBRARY.md` - Add PhotoGallery documentation
+
+---
+
+
+
+---
+
+## Phase 11: Inspection Workflow - Part 2 (Days 37-41)
+
+### P11-T01: Create Workflow Editor Screen
+
+- **Copilot Prompt:**
+  ```
+  Please complete task P11-T01: Create Workflow Editor Screen.
+
+  Follow the Standard Copilot Operating Procedures (SOPs) outlined in BUILD_CHECKLIST.md:
+  1. Acknowledge & Analyze this task
+  2. Plan & Execute the steps
+  3. Test & Validate locally
+  4. Verify & Document with evidence
+  5. Handle any blockers
+  6. Update & Finalize documentation
+
+  TASK: Create Workflow Editor Screen for customizing inspection workflows. This allows users to filter and reorder CSV data to create custom inspection templates.
+
+  Features:
+  1. Load base CSV data (Single_Family.csv)
+  2. Hierarchical filtering UI:
+     - Filter by Section (checkboxes)
+     - Filter by System (checkboxes)
+     - Filter by Component (checkboxes)
+     - Filter by Material (checkboxes)
+     - Filter by Condition (checkboxes)
+  3. Drag-and-drop reordering
+  4. Save custom workflow to SQLite
+  5. Share workflow via code/QR
+  6. Preview filtered results count
+
+  Reference: IMPLEMENTATION_ROADMAP.md Phase 11, Section 11.1
+  Reference: Smart_Inspector_Pro_Build_Layout.md Phase 5 for UI design
+
+  File: mobile/src/screens/workflow/WorkflowEditorScreen.tsx
+
+  After completing all acceptance criteria with evidence, check off this task: [x] P11-T01
+  ```
+
+- **Goal:** Create workflow editor for custom inspection templates
+
+- **Prerequisites:** P5-T02 complete (CSV data loaded)
+
+- **Copilot Reference:**
+  - `IMPLEMENTATION_ROADMAP.md` - Phase 11
+  - `Smart_Inspector_Pro_Build_Layout.md` - Phase 5
+
+- **Steps:**
+  1. [ ] Create WorkflowEditorScreen.tsx
+  2. [ ] Load CSV data from database
+  3. [ ] Build Section filter with checkboxes
+  4. [ ] Build System filter (filtered by selected Sections)
+  5. [ ] Build Component filter (cascading)
+  6. [ ] Build Material filter (cascading)
+  7. [ ] Build Condition filter
+  8. [ ] Implement drag-and-drop reordering
+  9. [ ] Display filtered results count
+  10. [ ] Add save workflow functionality
+  11. [ ] Generate workflow share code
+  12. [ ] Test workflow creation and saving
+
+- **Acceptance Criteria:**
+  - [ ] Can filter CSV data hierarchically
+  - [ ] Cascading filters work correctly
+  - [ ] Results count updates in real-time
+  - [ ] Drag-and-drop reordering works
+  - [ ] Can save custom workflow to SQLite
+  - [ ] Can generate share code
+  - [ ] Workflow persists and can be loaded
+
+- **Evidence Required:**
+  - Video showing complete workflow creation
+  - Screenshot of filtering UI
+  - Database query showing saved workflow
+  - Screenshot of generated share code
+
+- **Documents to Update:**
+  - `BUILD_NOTES.md` - Document workflow editor
+  - `API_DOCUMENTATION.md` - Add workflow data structure
+
+---
+
+### P11-T02: Implement Workflow Sharing
+
+- **Copilot Prompt:**
+  ```
+  Please complete task P11-T02: Implement Workflow Sharing.
+
+  Follow the Standard Copilot Operating Procedures (SOPs) outlined in BUILD_CHECKLIST.md:
+  1. Acknowledge & Analyze this task
+  2. Plan & Execute the steps
+  3. Test & Validate locally
+  4. Verify & Document with evidence
+  5. Handle any blockers
+  6. Update & Finalize documentation
+
+  TASK: Implement workflow sharing functionality for team collaboration.
+
+  Features:
+  1. Generate workflow share codes (8-character alphanumeric)
+  2. Generate QR codes for workflows
+  3. Import workflow from share code
+  4. Import workflow from QR code scan
+  5. Validate imported workflows
+  6. Display workflow metadata (name, creator, date, item count)
+
+  Reference: IMPLEMENTATION_ROADMAP.md Phase 11, Section 11.2
+
+  Files:
+  - mobile/src/services/workflow-share.service.ts
+  - mobile/src/screens/workflow/ImportWorkflowScreen.tsx
+
+  After completing all acceptance criteria with evidence, check off this task: [x] P11-T02
+  ```
+
+- **Goal:** Enable workflow sharing between users and teams
+
+- **Prerequisites:** P11-T01 complete
+
+- **Copilot Reference:**
+  - `IMPLEMENTATION_ROADMAP.md` - Phase 11, Section 11.2
+
+- **Steps:**
+  1. [ ] Create workflow-share.service.ts
+  2. [ ] Implement share code generation algorithm
+  3. [ ] Implement QR code generation using react-native-qrcode-svg
+  4. [ ] Create ImportWorkflowScreen with code input
+  5. [ ] Add QR code scanner using react-native-camera
+  6. [ ] Implement workflow validation
+  7. [ ] Display workflow preview before import
+  8. [ ] Save imported workflow to SQLite
+  9. [ ] Test complete sharing flow
+
+- **Acceptance Criteria:**
+  - [ ] Share codes generated correctly (8 chars)
+  - [ ] QR codes display and scan correctly
+  - [ ] Can import workflow from code
+  - [ ] Can import workflow from QR scan
+  - [ ] Workflow validation prevents invalid imports
+  - [ ] Workflow metadata displays correctly
+  - [ ] Imported workflows save to database
+
+- **Evidence Required:**
+  - Screenshot of generated QR code
+  - Video of QR code scanning
+  - Screenshot of workflow import screen
+  - Test of complete share → import flow
+
+- **Documents to Update:**
+  - `BUILD_NOTES.md` - Document workflow sharing
+  - `TROUBLESHOOTING.md` - Add workflow import issues
+
+---
+
+### P11-T03: Create Continue Inspection Screen
+
+- **Copilot Prompt:**
+  ```
+  Please complete task P11-T03: Create Continue Inspection Screen.
+
+  Follow the Standard Copilot Operating Procedures (SOPs) outlined in BUILD_CHECKLIST.md:
+  1. Acknowledge & Analyze this task
+  2. Plan & Execute the steps
+  3. Test & Validate locally
+  4. Verify & Document with evidence
+  5. Handle any blockers
+  6. Update & Finalize documentation
+
+  TASK: Create Continue Inspection Screen to resume in-progress inspections.
+
+  Features:
+  1. Display list of all inspections with status badges
+  2. Filter by status (scheduled, in-progress, completed)
+  3. Search by address or client name
+  4. Display inspection progress (X of Y items inspected)
+  5. Tap to resume inspection
+  6. Swipe actions (delete, duplicate, share)
+  7. Sort by date, status, or progress
+
+  Reference: IMPLEMENTATION_ROADMAP.md Phase 11, Section 11.3
+  Reference: Smart_Inspector_Pro_Build_Layout.md Phase 3.2
+
+  File: mobile/src/screens/inspection/ContinueInspectionScreen.tsx
+
+  After completing all acceptance criteria with evidence, check off this task: [x] P11-T03
+  ```
+
+- **Goal:** Create inspection list screen for resuming inspections
+
+- **Prerequisites:** P9-T01 complete (inspection state management)
+
+- **Copilot Reference:**
+  - `IMPLEMENTATION_ROADMAP.md` - Phase 11, Section 11.3
+  - `Smart_Inspector_Pro_Build_Layout.md` - Phase 3.2
+
+- **Steps:**
+  1. [ ] Create ContinueInspectionScreen.tsx
+  2. [ ] Load inspections from Redux state
+  3. [ ] Display inspections in FlatList
+  4. [ ] Add status badge component
+  5. [ ] Calculate and display progress percentage
+  6. [ ] Implement status filter
+  7. [ ] Add search functionality
+  8. [ ] Implement swipe actions (delete, duplicate, share)
+  9. [ ] Add sort options
+  10. [ ] Navigate to Smart Inspector on tap
+
+- **Acceptance Criteria:**
+  - [ ] All inspections display correctly
+  - [ ] Status badges show correct colors
+  - [ ] Progress displays accurately (e.g., "15 of 42 items")
+  - [ ] Filters work correctly
+  - [ ] Search filters results
+  - [ ] Swipe actions work (delete, duplicate, share)
+  - [ ] Sort options work
+  - [ ] Can resume inspection
+
+- **Evidence Required:**
+  - Screenshot of inspection list
+  - Video showing filter and search
+  - Video showing swipe actions
+  - Test of resuming inspection
+
+- **Documents to Update:**
+  - `BUILD_NOTES.md` - Document continue inspection screen
+  - `TESTING_GUIDELINES.md` - Add inspection list tests
+
+---
+
+## Phase 12: AI Integration (Days 42-47)
+
+### P12-T01: Create OpenAI Service
+
+- **Copilot Prompt:**
+  ```
+  Please complete task P12-T01: Create OpenAI Service.
+
+  Follow the Standard Copilot Operating Procedures (SOPs) outlined in BUILD_CHECKLIST.md:
+  1. Acknowledge & Analyze this task
+  2. Plan & Execute the steps
+  3. Test & Validate locally
+  4. Verify & Document with evidence
+  5. Handle any blockers
+  6. Update & Finalize documentation
+
+  TASK: Create OpenAI service for AI photo recognition and report generation.
+
+  Features:
+  1. OpenAI API client configuration
+  2. GPT-4 Vision integration for photo analysis
+  3. GPT-4 Turbo integration for report generation
+  4. Rate limiting and quota management
+  5. Cost tracking per request
+  6. Error handling and retry logic
+  7. Response caching to avoid duplicate API calls
+
+  Reference: IMPLEMENTATION_ROADMAP.md Phase 12, Section 12.1
+  Reference: PROJECT_CONFIGURATION.md for OpenAI API key
+  Reference: MEMBERSHIP_TIERS_REVISED.md for quota limits
+
+  Files:
+  - mobile/src/services/openai.service.ts
+  - mobile/src/types/ai.types.ts
+
+  After completing all acceptance criteria with evidence, check off this task: [x] P12-T01
+  ```
+
+- **Goal:** Create OpenAI service for AI features
+
+- **Prerequisites:** P2-T02 complete, OpenAI API key available
+
+- **Copilot Reference:**
+  - `IMPLEMENTATION_ROADMAP.md` - Phase 12
+  - `PROJECT_CONFIGURATION.md`
+  - `MEMBERSHIP_TIERS_REVISED.md`
+
+- **Steps:**
+  1. [ ] Create openai.service.ts
+  2. [ ] Install OpenAI SDK: `npm install openai`
+  3. [ ] Configure API client with key from env
+  4. [ ] Create analyzePhoto method (GPT-4 Vision)
+  5. [ ] Create generateReport method (GPT-4 Turbo)
+  6. [ ] Implement rate limiting (500 calls/month for Enterprise)
+  7. [ ] Add cost tracking
+  8. [ ] Implement response caching in SQLite
+  9. [ ] Add error handling and retry logic
+  10. [ ] Write unit tests
+
+- **Acceptance Criteria:**
+  - [ ] OpenAI service created
+  - [ ] API calls work correctly
+  - [ ] Rate limiting enforces quota
+  - [ ] Cost tracking accurate (~$0.02/image)
+  - [ ] Caching prevents duplicate calls
+  - [ ] Errors handled gracefully
+  - [ ] Unit tests passing
+
+- **Evidence Required:**
+  - Content of openai.service.ts
+  - Test showing successful API call
+  - Test showing rate limiting works
+  - Cache query showing stored responses
+
+- **Documents to Update:**
+  - `API_DOCUMENTATION.md` - Add OpenAI service docs
+  - `BUILD_NOTES.md` - Document AI integration
+
+---
+
+### P12-T02: Implement AI Photo Recognition
+
+- **Copilot Prompt:**
+  ```
+  Please complete task P12-T02: Implement AI Photo Recognition.
+
+  Follow the Standard Copilot Operating Procedures (SOPs) outlined in BUILD_CHECKLIST.md:
+  1. Acknowledge & Analyze this task
+  2. Plan & Execute the steps
+  3. Test & Validate locally
+  4. Verify & Document with evidence
+  5. Handle any blockers
+  6. Update & Finalize documentation
+
+  TASK: Implement AI photo recognition to auto-suggest inspection hierarchy values.
+
+  Features:
+  1. Send photo to GPT-4 Vision with prompt
+  2. Prompt engineering for inspection context
+  3. Parse AI response into hierarchy values
+  4. Display suggested values in Smart Inspector
+  5. One-click accept or manual override
+  6. Confidence scores for suggestions
+  7. Premium feature gate (Enterprise tier only)
+
+  Reference: IMPLEMENTATION_ROADMAP.md Phase 12, Section 12.2
+  Reference: .github/copilot-instructions.md for accuracy targets
+
+  Files:
+  - mobile/src/services/ai-recognition.service.ts
+  - mobile/src/screens/inspection/SmartInspectorScreen.tsx (update)
+
+  After completing all acceptance criteria with evidence, check off this task: [x] P12-T02
+  ```
+
+- **Goal:** Add AI-powered photo recognition to Smart Inspector
+
+- **Prerequisites:** P12-T01 complete, P10-T01 complete (camera integration)
+
+- **Copilot Reference:**
+  - `IMPLEMENTATION_ROADMAP.md` - Phase 12, Section 12.2
+  - `.github/copilot-instructions.md` - AI accuracy targets
+
+- **Steps:**
+  1. [ ] Create ai-recognition.service.ts
+  2. [ ] Design GPT-4 Vision prompt for inspection analysis
+  3. [ ] Implement photo analysis method
+  4. [ ] Parse AI response into hierarchy structure
+  5. [ ] Update SmartInspectorScreen with AI toggle
+  6. [ ] Display suggested values with confidence scores
+  7. [ ] Add "Accept All" button
+  8. [ ] Add manual override for each field
+  9. [ ] Add premium feature gate (check membership tier)
+  10. [ ] Test AI accuracy with sample photos
+
+- **Acceptance Criteria:**
+  - [ ] AI analyzes photos successfully
+  - [ ] Suggests Component with 95%+ accuracy
+  - [ ] Suggests Material with 88%+ accuracy
+  - [ ] Suggests Condition with 85%+ accuracy
+  - [ ] Confidence scores display correctly
+  - [ ] Accept all button populates fields
+  - [ ] Manual override works
+  - [ ] Premium gate blocks non-Enterprise users
+  - [ ] Fallback to manual workflow if AI fails
+
+- **Evidence Required:**
+  - Video showing AI analysis workflow
+  - Screenshot of suggested values
+  - Test results showing accuracy percentages
+  - Test showing premium gate enforcement
+
+- **Documents to Update:**
+  - `BUILD_NOTES.md` - Document AI photo recognition
+  - `API_DOCUMENTATION.md` - Add AI recognition docs
+
+---
+
+### P12-T03: Implement AI Report Generation
+
+- **Copilot Prompt:**
+  ```
+  Please complete task P12-T03: Implement AI Report Generation.
+
+  Follow the Standard Copilot Operating Procedures (SOPs) outlined in BUILD_CHECKLIST.md:
+  1. Acknowledge & Analyze this task
+  2. Plan & Execute the steps
+  3. Test & Validate locally
+  4. Verify & Document with evidence
+  5. Handle any blockers
+  6. Update & Finalize documentation
+
+  TASK: Implement AI-powered report generation using GPT-4 Turbo.
+
+  Features:
+  1. Generate professional inspection summaries
+  2. Create detailed descriptions from inspection records
+  3. Generate recommendations based on conditions
+  4. Customize tone (professional, friendly, technical)
+  5. Support multiple report formats
+  6. Available to all tiers (Professional and Enterprise)
+
+  Reference: IMPLEMENTATION_ROADMAP.md Phase 12, Section 12.3
+
+  Files:
+  - mobile/src/services/ai-report.service.ts
+
+  After completing all acceptance criteria with evidence, check off this task: [x] P12-T03
+  ```
+
+- **Goal:** Add AI-powered report generation
+
+- **Prerequisites:** P12-T01 complete
+
+- **Copilot Reference:**
+  - `IMPLEMENTATION_ROADMAP.md` - Phase 12, Section 12.3
+
+- **Steps:**
+  1. [ ] Create ai-report.service.ts
+  2. [ ] Design GPT-4 Turbo prompt for report generation
+  3. [ ] Implement generateSummary method
+  4. [ ] Implement generateRecommendations method
+  5. [ ] Add tone customization (professional/friendly/technical)
+  6. [ ] Create report preview screen
+  7. [ ] Allow editing of AI-generated content
+  8. [ ] Test with various inspection data
+
+- **Acceptance Criteria:**
+  - [ ] AI generates professional summaries
+  - [ ] Recommendations are relevant and actionable
+  - [ ] Tone customization works
+  - [ ] Generated content is editable
+  - [ ] Reports accurate reflect inspection data
+  - [ ] Generation completes in <10 seconds
+  - [ ] Available to Professional and Enterprise tiers
+
+- **Evidence Required:**
+  - Sample AI-generated report
+  - Video showing report generation
+  - Test of different tones
+  - Performance benchmark
+
+- **Documents to Update:**
+  - `BUILD_NOTES.md` - Document AI report generation
+  - `API_DOCUMENTATION.md` - Add report generation docs
+
+---
+
+## Phase 13: Report Generation (Days 48-53)
+
+### P13-T01: Create Report Template System
+
+- **Copilot Prompt:**
+  ```
+  Please complete task P13-T01: Create Report Template System.
+
+  Follow the Standard Copilot Operating Procedures (SOPs) outlined in BUILD_CHECKLIST.md:
+  1. Acknowledge & Analyze this task
+  2. Plan & Execute the steps
+  3. Test & Validate locally
+  4. Verify & Document with evidence
+  5. Handle any blockers
+  6. Update & Finalize documentation
+
+  TASK: Create report template system for generating professional inspection reports.
+
+  Features:
+  1. Define report template structure (header, summary, details, photos, recommendations)
+  2. Create default templates (standard, detailed, summary-only)
+  3. Support custom templates
+  4. Template preview functionality
+  5. Save/load templates from SQLite
+  6. Template sharing between team members
+
+  Reference: IMPLEMENTATION_ROADMAP.md Phase 13, Section 13.1
+  Reference: Smart_Inspector_Pro_Build_Layout.md Phase 6 for report design
+
+  Files:
+  - mobile/src/types/report.types.ts
+  - mobile/src/services/report-template.service.ts
+
+  After completing all acceptance criteria with evidence, check off this task: [x] P13-T01
+  ```
+
+- **Goal:** Create report template system for customizable reports
+
+- **Prerequisites:** P9-T01 complete (inspection data available)
+
+- **Copilot Reference:**
+  - `IMPLEMENTATION_ROADMAP.md` - Phase 13
+  - `Smart_Inspector_Pro_Build_Layout.md` - Phase 6
+
+- **Steps:**
+  1. [ ] Create report.types.ts with template interfaces
+  2. [ ] Create report-template.service.ts
+  3. [ ] Define template structure (sections, fields, styling)
+  4. [ ] Create 3 default templates
+  5. [ ] Implement template save/load from SQLite
+  6. [ ] Add template preview generation
+  7. [ ] Implement custom template editor
+  8. [ ] Add template sharing functionality
+  9. [ ] Write unit tests
+
+- **Acceptance Criteria:**
+  - [ ] Report template types defined
+  - [ ] 3 default templates created
+  - [ ] Templates save to SQLite
+  - [ ] Templates load correctly
+  - [ ] Preview shows template layout
+  - [ ] Can create custom templates
+  - [ ] Template sharing works
+
+- **Evidence Required:**
+  - Content of report types file
+  - Screenshots of 3 default templates
+  - Database query showing saved templates
+
+- **Documents to Update:**
+  - `API_DOCUMENTATION.md` - Add report template docs
+  - `BUILD_NOTES.md` - Document report system
+
+---
+
+### P13-T02: Implement PDF Report Generation
+
+- **Copilot Prompt:**
+  ```
+  Please complete task P13-T02: Implement PDF Report Generation.
+
+  Follow the Standard Copilot Operating Procedures (SOPs) outlined in BUILD_CHECKLIST.md:
+  1. Acknowledge & Analyze this task
+  2. Plan & Execute the steps
+  3. Test & Validate locally
+  4. Verify & Document with evidence
+  5. Handle any blockers
+  6. Update & Finalize documentation
+
+  TASK: Implement PDF report generation from inspection data.
+
+  Features:
+  1. Generate PDF from inspection records using selected template
+  2. Include photos in PDF (embedded from S3)
+  3. Add company logo and branding
+  4. Page numbering and table of contents
+  5. Digital signature field
+  6. Export to device storage
+  7. Share via email/messaging
+  8. Preview before generation
+
+  Reference: IMPLEMENTATION_ROADMAP.md Phase 13, Section 13.2
+
+  Install: npm install react-native-pdf react-native-html-to-pdf
+
+  Files:
+  - mobile/src/services/pdf-generator.service.ts
+  - mobile/src/screens/reports/GenerateReportScreen.tsx
+
+  After completing all acceptance criteria with evidence, check off this task: [x] P13-T02
+  ```
+
+- **Goal:** Generate professional PDF reports from inspections
+
+- **Prerequisites:** P13-T01 complete, P12-T03 complete (AI report generation)
+
+- **Copilot Reference:**
+  - `IMPLEMENTATION_ROADMAP.md` - Phase 13, Section 13.2
+
+- **Steps:**
+  1. [ ] Install react-native-pdf and react-native-html-to-pdf
+  2. [ ] Create pdf-generator.service.ts
+  3. [ ] Design HTML template for PDF
+  4. [ ] Implement PDF generation method
+  5. [ ] Add photo embedding from S3 URLs
+  6. [ ] Add company logo support
+  7. [ ] Implement page numbering and TOC
+  8. [ ] Add digital signature field
+  9. [ ] Create GenerateReportScreen
+  10. [ ] Add PDF preview functionality
+  11. [ ] Implement export to storage
+  12. [ ] Add share functionality
+  13. [ ] Test PDF generation with sample data
+
+- **Acceptance Criteria:**
+  - [ ] PDF generates successfully
+  - [ ] Photos display correctly in PDF
+  - [ ] Company logo appears in header
+  - [ ] Page numbers accurate
+  - [ ] Table of contents links work
+  - [ ] Digital signature field included
+  - [ ] Can export to device storage
+  - [ ] Can share via email/messaging
+  - [ ] Preview displays before generation
+  - [ ] PDF file size reasonable (<10MB)
+
+- **Evidence Required:**
+  - Sample generated PDF file
+  - Screenshots of PDF preview
+  - Video showing complete generation flow
+  - File size of generated PDF
+
+- **Documents to Update:**
+  - `BUILD_NOTES.md` - Document PDF generation
+  - `TROUBLESHOOTING.md` - Add PDF generation issues
+
+---
+
+### P13-T03: Create Digital Forms System
+
+- **Copilot Prompt:**
+  ```
+  Please complete task P13-T03: Create Digital Forms System.
+
+  Follow the Standard Copilot Operating Procedures (SOPs) outlined in BUILD_CHECKLIST.md:
+  1. Acknowledge & Analyze this task
+  2. Plan & Execute the steps
+  3. Test & Validate locally
+  4. Verify & Document with evidence
+  5. Handle any blockers
+  6. Update & Finalize documentation
+
+  TASK: Create digital forms system for inspection agreements and contracts.
+
+  Features:
+  1. Pre-inspection agreement form
+  2. Client consent form
+  3. Payment authorization form
+  4. Digital signature capture
+  5. Form validation
+  6. Save completed forms to inspection
+  7. Export forms to PDF
+  8. Email forms to client
+
+  Reference: IMPLEMENTATION_ROADMAP.md Phase 13, Section 13.3
+
+  Install: npm install react-native-signature-canvas
+
+  Files:
+  - mobile/src/screens/forms/DigitalFormsScreen.tsx
+  - mobile/src/components/forms/SignatureCapture.tsx
+
+  After completing all acceptance criteria with evidence, check off this task: [x] P13-T03
+  ```
+
+- **Goal:** Create digital forms with signature capture
+
+- **Prerequisites:** P13-T02 complete
+
+- **Copilot Reference:**
+  - `IMPLEMENTATION_ROADMAP.md` - Phase 13, Section 13.3
+
+- **Steps:**
+  1. [ ] Install react-native-signature-canvas
+  2. [ ] Create form templates (3 forms)
+  3. [ ] Create DigitalFormsScreen
+  4. [ ] Create SignatureCapture component
+  5. [ ] Implement form validation
+  6. [ ] Add signature capture functionality
+  7. [ ] Save completed forms to SQLite
+  8. [ ] Link forms to inspections
+  9. [ ] Export forms to PDF
+  10. [ ] Add email form functionality
+  11. [ ] Test complete form flow
+
+- **Acceptance Criteria:**
+  - [ ] All 3 forms render correctly
+  - [ ] Form validation works
+  - [ ] Signature capture smooth and accurate
+  - [ ] Can save signature as image
+  - [ ] Completed forms save to database
+  - [ ] Forms link to inspections
+  - [ ] Can export forms to PDF
+  - [ ] Can email forms to client
+
+- **Evidence Required:**
+  - Screenshots of all 3 forms
+  - Video showing signature capture
+  - Sample PDF of completed form
+  - Test of email functionality
+
+- **Documents to Update:**
+  - `COMPONENT_LIBRARY.md` - Add SignatureCapture docs
+  - `BUILD_NOTES.md` - Document digital forms
+
+---
+
+## Phase 14: Team Collaboration (Days 54-58)
+
+### P14-T01: Create Team Management System
+
+- **Copilot Prompt:**
+  ```
+  Please complete task P14-T01: Create Team Management System.
+
+  Follow the Standard Copilot Operating Procedures (SOPs) outlined in BUILD_CHECKLIST.md:
+  1. Acknowledge & Analyze this task
+  2. Plan & Execute the steps
+  3. Test & Validate locally
+  4. Verify & Document with evidence
+  5. Handle any blockers
+  6. Update & Finalize documentation
+
+  TASK: Create team management system for multi-user collaboration.
+
+  Features:
+  1. Create team (team name, description)
+  2. Invite team members (email, code, QR)
+  3. Assign roles (Team Leader, Senior Inspector, Assistant)
+  4. View team members list
+  5. Edit member roles
+  6. Remove team members
+  7. Leave team
+  8. Team settings and permissions
+
+  Reference: IMPLEMENTATION_ROADMAP.md Phase 14, Section 14.1
+  Reference: Smart_Inspector_Pro_Build_Layout.md Phase 7 for team features
+  Reference: .github/copilot-instructions.md for RBAC roles
+
+  Files:
+  - mobile/src/redux/slices/team.slice.ts
+  - mobile/src/types/team.types.ts
+  - mobile/src/screens/team/TeamManagementScreen.tsx
+
+  After completing all acceptance criteria with evidence, check off this task: [x] P14-T01
+  ```
+
+- **Goal:** Create team management with RBAC
+
+- **Prerequisites:** P4-T01 complete (auth system)
+
+- **Copilot Reference:**
+  - `IMPLEMENTATION_ROADMAP.md` - Phase 14
+  - `Smart_Inspector_Pro_Build_Layout.md` - Phase 7
+  - `.github/copilot-instructions.md` - RBAC roles
+
+- **Steps:**
+  1. [ ] Create team.types.ts with interfaces
+  2. [ ] Create team.slice.ts with Redux state
+  3. [ ] Define 3 roles (Team Leader, Senior Inspector, Assistant)
+  4. [ ] Create TeamManagementScreen
+  5. [ ] Implement create team functionality
+  6. [ ] Add invite methods (email, code, QR)
+  7. [ ] Display team members list
+  8. [ ] Implement role assignment
+  9. [ ] Add remove member functionality
+  10. [ ] Add leave team functionality
+  11. [ ] Implement team permissions
+  12. [ ] Test RBAC enforcement
+
+- **Acceptance Criteria:**
+  - [ ] Can create team
+  - [ ] Can invite members via email, code, QR
+  - [ ] Team members display correctly
+  - [ ] Roles can be assigned
+  - [ ] Role permissions enforced
+  - [ ] Can remove team members (Team Leader only)
+  - [ ] Can leave team
+  - [ ] Team settings save correctly
+
+- **Evidence Required:**
+  - Screenshots of team management screens
+  - Video showing complete team creation
+  - Test showing RBAC enforcement
+  - Database query showing team data
+
+- **Documents to Update:**
+  - `API_DOCUMENTATION.md` - Add team management docs
+  - `BUILD_NOTES.md` - Document team system
+
+---
+
+### P14-T02: Implement Real-Time Collaboration
+
+- **Copilot Prompt:**
+  ```
+  Please complete task P14-T02: Implement Real-Time Collaboration.
+
+  Follow the Standard Copilot Operating Procedures (SOPs) outlined in BUILD_CHECKLIST.md:
+  1. Acknowledge & Analyze this task
+  2. Plan & Execute the steps
+  3. Test & Validate locally
+  4. Verify & Document with evidence
+  5. Handle any blockers
+  6. Update & Finalize documentation
+
+  TASK: Implement real-time collaboration using Socket.io for team inspections.
+
+  Features:
+  1. Socket.io client integration
+  2. Join team inspection room
+  3. Real-time inspection record sync
+  4. Live photo sharing
+  5. Real-time comment updates
+  6. Member presence indicators (online/offline)
+  7. Typing indicators
+  8. Conflict resolution for concurrent edits
+
+  Reference: IMPLEMENTATION_ROADMAP.md Phase 14, Section 14.2
+
+  Install: npm install socket.io-client
+
+  Files:
+  - mobile/src/services/socket.service.ts
+  - mobile/src/hooks/useTeamInspection.ts
+
+  After completing all acceptance criteria with evidence, check off this task: [x] P14-T02
+  ```
+
+- **Goal:** Enable real-time team collaboration on inspections
+
+- **Prerequisites:** P14-T01 complete
+
+- **Copilot Reference:**
+  - `IMPLEMENTATION_ROADMAP.md` - Phase 14, Section 14.2
+
+- **Steps:**
+  1. [ ] Install socket.io-client
+  2. [ ] Create socket.service.ts
+  3. [ ] Configure Socket.io connection
+  4. [ ] Implement join/leave room methods
+  5. [ ] Add inspection record sync listeners
+  6. [ ] Add photo sync listeners
+  7. [ ] Add comment sync listeners
+  8. [ ] Create useTeamInspection hook
+  9. [ ] Add presence indicators
+  10. [ ] Implement typing indicators
+  11. [ ] Add conflict resolution logic
+  12. [ ] Test real-time sync with 2+ users
+
+- **Acceptance Criteria:**
+  - [ ] Socket.io connects successfully
+  - [ ] Can join team inspection room
+  - [ ] Inspection records sync in real-time
+  - [ ] Photos sync to all team members
+  - [ ] Comments update in real-time
+  - [ ] Presence indicators show online/offline
+  - [ ] Typing indicators display
+  - [ ] Conflicts resolved (last-write-wins)
+  - [ ] Works offline (queues updates)
+
+- **Evidence Required:**
+  - Video showing real-time sync with 2 devices
+  - Screenshots of presence indicators
+  - Test of conflict resolution
+  - Offline queue test
+
+- **Documents to Update:**
+  - `API_DOCUMENTATION.md` - Add Socket.io docs
+  - `TROUBLESHOOTING.md` - Add real-time sync issues
+
+---
+
+### P14-T03: Create Join Team Inspection Screen
+
+- **Copilot Prompt:**
+  ```
+  Please complete task P14-T03: Create Join Team Inspection Screen.
+
+  Follow the Standard Copilot Operating Procedures (SOPs) outlined in BUILD_CHECKLIST.md:
+  1. Acknowledge & Analyze this task
+  2. Plan & Execute the steps
+  3. Test & Validate locally
+  4. Verify & Document with evidence
+  5. Handle any blockers
+  6. Update & Finalize documentation
+
+  TASK: Create Join Team Inspection Screen for collaborating on shared inspections.
+
+  Features:
+  1. Display active team inspections
+  2. Join inspection via code
+  3. Join inspection via QR scan
+  4. Display team members in inspection
+  5. Show real-time activity feed
+  6. Role-based action permissions
+  7. Leave inspection option
+
+  Reference: IMPLEMENTATION_ROADMAP.md Phase 14, Section 14.3
+  Reference: Smart_Inspector_Pro_Build_Layout.md Phase 3.3
+
+  File: mobile/src/screens/inspection/JoinTeamInspectionScreen.tsx
+
+  After completing all acceptance criteria with evidence, check off this task: [x] P14-T03
+  ```
+
+- **Goal:** Create screen for joining team inspections
+
+- **Prerequisites:** P14-T02 complete
+
+- **Copilot Reference:**
+  - `IMPLEMENTATION_ROADMAP.md` - Phase 14, Section 14.3
+  - `Smart_Inspector_Pro_Build_Layout.md` - Phase 3.3
+
+- **Steps:**
+  1. [ ] Create JoinTeamInspectionScreen
+  2. [ ] Load active team inspections
+  3. [ ] Display inspection list with team info
+  4. [ ] Add join via code input
+  5. [ ] Add join via QR scan
+  6. [ ] Display team members in inspection
+  7. [ ] Show real-time activity feed
+  8. [ ] Enforce role-based permissions
+  9. [ ] Add leave inspection button
+  10. [ ] Test join flow
+
+- **Acceptance Criteria:**
+  - [ ] Active inspections display correctly
+  - [ ] Can join via code
+  - [ ] Can join via QR scan
+  - [ ] Team members display with roles
+  - [ ] Activity feed shows real-time updates
+  - [ ] Permissions enforced by role
+  - [ ] Can leave inspection
+  - [ ] Socket.io room joined on entry
+
+- **Evidence Required:**
+  - Screenshots of join inspection screen
+  - Video showing join via code and QR
+  - Screenshot of activity feed
+  - Test of role permissions
+
+- **Documents to Update:**
+  - `BUILD_NOTES.md` - Document team inspection joining
+  - `TESTING_GUIDELINES.md` - Add team collaboration tests
+
+---
+
+## Phase 15: Business Tools Suite (Days 59-63)
+
+### P15-T01: Create Calendar Integration
+
+- **Copilot Prompt:**
+  ```
+  Please complete task P15-T01: Create Calendar Integration.
+
+  Follow the Standard Copilot Operating Procedures (SOPs) outlined in BUILD_CHECKLIST.md:
+  1. Acknowledge & Analyze this task
+  2. Plan & Execute the steps
+  3. Test & Validate locally
+  4. Verify & Document with evidence
+  5. Handle any blockers
+  6. Update & Finalize documentation
+
+  TASK: Create calendar system for scheduling inspections and appointments.
+
+  Features:
+  1. Calendar view (month, week, day)
+  2. Schedule inspection appointments
+  3. Set reminders and notifications
+  4. Sync with device calendar (iOS Calendar, Google Calendar)
+  5. View scheduled inspections
+  6. Drag-and-drop rescheduling
+  7. Color-coded by status
+  8. Export calendar to ICS file
+
+  Reference: IMPLEMENTATION_ROADMAP.md Phase 15, Section 15.1
+
+  Install: npm install react-native-calendars react-native-calendar-events
+
+  Files:
+  - mobile/src/screens/business/CalendarScreen.tsx
+  - mobile/src/services/calendar.service.ts
+
+  After completing all acceptance criteria with evidence, check off this task: [x] P15-T01
+  ```
+
+- **Goal:** Create calendar system for appointment scheduling
+
+- **Prerequisites:** P9-T01 complete (inspection state)
+
+- **Copilot Reference:**
+  - `IMPLEMENTATION_ROADMAP.md` - Phase 15
+
+- **Steps:**
+  1. [ ] Install react-native-calendars and react-native-calendar-events
+  2. [ ] Create CalendarScreen with month/week/day views
+  3. [ ] Create calendar.service.ts
+  4. [ ] Implement schedule appointment functionality
+  5. [ ] Add reminder/notification system
+  6. [ ] Integrate device calendar sync
+  7. [ ] Add drag-and-drop rescheduling
+  8. [ ] Implement color-coding by status
+  9. [ ] Add ICS export functionality
+  10. [ ] Test calendar sync
+
+- **Acceptance Criteria:**
+  - [ ] Calendar displays all views (month, week, day)
+  - [ ] Can schedule appointments
+  - [ ] Reminders trigger notifications
+  - [ ] Syncs with device calendar
+  - [ ] Drag-and-drop rescheduling works
+  - [ ] Color-coding accurate
+  - [ ] Can export to ICS file
+  - [ ] Calendar updates in real-time
+
+- **Evidence Required:**
+  - Screenshots of all calendar views
+  - Video showing scheduling and rescheduling
+  - Screenshot of device calendar showing synced event
+  - Test of notification
+
+- **Documents to Update:**
+  - `BUILD_NOTES.md` - Document calendar integration
+  - `API_DOCUMENTATION.md` - Add calendar service docs
+
+---
+
+### P15-T02: Create Contacts Management
+
+- **Copilot Prompt:**
+  ```
+  Please complete task P15-T02: Create Contacts Management.
+
+  Follow the Standard Copilot Operating Procedures (SOPs) outlined in BUILD_CHECKLIST.md:
+  1. Acknowledge & Analyze this task
+  2. Plan & Execute the steps
+  3. Test & Validate locally
+  4. Verify & Document with evidence
+  5. Handle any blockers
+  6. Update & Finalize documentation
+
+  TASK: Create contacts management system for clients and business contacts.
+
+  Features:
+  1. Add/edit/delete contacts
+  2. Contact fields (name, email, phone, address, notes)
+  3. Contact categories (client, contractor, supplier, other)
+  4. Search and filter contacts
+  5. Link contacts to inspections
+  6. Import from device contacts
+  7. Export contacts to vCard
+  8. Quick actions (call, email, message)
+
+  Reference: IMPLEMENTATION_ROADMAP.md Phase 15, Section 15.2
+
+  Install: npm install react-native-contacts
+
+  Files:
+  - mobile/src/screens/business/ContactsScreen.tsx
+  - mobile/src/services/contacts.service.ts
+  - mobile/src/types/contact.types.ts
+
+  After completing all acceptance criteria with evidence, check off this task: [x] P15-T02
+  ```
+
+- **Goal:** Create contacts management system
+
+- **Prerequisites:** None (standalone feature)
+
+- **Copilot Reference:**
+  - `IMPLEMENTATION_ROADMAP.md` - Phase 15, Section 15.2
+
+- **Steps:**
+  1. [ ] Install react-native-contacts
+  2. [ ] Create contact.types.ts
+  3. [ ] Create contacts.service.ts
+  4. [ ] Create ContactsScreen with list view
+  5. [ ] Implement add/edit/delete functionality
+  6. [ ] Add contact form with all fields
+  7. [ ] Implement categories
+  8. [ ] Add search and filter
+  9. [ ] Link contacts to inspections
+  10. [ ] Import from device contacts
+  11. [ ] Export to vCard
+  12. [ ] Add quick actions (call, email, message)
+
+- **Acceptance Criteria:**
+  - [ ] Can add/edit/delete contacts
+  - [ ] All contact fields save correctly
+  - [ ] Categories work
+  - [ ] Search filters contacts
+  - [ ] Contacts link to inspections
+  - [ ] Can import from device
+  - [ ] Can export to vCard
+  - [ ] Quick actions launch apps (Phone, Mail, Messages)
+
+- **Evidence Required:**
+  - Screenshots of contacts screen
+  - Video showing add/edit/delete flow
+  - Test of device import
+  - Test of quick actions
+
+- **Documents to Update:**
+  - `BUILD_NOTES.md` - Document contacts management
+  - `API_DOCUMENTATION.md` - Add contacts service docs
+
+---
+
+### P15-T03: Create Basic Accounting Tools
+
+- **Copilot Prompt:**
+  ```
+  Please complete task P15-T03: Create Basic Accounting Tools.
+
+  Follow the Standard Copilot Operating Procedures (SOPs) outlined in BUILD_CHECKLIST.md:
+  1. Acknowledge & Analyze this task
+  2. Plan & Execute the steps
+  3. Test & Validate locally
+  4. Verify & Document with evidence
+  5. Handle any blockers
+  6. Update & Finalize documentation
+
+  TASK: Create basic accounting tools for tracking income and expenses.
+
+  Features:
+  1. Add income entries (inspection fees)
+  2. Add expense entries (travel, supplies, subscriptions)
+  3. Expense categories
+  4. Receipt photo attachment
+  5. Monthly/yearly reports
+  6. Income vs. expenses chart
+  7. Export to CSV for accountant
+  8. Tax category tagging
+
+  Reference: IMPLEMENTATION_ROADMAP.md Phase 15, Section 15.3
+
+  Files:
+  - mobile/src/screens/business/AccountingScreen.tsx
+  - mobile/src/services/accounting.service.ts
+  - mobile/src/types/accounting.types.ts
+
+  After completing all acceptance criteria with evidence, check off this task: [x] P15-T03
+  ```
+
+- **Goal:** Create basic accounting and financial tracking
+
+- **Prerequisites:** P9-T01 complete (inspection data for income)
+
+- **Copilot Reference:**
+  - `IMPLEMENTATION_ROADMAP.md` - Phase 15, Section 15.3
+
+- **Steps:**
+  1. [ ] Create accounting.types.ts
+  2. [ ] Create accounting.service.ts
+  3. [ ] Create AccountingScreen
+  4. [ ] Implement income entry form
+  5. [ ] Implement expense entry form
+  6. [ ] Add expense categories
+  7. [ ] Add receipt photo attachment
+  8. [ ] Generate monthly/yearly reports
+  9. [ ] Create income vs. expenses chart
+  10. [ ] Implement CSV export
+  11. [ ] Add tax category tagging
+  12. [ ] Test calculations
+
+- **Acceptance Criteria:**
+  - [ ] Can add income entries
+  - [ ] Can add expense entries
+  - [ ] Categories work correctly
+  - [ ] Can attach receipt photos
+  - [ ] Reports generate accurately
+  - [ ] Chart displays correctly
+  - [ ] CSV export includes all data
+  - [ ] Tax categories tag entries
+  - [ ] Calculations accurate
+
+- **Evidence Required:**
+  - Screenshots of accounting screens
+  - Sample monthly report
+  - Screenshot of income vs. expenses chart
+  - Sample CSV export file
+
+- **Documents to Update:**
+  - `BUILD_NOTES.md` - Document accounting tools
+  - `API_DOCUMENTATION.md` - Add accounting service docs
+
+---
+
+## Phase 16: Marketplace (Days 64-67)
+
+### P16-T01: Create Marketplace Browser
+
+- **Copilot Prompt:**
+  ```
+  Please complete task P16-T01: Create Marketplace Browser.
+
+  Follow the Standard Copilot Operating Procedures (SOPs) outlined in BUILD_CHECKLIST.md:
+  1. Acknowledge & Analyze this task
+  2. Plan & Execute the steps
+  3. Test & Validate locally
+  4. Verify & Document with evidence
+  5. Handle any blockers
+  6. Update & Finalize documentation
+
+  TASK: Create marketplace for browsing and purchasing CSV add-ons and custom workflows.
+
+  Features:
+  1. Browse available CSV add-ons (commercial, multi-family, etc.)
+  2. Browse custom workflows from community
+  3. Search and filter by category
+  4. View item details (description, preview, price, ratings)
+  5. Sample data preview
+  6. Purchase workflow (in-app purchase)
+  7. Download and install add-ons
+  8. My Purchases screen
+
+  Reference: IMPLEMENTATION_ROADMAP.md Phase 16, Section 16.1
+  Reference: Smart_Inspector_Pro_Build_Layout.md Phase 8 for marketplace design
+
+  Files:
+  - mobile/src/screens/marketplace/MarketplaceScreen.tsx
+  - mobile/src/services/marketplace.service.ts
+
+  After completing all acceptance criteria with evidence, check off this task: [x] P16-T01
+  ```
+
+- **Goal:** Create marketplace for CSV add-ons and workflows
+
+- **Prerequisites:** P11-T01 complete (workflow system)
+
+- **Copilot Reference:**
+  - `IMPLEMENTATION_ROADMAP.md` - Phase 16
+  - `Smart_Inspector_Pro_Build_Layout.md` - Phase 8
+
+- **Steps:**
+  1. [ ] Create MarketplaceScreen
+  2. [ ] Create marketplace.service.ts
+  3. [ ] Design marketplace item structure
+  4. [ ] Implement browse functionality
+  5. [ ] Add search and filter
+  6. [ ] Create item detail screen
+  7. [ ] Add sample data preview
+  8. [ ] Integrate in-app purchase (Stripe)
+  9. [ ] Implement download and install
+  10. [ ] Create My Purchases screen
+  11. [ ] Test purchase flow
+
+- **Acceptance Criteria:**
+  - [ ] Marketplace displays all items
+  - [ ] Search and filter work
+  - [ ] Item details display correctly
+  - [ ] Sample preview works
+  - [ ] In-app purchase completes
+  - [ ] Add-ons download and install
+  - [ ] My Purchases shows owned items
+  - [ ] Can re-download purchased items
+
+- **Evidence Required:**
+  - Screenshots of marketplace screens
+  - Video showing complete purchase flow
+  - Test of add-on installation
+  - Screenshot of My Purchases
+
+- **Documents to Update:**
+  - `BUILD_NOTES.md` - Document marketplace
+  - `API_DOCUMENTATION.md` - Add marketplace service docs
+
+---
+
+### P16-T02: Create Workflow Publishing System
+
+- **Copilot Prompt:**
+  ```
+  Please complete task P16-T02: Create Workflow Publishing System.
+
+  Follow the Standard Copilot Operating Procedures (SOPs) outlined in BUILD_CHECKLIST.md:
+  1. Acknowledge & Analyze this task
+  2. Plan & Execute the steps
+  3. Test & Validate locally
+  4. Verify & Document with evidence
+  5. Handle any blockers
+  6. Update & Finalize documentation
+
+  TASK: Create system for users to publish their custom workflows to marketplace.
+
+  Features:
+  1. Publish workflow to marketplace
+  2. Set workflow metadata (name, description, price, category)
+  3. Add workflow preview images
+  4. Set pricing (free or paid)
+  5. Review and approval process
+  6. Track downloads and revenue
+  7. Update published workflows
+  8. Remove/unpublish workflows
+
+  Reference: IMPLEMENTATION_ROADMAP.md Phase 16, Section 16.2
+
+  Files:
+  - mobile/src/screens/marketplace/PublishWorkflowScreen.tsx
+  - mobile/src/services/workflow-publish.service.ts
+
+  After completing all acceptance criteria with evidence, check off this task: [x] P16-T02
+  ```
+
+- **Goal:** Enable users to publish workflows to marketplace
+
+- **Prerequisites:** P16-T01 complete
+
+- **Copilot Reference:**
+  - `IMPLEMENTATION_ROADMAP.md` - Phase 16, Section 16.2
+
+- **Steps:**
+  1. [ ] Create PublishWorkflowScreen
+  2. [ ] Create workflow-publish.service.ts
+  3. [ ] Build publish form (metadata, pricing)
+  4. [ ] Add preview image upload
+  5. [ ] Implement validation
+  6. [ ] Add review submission
+  7. [ ] Create publisher dashboard
+  8. [ ] Track downloads and revenue
+  9. [ ] Add update workflow functionality
+  10. [ ] Add unpublish functionality
+  11. [ ] Test complete publishing flow
+
+- **Acceptance Criteria:**
+  - [ ] Can publish workflow
+  - [ ] All metadata saved correctly
+  - [ ] Preview images upload
+  - [ ] Pricing set correctly (free or paid)
+  - [ ] Workflow submitted for review
+  - [ ] Dashboard shows downloads and revenue
+  - [ ] Can update published workflows
+  - [ ] Can unpublish workflows
+
+- **Evidence Required:**
+  - Screenshots of publish workflow screen
+  - Video showing complete publishing flow
+  - Screenshot of publisher dashboard
+  - Test showing workflow in marketplace
+
+- **Documents to Update:**
+  - `BUILD_NOTES.md` - Document workflow publishing
+  - `API_DOCUMENTATION.md` - Add publishing service docs
+
+---
+
+### P16-T03: Integrate Payment Processing
+
+- **Copilot Prompt:**
+  ```
+  Please complete task P16-T03: Integrate Payment Processing.
+
+  Follow the Standard Copilot Operating Procedures (SOPs) outlined in BUILD_CHECKLIST.md:
+  1. Acknowledge & Analyze this task
+  2. Plan & Execute the steps
+  3. Test & Validate locally
+  4. Verify & Document with evidence
+  5. Handle any blockers
+  6. Update & Finalize documentation
+
+  TASK: Integrate Stripe for marketplace payments and subscriptions.
+
+  Features:
+  1. Stripe SDK integration
+  2. One-time purchases for workflows/add-ons
+  3. Subscription management (upgrade/downgrade tiers)
+  4. Payment method management (add/remove cards)
+  5. Purchase history
+  6. Receipt generation
+  7. Refund handling
+  8. Webhook integration for payment events
+
+  Reference: IMPLEMENTATION_ROADMAP.md Phase 16, Section 16.3
+  Reference: MEMBERSHIP_TIERS_REVISED.md for subscription tiers
+
+  Install: npm install @stripe/stripe-react-native
+
+  Files:
+  - mobile/src/services/payment.service.ts
+  - mobile/src/screens/settings/SubscriptionScreen.tsx
+
+  After completing all acceptance criteria with evidence, check off this task: [x] P16-T03
+  ```
+
+- **Goal:** Integrate Stripe for payments and subscriptions
+
+- **Prerequisites:** P16-T01 complete
+
+- **Copilot Reference:**
+  - `IMPLEMENTATION_ROADMAP.md` - Phase 16, Section 16.3
+  - `MEMBERSHIP_TIERS_REVISED.md`
+
+- **Steps:**
+  1. [ ] Install @stripe/stripe-react-native
+  2. [ ] Create payment.service.ts
+  3. [ ] Configure Stripe SDK
+  4. [ ] Implement one-time purchase flow
+  5. [ ] Implement subscription flow
+  6. [ ] Create SubscriptionScreen
+  7. [ ] Add payment method management
+  8. [ ] Display purchase history
+  9. [ ] Generate receipts
+  10. [ ] Handle refunds
+  11. [ ] Integrate webhooks
+  12. [ ] Test all payment flows
+
+- **Acceptance Criteria:**
+  - [ ] Stripe SDK configured
+  - [ ] Can complete one-time purchases
+  - [ ] Can subscribe to Professional tier ($89.99/mo)
+  - [ ] Can subscribe to Enterprise tier ($149.99/mo)
+  - [ ] Can upgrade/downgrade subscriptions
+  - [ ] Can add/remove payment methods
+  - [ ] Purchase history displays
+  - [ ] Receipts generate correctly
+  - [ ] Refunds process
+  - [ ] Webhooks receive events
+
+- **Evidence Required:**
+  - Test purchase in Stripe test mode
+  - Screenshot of subscription screen
+  - Screenshot of payment method management
+  - Webhook event log
+
+- **Documents to Update:**
+  - `BUILD_NOTES.md` - Document payment integration
+  - `API_DOCUMENTATION.md` - Add payment service docs
+  - `TROUBLESHOOTING.md` - Add payment issues
+
+---
+
+## Phase 17: Testing & QA (Days 68-74)
+
+### P17-T01: Comprehensive Unit Testing
+
+- **Copilot Prompt:**
+  ```
+  Please complete task P17-T01: Comprehensive Unit Testing.
+
+  Follow the Standard Copilot Operating Procedures (SOPs) outlined in BUILD_CHECKLIST.md:
+  1. Acknowledge & Analyze this task
+  2. Plan & Execute the steps
+  3. Test & Validate locally
+  4. Verify & Document with evidence
+  5. Handle any blockers
+  6. Update & Finalize documentation
+
+  TASK: Write comprehensive unit tests for all business logic and services.
+
+  Test Coverage:
+  1. Authentication service tests
+  2. Database service tests
+  3. CSV parser service tests
+  4. Photo upload service tests
+  5. Workflow service tests
+  6. OpenAI service tests (mocked)
+  7. PDF generator tests
+  8. Payment service tests (mocked)
+  9. Redux slice tests
+  10. Utility function tests
+
+  Target: 80%+ code coverage
+
+  Reference: IMPLEMENTATION_ROADMAP.md Phase 17, Section 17.1
+  Reference: TESTING_GUIDELINES.md
+
+  Install: npm install --save-dev @testing-library/react-native jest
+
+  After completing all acceptance criteria with evidence, check off this task: [x] P17-T01
+  ```
+
+- **Goal:** Achieve 80%+ unit test coverage
+
+- **Prerequisites:** All services implemented (P1-P16)
+
+- **Copilot Reference:**
+  - `IMPLEMENTATION_ROADMAP.md` - Phase 17
+  - `TESTING_GUIDELINES.md`
+
+- **Steps:**
+  1. [ ] Install testing libraries
+  2. [ ] Configure Jest
+  3. [ ] Write auth service tests
+  4. [ ] Write database service tests
+  5. [ ] Write CSV parser tests
+  6. [ ] Write photo upload tests
+  7. [ ] Write workflow service tests
+  8. [ ] Write OpenAI service tests (mocked)
+  9. [ ] Write PDF generator tests
+  10. [ ] Write payment service tests (mocked)
+  11. [ ] Write Redux slice tests
+  12. [ ] Write utility tests
+  13. [ ] Run coverage report
+  14. [ ] Fix failing tests
+
+- **Acceptance Criteria:**
+  - [ ] 80%+ code coverage achieved
+  - [ ] All critical paths tested
+  - [ ] All tests passing
+  - [ ] Mocks configured correctly
+  - [ ] Coverage report generated
+  - [ ] No flaky tests
+
+- **Evidence Required:**
+  - Coverage report showing 80%+
+  - Test output showing all tests passing
+  - Number of unit tests written
+
+- **Documents to Update:**
+  - `TESTING_GUIDELINES.md` - Add unit testing examples
+  - `BUILD_NOTES.md` - Document test coverage
+
+---
+
+### P17-T02: Integration and E2E Testing
+
+- **Copilot Prompt:**
+  ```
+  Please complete task P17-T02: Integration and E2E Testing.
+
+  Follow the Standard Copilot Operating Procedures (SOPs) outlined in BUILD_CHECKLIST.md:
+  1. Acknowledge & Analyze this task
+  2. Plan & Execute the steps
+  3. Test & Validate locally
+  4. Verify & Document with evidence
+  5. Handle any blockers
+  6. Update & Finalize documentation
+
+  TASK: Write integration and end-to-end tests for critical user flows.
+
+  Critical Flows to Test:
+  1. Complete authentication flow (register → verify → login)
+  2. Create inspection → capture photo → complete workflow
+  3. Generate PDF report from inspection
+  4. Team inspection collaboration
+  5. Workflow creation and sharing
+  6. Marketplace purchase flow
+  7. Offline sync when back online
+  8. Photo upload queue and retry
+
+  Reference: IMPLEMENTATION_ROADMAP.md Phase 17, Section 17.2
+
+  Install: npm install --save-dev detox
+
+  After completing all acceptance criteria with evidence, check off this task: [x] P17-T02
+  ```
+
+- **Goal:** Test all critical user flows end-to-end
+
+- **Prerequisites:** P17-T01 complete
+
+- **Copilot Reference:**
+  - `IMPLEMENTATION_ROADMAP.md` - Phase 17, Section 17.2
+
+- **Steps:**
+  1. [ ] Install Detox for E2E testing
+  2. [ ] Configure Detox for iOS and Android
+  3. [ ] Write authentication E2E test
+  4. [ ] Write inspection workflow E2E test
+  5. [ ] Write report generation E2E test
+  6. [ ] Write team collaboration E2E test
+  7. [ ] Write workflow sharing E2E test
+  8. [ ] Write marketplace purchase E2E test
+  9. [ ] Write offline sync E2E test
+  10. [ ] Write photo upload E2E test
+  11. [ ] Run all E2E tests
+  12. [ ] Fix failing tests
+
+- **Acceptance Criteria:**
+  - [ ] All 8 critical flows tested
+  - [ ] Tests run on iOS
+  - [ ] Tests run on Android
+  - [ ] All E2E tests passing
+  - [ ] Tests complete in reasonable time (<10 min)
+
+- **Evidence Required:**
+  - Video of E2E tests running
+  - Test output showing all tests passing
+  - Execution time for full suite
+
+- **Documents to Update:**
+  - `TESTING_GUIDELINES.md` - Add E2E testing guide
+  - `BUILD_NOTES.md` - Document E2E testing
+
+---
+
+### P17-T03: Cross-Platform Testing and Bug Fixes
+
+- **Copilot Prompt:**
+  ```
+  Please complete task P17-T03: Cross-Platform Testing and Bug Fixes.
+
+  Follow the Standard Copilot Operating Procedures (SOPs) outlined in BUILD_CHECKLIST.md:
+  1. Acknowledge & Analyze this task
+  2. Plan & Execute the steps
+  3. Test & Validate locally
+  4. Verify & Document with evidence
+  5. Handle any blockers
+  6. Update & Finalize documentation
+
+  TASK: Comprehensive testing on iOS and Android devices with bug fixes.
+
+  Testing Matrix:
+  1. iOS devices: iPhone SE, iPhone 14, iPhone 14 Pro, iPad Pro
+  2. Android devices: Pixel 5, Pixel 7, Samsung Galaxy S23, Tablet
+  3. Test all screens and features
+  4. Document platform-specific issues
+  5. Fix critical bugs
+  6. Test dark mode on all screens
+  7. Test accessibility features
+  8. Performance testing (FPS, memory, battery)
+
+  Reference: IMPLEMENTATION_ROADMAP.md Phase 17, Section 17.3
+
+  After completing all acceptance criteria with evidence, check off this task: [x] P17-T03
+  ```
+
+- **Goal:** Test on all devices and fix platform-specific bugs
+
+- **Prerequisites:** P17-T02 complete
+
+- **Copilot Reference:**
+  - `IMPLEMENTATION_ROADMAP.md` - Phase 17, Section 17.3
+
+- **Steps:**
+  1. [ ] Test on iPhone SE (iOS 16+)
+  2. [ ] Test on iPhone 14 (iOS 17)
+  3. [ ] Test on iPhone 14 Pro (iOS 17)
+  4. [ ] Test on iPad Pro (iOS 17)
+  5. [ ] Test on Pixel 5 (Android 13)
+  6. [ ] Test on Pixel 7 (Android 14)
+  7. [ ] Test on Samsung Galaxy S23 (Android 14)
+  8. [ ] Test on Android tablet
+  9. [ ] Document all bugs found
+  10. [ ] Fix critical bugs
+  11. [ ] Test dark mode on all devices
+  12. [ ] Test accessibility (VoiceOver, TalkBack)
+  13. [ ] Run performance benchmarks
+
+- **Acceptance Criteria:**
+  - [ ] Tested on 4+ iOS devices
+  - [ ] Tested on 4+ Android devices
+  - [ ] All critical bugs fixed
+  - [ ] Dark mode works on all screens
+  - [ ] Accessibility features functional
+  - [ ] Performance meets benchmarks (60fps, <100MB RAM)
+  - [ ] No platform-specific crashes
+
+- **Evidence Required:**
+  - Bug report with all issues found
+  - Screenshots from each device type
+  - Performance benchmark results
+  - Test checklist showing completed tests
+
+- **Documents to Update:**
+  - `TROUBLESHOOTING.md` - Add known issues and fixes
+  - `BUILD_NOTES.md` - Document testing results
+  - `CHANGELOG.md` - Add bug fixes
+
+---
+
+## Phase 18: Performance Optimization (Days 75-79)
+
+### P18-T01: Optimize Bundle Size and Startup Time
+
+- **Copilot Prompt:**
+  ```
+  Please complete task P18-T01: Optimize Bundle Size and Startup Time.
+
+  Follow the Standard Copilot Operating Procedures (SOPs) outlined in BUILD_CHECKLIST.md:
+  1. Acknowledge & Analyze this task
+  2. Plan & Execute the steps
+  3. Test & Validate locally
+  4. Verify & Document with evidence
+  5. Handle any blockers
+  6. Update & Finalize documentation
+
+  TASK: Optimize app bundle size and improve startup performance.
+
+  Optimizations:
+  1. Enable Hermes engine
+  2. Enable ProGuard (Android)
+  3. Strip unused code
+  4. Optimize images and assets
+  5. Code splitting and lazy loading
+  6. Remove console.log statements
+  7. Bundle analysis and tree shaking
+  8. Reduce startup time to <3 seconds
+
+  Target: Bundle size <50MB, Startup <3s
+
+  Reference: IMPLEMENTATION_ROADMAP.md Phase 18, Section 18.1
+
+  After completing all acceptance criteria with evidence, check off this task: [x] P18-T01
+  ```
+
+- **Goal:** Reduce bundle size and improve startup performance
+
+- **Prerequisites:** P17-T03 complete (all features tested)
+
+- **Copilot Reference:**
+  - `IMPLEMENTATION_ROADMAP.md` - Phase 18
+
+- **Steps:**
+  1. [ ] Enable Hermes engine (if not already)
+  2. [ ] Configure ProGuard for Android release
+  3. [ ] Run bundle analyzer
+  4. [ ] Remove unused dependencies
+  5. [ ] Optimize all images (compress, WebP)
+  6. [ ] Implement code splitting
+  7. [ ] Lazy load non-critical screens
+  8. [ ] Remove console.log statements
+  9. [ ] Enable tree shaking
+  10. [ ] Measure bundle size
+  11. [ ] Measure startup time
+  12. [ ] Optimize until targets met
+
+- **Acceptance Criteria:**
+  - [ ] Hermes engine enabled
+  - [ ] ProGuard configured
+  - [ ] Bundle size <50MB (iOS and Android)
+  - [ ] Startup time <3 seconds
+  - [ ] No unused dependencies
+  - [ ] Images optimized
+  - [ ] Code splitting implemented
+  - [ ] Console statements removed
+
+- **Evidence Required:**
+  - Bundle size report (before/after)
+  - Startup time benchmark (before/after)
+  - Bundle analyzer screenshot
+  - App size in MB
+
+- **Documents to Update:**
+  - `BUILD_NOTES.md` - Document optimizations
+  - `DEPLOYMENT_GUIDE.md` - Add optimization steps
+
+---
+
+### P18-T02: Optimize Rendering and Animation Performance
+
+- **Copilot Prompt:**
+  ```
+  Please complete task P18-T02: Optimize Rendering and Animation Performance.
+
+  Follow the Standard Copilot Operating Procedures (SOPs) outlined in BUILD_CHECKLIST.md:
+  1. Acknowledge & Analyze this task
+  2. Plan & Execute the steps
+  3. Test & Validate locally
+  4. Verify & Document with evidence
+  5. Handle any blockers
+  6. Update & Finalize documentation
+
+  TASK: Optimize rendering performance and smooth animations.
+
+  Optimizations:
+  1. Use FlatList for large lists (pagination, windowSize)
+  2. Implement React.memo for expensive components
+  3. Use useCallback and useMemo appropriately
+  4. Optimize image rendering (FastImage)
+  5. Use native driver for animations
+  6. Reduce re-renders
+  7. Profile with React DevTools
+  8. Maintain 60fps during scrolling and animations
+
+  Target: 60fps consistently
+
+  Reference: IMPLEMENTATION_ROADMAP.md Phase 18, Section 18.2
+
+  After completing all acceptance criteria with evidence, check off this task: [x] P18-T02
+  ```
+
+- **Goal:** Achieve smooth 60fps performance
+
+- **Prerequisites:** P18-T01 complete
+
+- **Copilot Reference:**
+  - `IMPLEMENTATION_ROADMAP.md` - Phase 18, Section 18.2
+
+- **Steps:**
+  1. [ ] Audit all FlatList configurations
+  2. [ ] Optimize windowSize and pagination
+  3. [ ] Apply React.memo to expensive components
+  4. [ ] Add useCallback for event handlers
+  5. [ ] Add useMemo for expensive calculations
+  6. [ ] Replace Image with FastImage
+  7. [ ] Enable native driver for all animations
+  8. [ ] Profile components with React DevTools
+  9. [ ] Reduce unnecessary re-renders
+  10. [ ] Test FPS during heavy operations
+  11. [ ] Fix performance bottlenecks
+
+- **Acceptance Criteria:**
+  - [ ] All lists use FlatList with optimization
+  - [ ] React.memo applied to heavy components
+  - [ ] useCallback and useMemo used appropriately
+  - [ ] FastImage used for all images
+  - [ ] Native driver enabled for animations
+  - [ ] 60fps maintained during scrolling
+  - [ ] 60fps maintained during animations
+  - [ ] No performance warnings
+
+- **Evidence Required:**
+  - FPS measurements during heavy operations
+  - React DevTools profiler screenshots
+  - Before/after performance comparison
+
+- **Documents to Update:**
+  - `CODE_STANDARDS.md` - Add performance best practices
+  - `BUILD_NOTES.md` - Document performance improvements
+
+---
+
+### P18-T03: Memory and Network Optimization
+
+- **Copilot Prompt:**
+  ```
+  Please complete task P18-T03: Memory and Network Optimization.
+
+  Follow the Standard Copilot Operating Procedures (SOPs) outlined in BUILD_CHECKLIST.md:
+  1. Acknowledge & Analyze this task
+  2. Plan & Execute the steps
+  3. Test & Validate locally
+  4. Verify & Document with evidence
+  5. Handle any blockers
+  6. Update & Finalize documentation
+
+  TASK: Optimize memory usage and network efficiency.
+
+  Optimizations:
+  1. Fix memory leaks
+  2. Implement image caching
+  3. Reduce API calls (caching, batching)
+  4. Optimize database queries
+  5. Implement request debouncing
+  6. Compress network payloads
+  7. Monitor memory usage
+  8. Optimize SQLite performance
+
+  Target: <100MB RAM, <50% network reduction
+
+  Reference: IMPLEMENTATION_ROADMAP.md Phase 18, Section 18.3
+
+  After completing all acceptance criteria with evidence, check off this task: [x] P18-T03
+  ```
+
+- **Goal:** Optimize memory and network usage
+
+- **Prerequisites:** P18-T02 complete
+
+- **Copilot Reference:**
+  - `IMPLEMENTATION_ROADMAP.md` - Phase 18, Section 18.3
+
+- **Steps:**
+  1. [ ] Profile memory usage
+  2. [ ] Fix memory leaks (listeners, timers)
+  3. [ ] Implement FastImage for caching
+  4. [ ] Add API response caching
+  5. [ ] Batch API requests where possible
+  6. [ ] Optimize database queries (indexes)
+  7. [ ] Add request debouncing (search)
+  8. [ ] Compress JSON payloads
+  9. [ ] Monitor memory over time
+  10. [ ] Test with large datasets
+
+- **Acceptance Criteria:**
+  - [ ] No memory leaks detected
+  - [ ] Memory usage <100MB average
+  - [ ] Image caching implemented
+  - [ ] API calls reduced by 50%+
+  - [ ] Database queries optimized
+  - [ ] Request debouncing works
+  - [ ] Network payloads compressed
+  - [ ] App runs smoothly with 1000+ records
+
+- **Evidence Required:**
+  - Memory profiler screenshots
+  - Network traffic comparison (before/after)
+  - Database query performance benchmarks
+
+- **Documents to Update:**
+  - `BUILD_NOTES.md` - Document optimizations
+  - `TROUBLESHOOTING.md` - Add performance issues
+
+---
+
+## Phase 19: App Store Preparation (Days 80-85)
+
+### P19-T01: Prepare App Store Assets
+
+- **Copilot Prompt:**
+  ```
+  Please complete task P19-T01: Prepare App Store Assets.
+
+  Follow the Standard Copilot Operating Procedures (SOPs) outlined in BUILD_CHECKLIST.md:
+  1. Acknowledge & Analyze this task
+  2. Plan & Execute the steps
+  3. Test & Validate locally
+  4. Verify & Document with evidence
+  5. Handle any blockers
+  6. Update & Finalize documentation
+
+  TASK: Create all required assets for App Store and Google Play submissions.
+
+  Assets Needed:
+  1. App icons (all sizes for iOS and Android)
+  2. Launch screens (iOS and Android)
+  3. Screenshots (6.5", 5.5", 12.9" iPad, Android variants)
+  4. App preview videos (30 seconds, iOS and Android)
+  5. Feature graphics (1024x500 for Play Store)
+  6. Promotional graphics
+  7. App descriptions (short and long)
+  8. Keywords and metadata
+  9. Privacy policy and terms of service
+  10. Support URL and marketing URL
+
+  Reference: IMPLEMENTATION_ROADMAP.md Phase 19, Section 19.1
+
+  After completing all acceptance criteria with evidence, check off this task: [x] P19-T01
+  ```
+
+- **Goal:** Create all App Store and Play Store assets
+
+- **Prerequisites:** P18-T03 complete (app fully optimized)
+
+- **Copilot Reference:**
+  - `IMPLEMENTATION_ROADMAP.md` - Phase 19
+
+- **Steps:**
+  1. [ ] Design app icon (1024x1024)
+  2. [ ] Generate all icon sizes
+  3. [ ] Create launch screens
+  4. [ ] Capture screenshots (all required sizes)
+  5. [ ] Record app preview videos
+  6. [ ] Create feature graphics
+  7. [ ] Write app descriptions
+  8. [ ] Research keywords
+  9. [ ] Write privacy policy
+  10. [ ] Write terms of service
+  11. [ ] Set up support website
+  12. [ ] Organize all assets
+
+- **Acceptance Criteria:**
+  - [ ] App icon in all required sizes
+  - [ ] Launch screens for iOS and Android
+  - [ ] Screenshots for all device sizes
+  - [ ] App preview videos (<30 seconds)
+  - [ ] Feature graphic created
+  - [ ] App descriptions written (engaging)
+  - [ ] Keywords researched
+  - [ ] Privacy policy published
+  - [ ] Terms of service published
+  - [ ] Support URL active
+
+- **Evidence Required:**
+  - All icon files
+  - All screenshot files
+  - App preview videos
+  - App description text
+  - Links to privacy policy and terms
+
+- **Documents to Update:**
+  - `DEPLOYMENT_GUIDE.md` - Add asset requirements
+  - `BUILD_NOTES.md` - Document asset creation
+
+---
+
+### P19-T02: Configure App Store Listings
+
+- **Copilot Prompt:**
+  ```
+  Please complete task P19-T02: Configure App Store Listings.
+
+  Follow the Standard Copilot Operating Procedures (SOPs) outlined in BUILD_CHECKLIST.md:
+  1. Acknowledge & Analyze this task
+  2. Plan & Execute the steps
+  3. Test & Validate locally
+  4. Verify & Document with evidence
+  5. Handle any blockers
+  6. Update & Finalize documentation
+
+  TASK: Configure App Store Connect and Google Play Console listings.
+
+  Configuration:
+  1. Create App Store Connect app record
+  2. Create Google Play Console app record
+  3. Upload all assets
+  4. Configure in-app purchases (subscription tiers)
+  5. Set up TestFlight for iOS beta testing
+  6. Set up Internal Testing for Android
+  7. Configure app ratings and age restrictions
+  8. Set pricing and availability
+  9. Add localization (if applicable)
+  10. Submit for review (TestFlight/Internal Testing first)
+
+  Reference: IMPLEMENTATION_ROADMAP.md Phase 19, Section 19.2
+
+  After completing all acceptance criteria with evidence, check off this task: [x] P19-T02
+  ```
+
+- **Goal:** Configure both app store listings
+
+- **Prerequisites:** P19-T01 complete
+
+- **Copilot Reference:**
+  - `IMPLEMENTATION_ROADMAP.md` - Phase 19, Section 19.2
+
+- **Steps:**
+  1. [ ] Create App Store Connect record
+  2. [ ] Create Google Play Console record
+  3. [ ] Upload app icon and screenshots
+  4. [ ] Configure app information
+  5. [ ] Set up in-app purchases (Professional, Enterprise tiers)
+  6. [ ] Configure TestFlight
+  7. [ ] Configure Internal Testing (Android)
+  8. [ ] Set content rating
+  9. [ ] Set pricing ($89.99/mo, $149.99/mo)
+  10. [ ] Configure availability (all countries)
+  11. [ ] Add localization (if needed)
+  12. [ ] Submit for TestFlight/Internal Testing
+
+- **Acceptance Criteria:**
+  - [ ] App Store Connect configured
+  - [ ] Google Play Console configured
+  - [ ] All assets uploaded
+  - [ ] In-app purchases configured
+  - [ ] TestFlight enabled
+  - [ ] Internal Testing enabled
+  - [ ] Content rating set
+  - [ ] Pricing configured
+  - [ ] Submitted for beta testing
+
+- **Evidence Required:**
+  - Screenshots of App Store Connect
+  - Screenshots of Google Play Console
+  - TestFlight invite link
+  - Internal Testing status
+
+- **Documents to Update:**
+  - `DEPLOYMENT_GUIDE.md` - Add store configuration steps
+  - `BUILD_NOTES.md` - Document submission process
+
+---
+
+### P19-T03: Beta Testing and Final Fixes
+
+- **Copilot Prompt:**
+  ```
+  Please complete task P19-T03: Beta Testing and Final Fixes.
+
+  Follow the Standard Copilot Operating Procedures (SOPs) outlined in BUILD_CHECKLIST.md:
+  1. Acknowledge & Analyze this task
+  2. Plan & Execute the steps
+  3. Test & Validate locally
+  4. Verify & Document with evidence
+  5. Handle any blockers
+  6. Update & Finalize documentation
+
+  TASK: Conduct beta testing and fix critical issues before public launch.
+
+  Beta Testing:
+  1. Invite 10-20 beta testers (TestFlight and Internal Testing)
+  2. Provide beta testing guidelines
+  3. Collect feedback via forms
+  4. Monitor crash reports
+  5. Track issues in GitHub Issues
+  6. Fix critical bugs
+  7. Release beta updates
+  8. Conduct final regression testing
+  9. Prepare for production release
+
+  Reference: IMPLEMENTATION_ROADMAP.md Phase 19, Section 19.3
+
+  After completing all acceptance criteria with evidence, check off this task: [x] P19-T03
+  ```
+
+- **Goal:** Complete beta testing and fix all critical issues
+
+- **Prerequisites:** P19-T02 complete
+
+- **Copilot Reference:**
+  - `IMPLEMENTATION_ROADMAP.md` - Phase 19, Section 19.3
+
+- **Steps:**
+  1. [ ] Invite beta testers
+  2. [ ] Send beta testing guidelines
+  3. [ ] Create feedback form
+  4. [ ] Monitor TestFlight/Play Console crashes
+  5. [ ] Track issues in GitHub
+  6. [ ] Prioritize bugs (critical, major, minor)
+  7. [ ] Fix critical bugs
+  8. [ ] Release beta update v1.0.0-beta.2
+  9. [ ] Conduct regression testing
+  10. [ ] Get final approval from testers
+  11. [ ] Prepare production build
+
+- **Acceptance Criteria:**
+  - [ ] 10+ beta testers recruited
+  - [ ] Feedback collected from majority
+  - [ ] All critical bugs fixed
+  - [ ] Crash-free rate >99%
+  - [ ] Beta testers approve for production
+  - [ ] Regression testing passed
+  - [ ] Ready for production release
+
+- **Evidence Required:**
+  - Beta tester list
+  - Feedback summary
+  - Bug fix changelog
+  - Crash-free rate from console
+  - Final test checklist
+
+- **Documents to Update:**
+  - `CHANGELOG.md` - Add all beta fixes
+  - `BUILD_NOTES.md` - Document beta testing results
+  - `TROUBLESHOOTING.md` - Add common beta issues
+
+---
+
+## Phase 20: Production Launch (Days 86-90+)
+
+### P20-T01: Production Deployment
+
+- **Copilot Prompt:**
+  ```
+  Please complete task P20-T01: Production Deployment.
+
+  Follow the Standard Copilot Operating Procedures (SOPs) outlined in BUILD_CHECKLIST.md:
+  1. Acknowledge & Analyze this task
+  2. Plan & Execute the steps
+  3. Test & Validate locally
+  4. Verify & Document with evidence
+  5. Handle any blockers
+  6. Update & Finalize documentation
+
+  TASK: Deploy production infrastructure and submit apps to stores.
+
+  Deployment Steps:
+  1. Scale AWS infrastructure for production load
+  2. Configure production environment variables
+  3. Enable CloudWatch monitoring and alarms
+  4. Set up error tracking (Sentry)
+  5. Configure CDN caching rules
+  6. Build production iOS app (Archive)
+  7. Build production Android app (AAB)
+  8. Submit to App Store for review
+  9. Submit to Google Play for review
+  10. Monitor review status
+
+  Reference: IMPLEMENTATION_ROADMAP.md Phase 20, Section 20.1
+  Reference: AWS_INFRASTRUCTURE_COMPLETED.md
+  Reference: DEPLOYMENT_GUIDE.md
+
+  After completing all acceptance criteria with evidence, check off this task: [x] P20-T01
+  ```
+
+- **Goal:** Deploy production infrastructure and submit apps
+
+- **Prerequisites:** P19-T03 complete (beta testing done)
+
+- **Copilot Reference:**
+  - `IMPLEMENTATION_ROADMAP.md` - Phase 20
+  - `AWS_INFRASTRUCTURE_COMPLETED.md`
+  - `DEPLOYMENT_GUIDE.md`
+
+- **Steps:**
+  1. [ ] Scale AWS infrastructure
+  2. [ ] Configure production environment variables
+  3. [ ] Enable CloudWatch alarms
+  4. [ ] Set up Sentry error tracking
+  5. [ ] Configure CloudFront caching
+  6. [ ] Build iOS production archive
+  7. [ ] Upload to App Store Connect
+  8. [ ] Build Android production AAB
+  9. [ ] Upload to Google Play Console
+  10. [ ] Submit both for review
+  11. [ ] Monitor review status
+
+- **Acceptance Criteria:**
+  - [ ] AWS infrastructure scaled for production
+  - [ ] Production environment configured
+  - [ ] CloudWatch alarms active
+  - [ ] Sentry tracking errors
+  - [ ] CDN caching optimized
+  - [ ] iOS build submitted for review
+  - [ ] Android build submitted for review
+  - [ ] No submission errors
+
+- **Evidence Required:**
+  - AWS dashboard showing scaled resources
+  - Screenshot of App Store submission
+  - Screenshot of Play Store submission
+  - Sentry dashboard showing tracking
+
+- **Documents to Update:**
+  - `DEPLOYMENT_GUIDE.md` - Document production deployment
+  - `BUILD_NOTES.md` - Record deployment date
+
+---
+
+### P20-T02: Launch Day Monitoring and Support
+
+- **Copilot Prompt:**
+  ```
+  Please complete task P20-T02: Launch Day Monitoring and Support.
+
+  Follow the Standard Copilot Operating Procedures (SOPs) outlined in BUILD_CHECKLIST.md:
+  1. Acknowledge & Analyze this task
+  2. Plan & Execute the steps
+  3. Test & Validate locally
+  4. Verify & Document with evidence
+  5. Handle any blockers
+  6. Update & Finalize documentation
+
+  TASK: Monitor launch day performance and provide user support.
+
+  Launch Day Activities:
+  1. Monitor app store approvals
+  2. Apps go live (iOS and Android simultaneously)
+  3. Execute marketing campaign
+  4. Monitor CloudWatch metrics (API, database, errors)
+  5. Monitor app store reviews
+  6. Respond to user support requests
+  7. Fix critical issues immediately
+  8. Post launch announcement
+  9. Celebrate! 🎉
+
+  Reference: IMPLEMENTATION_ROADMAP.md Phase 20, Section 20.2
+
+  After completing all acceptance criteria with evidence, check off this task: [x] P20-T02
+  ```
+
+- **Goal:** Successfully launch and monitor app performance
+
+- **Prerequisites:** P20-T01 complete (apps approved)
+
+- **Copilot Reference:**
+  - `IMPLEMENTATION_ROADMAP.md` - Phase 20, Section 20.2
+
+- **Steps:**
+  1. [ ] Monitor app store approval status
+  2. [ ] Apps approved and go live!
+  3. [ ] Execute marketing campaign
+  4. [ ] Monitor CloudWatch dashboard
+  5. [ ] Monitor Sentry for errors
+  6. [ ] Monitor app store reviews/ratings
+  7. [ ] Set up customer support channel
+  8. [ ] Respond to user inquiries
+  9. [ ] Fix critical issues if any
+  10. [ ] Post launch announcement on social media
+  11. [ ] Celebrate successful launch! 🎉
+
+- **Acceptance Criteria:**
+  - [ ] Apps live on both stores
+  - [ ] Marketing campaign executed
+  - [ ] No critical errors in first 24 hours
+  - [ ] CloudWatch metrics healthy
+  - [ ] Support channel active
+  - [ ] User inquiries answered
+  - [ ] Launch announcement posted
+
+- **Evidence Required:**
+  - Screenshots of live app store listings
+  - CloudWatch metrics (first 24 hours)
+  - App store reviews/ratings
+  - Support ticket log
+  - Launch announcement link
+
+- **Documents to Update:**
+  - `CHANGELOG.md` - Add v1.0.0 release notes
+  - `BUILD_NOTES.md` - Document launch success
+
+---
+
+### P20-T03: Post-Launch Optimization and Roadmap
+
+- **Copilot Prompt:**
+  ```
+  Please complete task P20-T03: Post-Launch Optimization and Roadmap.
+
+  Follow the Standard Copilot Operating Procedures (SOPs) outlined in BUILD_CHECKLIST.md:
+  1. Acknowledge & Analyze this task
+  2. Plan & Execute the steps
+  3. Test & Validate locally
+  4. Verify & Document with evidence
+  5. Handle any blockers
+  6. Update & Finalize documentation
+
+  TASK: Analyze post-launch metrics and plan future updates.
+
+  Post-Launch Activities:
+  1. Analyze user metrics (DAU, MAU, retention)
+  2. Analyze revenue metrics (subscriptions, marketplace)
+  3. Review app store feedback
+  4. Prioritize bug fixes and feature requests
+  5. Plan v1.1.0 update
+  6. Create product roadmap (Q1-Q4)
+  7. Optimize based on usage data
+  8. Scale infrastructure as needed
+  9. Document lessons learned
+  10. Plan next phase of development
+
+  Reference: IMPLEMENTATION_ROADMAP.md Phase 20, Section 20.3
+
+  After completing all acceptance criteria with evidence, check off this task: [x] P20-T03
+  ```
+
+- **Goal:** Analyze launch metrics and plan future development
+
+- **Prerequisites:** P20-T02 complete (launch successful)
+
+- **Copilot Reference:**
+  - `IMPLEMENTATION_ROADMAP.md` - Phase 20, Section 20.3
+
+- **Steps:**
+  1. [ ] Set up analytics dashboard
+  2. [ ] Track DAU, MAU, retention
+  3. [ ] Track subscription conversions
+  4. [ ] Track marketplace revenue
+  5. [ ] Review app store feedback
+  6. [ ] Compile bug reports
+  7. [ ] Prioritize feature requests
+  8. [ ] Plan v1.1.0 update
+  9. [ ] Create product roadmap
+  10. [ ] Document lessons learned
+  11. [ ] Scale infrastructure if needed
+
+- **Acceptance Criteria:**
+  - [ ] Analytics dashboard configured
+  - [ ] User metrics tracked
+  - [ ] Revenue metrics tracked
+  - [ ] Bug reports compiled
+  - [ ] Feature requests prioritized
+  - [ ] v1.1.0 planned
+  - [ ] Product roadmap created
+  - [ ] Lessons learned documented
+
+- **Evidence Required:**
+  - Analytics dashboard screenshot
+  - User/revenue metrics report
+  - Prioritized bug/feature list
+  - v1.1.0 roadmap
+  - Product roadmap document
+
+- **Documents to Update:**
+  - `CHANGELOG.md` - Prepare for v1.1.0
+  - `BUILD_NOTES.md` - Add lessons learned
+  - Create `PRODUCT_ROADMAP.md`
+
+---
+
+## 🎉 CHECKLIST COMPLETE!
+
+**Total Tasks**: 68 tasks (P1-T01 through P20-T03)
+**Total Phases**: 20 phases
+**Total Timeline**: 86-90+ days (approximately 17-20 weeks)
+**Task Breakdown by Phase**:
+- Phase 1-2: Setup & Initialization (6 tasks)
+- Phase 3-6: Core Infrastructure (8 tasks)
+- Phase 7-10: Core Features (12 tasks)
+- Phase 11-14: Advanced Features (12 tasks)
+- Phase 15-16: Business Tools (9 tasks)
+- Phase 17-20: Testing, Optimization & Launch (9 tasks + final tasks)
+
+---
+
+## How to Use This Checklist
+
+1. **Start with Phase 1, Task 1** (P1-T01)
+2. **Copy the Copilot Prompt** from the task into your chat with GitHub Copilot
+3. **Follow the steps** systematically, checking off each sub-step
+4. **Verify acceptance criteria** - provide evidence for each criterion
+5. **Update documents** as specified in each task
+6. **Commit your changes** after completing each task
+7. **Move to next task** only after all criteria are met
+
+---
+
+## Notes
+
+- Tasks are designed to be completed in order (dependencies tracked in Prerequisites)
+- Each task should take 2-8 hours depending on complexity
+- Test locally before integrating external services
+- Commit frequently with conventional commit messages
+- Update BUILD_NOTES.md with any deviations or issues encountered
+
+---
+
+**Ready to start?** Begin with **P1-T01: Install Core Development Tools**

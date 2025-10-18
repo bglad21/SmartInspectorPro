@@ -1,0 +1,14 @@
+{
+  "recommendations": [
+    "msjsdiag.vscode-react-native",
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "dsznajder.es7-react-js-snippets",
+    "christian-kohler.path-intellisense",
+    "christian-kohler.npm-intellisense",
+    "eamodio.gitlens",
+    "jundat95.react-native-snippet",
+    "formulahendry.auto-close-tag"
+  ],
+  "unwantedRecommendations": []
+}
