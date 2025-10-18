@@ -1,6 +1,6 @@
 /**
  * Redux Auth Slice - Usage Examples & Test Scenarios
- * 
+ *
  * This file demonstrates how to use the Redux auth slice in components:
  * 1. Initialize auth on app startup
  * 2. Sign in with username/password
@@ -12,41 +12,41 @@
  * 8. Access auth state with selectors
  * 9. Token expiration checking
  * 10. Error handling
- * 
+ *
  * @module redux/__tests__/auth.slice.examples
  */
 
-import { store } from '../store';
 import {
-  initializeAuth,
-  signIn,
-  signUp,
-  confirmSignUp,
-  resendConfirmationCode,
-  signOut,
-  forgotPassword,
-  confirmForgotPassword,
   changePassword,
-  refreshTokens,
   checkTokenExpiration,
   clearError,
-  updateLastActivity,
-  selectUser,
-  selectIsAuthenticated,
-  selectAuthLoading,
+  confirmForgotPassword,
+  confirmSignUp,
+  forgotPassword,
+  initializeAuth,
+  refreshTokens,
+  resendConfirmationCode,
   selectAuthError,
-  selectUserEmail,
-  selectUserBusinessName,
-  selectUserMembershipTier,
-  selectUserGroups,
+  selectAuthLoading,
   selectHasRole,
+  selectIsAuthenticated,
+  selectUser,
+  selectUserBusinessName,
+  selectUserEmail,
+  selectUserGroups,
+  selectUserMembershipTier,
+  signIn,
+  signOut,
+  signUp,
+  updateLastActivity,
 } from '../slices/auth.slice';
+import { store } from '../store';
 
 // ==================== Example 1: Initialize Auth on App Startup ====================
 
 /**
  * Example 1: Initialize authentication state when app starts
- * 
+ *
  * This should be called in App.tsx componentDidMount or useEffect
  * Restores user session from AsyncStorage if available
  */
@@ -79,13 +79,13 @@ export async function exampleInitializeAuth() {
 
 /**
  * Example 2: Sign in user and update Redux state
- * 
+ *
  * Usage in LoginScreen component:
  * ```typescript
  * const dispatch = useAppDispatch();
  * const loading = useAppSelector(selectAuthLoading('signIn'));
  * const error = useAppSelector(selectAuthError);
- * 
+ *
  * const handleSignIn = async () => {
  *   try {
  *     await dispatch(signIn({ username, password })).unwrap();
@@ -102,12 +102,14 @@ export async function exampleSignIn() {
 
   try {
     // Dispatch sign in action
-    const result = await store.dispatch(
-      signIn({
-        username: 'john.inspector',
-        password: 'SecurePass123!',
-      })
-    ).unwrap();
+    const result = await store
+      .dispatch(
+        signIn({
+          username: 'john.inspector',
+          password: 'SecurePass123!',
+        }),
+      )
+      .unwrap();
 
     console.log('✅ Signed in successfully!');
     console.log('User:', result.user.username);
@@ -125,7 +127,7 @@ export async function exampleSignIn() {
     console.log('Authenticated:', isAuthenticated);
   } catch (error) {
     console.error('❌ Sign in failed:', error);
-    
+
     // Error is available in Redux state
     const state = store.getState();
     const authError = selectAuthError(state);
@@ -137,12 +139,12 @@ export async function exampleSignIn() {
 
 /**
  * Example 3: Sign up new user
- * 
+ *
  * Usage in RegistrationScreen:
  * ```typescript
  * const dispatch = useAppDispatch();
  * const loading = useAppSelector(selectAuthLoading('signUp'));
- * 
+ *
  * const handleSignUp = async () => {
  *   try {
  *     const result = await dispatch(signUp({
@@ -152,7 +154,7 @@ export async function exampleSignIn() {
  *       businessName,
  *       membershipTier: 'professional'
  *     })).unwrap();
- *     
+ *
  *     if (result.needsEmailVerification) {
  *       navigation.navigate('ConfirmEmail', { username });
  *     }
@@ -166,15 +168,17 @@ export async function exampleSignUp() {
   console.log('=== Example 3: Sign Up ===\n');
 
   try {
-    const result = await store.dispatch(
-      signUp({
-        username: 'sarah.inspector',
-        password: 'SecurePass456!',
-        email: 'sarah@example.com',
-        businessName: 'ABC Inspections LLC',
-        membershipTier: 'professional',
-      })
-    ).unwrap();
+    const result = await store
+      .dispatch(
+        signUp({
+          username: 'sarah.inspector',
+          password: 'SecurePass456!',
+          email: 'sarah@example.com',
+          businessName: 'ABC Inspections LLC',
+          membershipTier: 'professional',
+        }),
+      )
+      .unwrap();
 
     console.log('✅ Sign up successful!');
     console.log('User ID:', result.userId);
@@ -192,19 +196,19 @@ export async function exampleSignUp() {
 
 /**
  * Example 4: Confirm email with verification code
- * 
+ *
  * Usage in EmailVerificationScreen:
  * ```typescript
  * const dispatch = useAppDispatch();
  * const loading = useAppSelector(selectAuthLoading('confirmSignUp'));
- * 
+ *
  * const handleConfirm = async () => {
  *   try {
  *     await dispatch(confirmSignUp({
  *       username,
  *       confirmationCode
  *     })).unwrap();
- *     
+ *
  *     navigation.navigate('Login');
  *   } catch (error) {
  *     // Handle error
@@ -216,12 +220,14 @@ export async function exampleConfirmSignUp() {
   console.log('=== Example 4: Confirm Email Verification ===\n');
 
   try {
-    await store.dispatch(
-      confirmSignUp({
-        username: 'sarah.inspector',
-        confirmationCode: '123456',
-      })
-    ).unwrap();
+    await store
+      .dispatch(
+        confirmSignUp({
+          username: 'sarah.inspector',
+          confirmationCode: '123456',
+        }),
+      )
+      .unwrap();
 
     console.log('✅ Email verified successfully!');
     console.log('👉 User can now sign in');
@@ -250,7 +256,7 @@ export async function exampleResendCode() {
 
 /**
  * Example 6: Forgot password flow (2 steps)
- * 
+ *
  * Usage in ForgotPasswordScreen:
  * ```typescript
  * // Step 1: Request code
@@ -262,7 +268,7 @@ export async function exampleResendCode() {
  *     // Handle error
  *   }
  * };
- * 
+ *
  * // Step 2: Confirm with code
  * const handleConfirmReset = async () => {
  *   try {
@@ -271,7 +277,7 @@ export async function exampleResendCode() {
  *       confirmationCode,
  *       newPassword
  *     })).unwrap();
- *     
+ *
  *     navigation.navigate('Login');
  *   } catch (error) {
  *     // Handle error
@@ -285,20 +291,22 @@ export async function exampleForgotPassword() {
   try {
     // Step 1: Request password reset
     console.log('Step 1: Requesting reset code...');
-    await store.dispatch(
-      forgotPassword({ username: 'john.inspector' })
-    ).unwrap();
+    await store
+      .dispatch(forgotPassword({ username: 'john.inspector' }))
+      .unwrap();
     console.log('✅ Reset code sent to email');
 
     // Step 2: Confirm with code
     console.log('\nStep 2: Confirming with code...');
-    await store.dispatch(
-      confirmForgotPassword({
-        username: 'john.inspector',
-        confirmationCode: '654321',
-        newPassword: 'NewSecurePass789!',
-      })
-    ).unwrap();
+    await store
+      .dispatch(
+        confirmForgotPassword({
+          username: 'john.inspector',
+          confirmationCode: '654321',
+          newPassword: 'NewSecurePass789!',
+        }),
+      )
+      .unwrap();
     console.log('✅ Password reset successfully!');
     console.log('👉 User can now sign in with new password');
   } catch (error) {
@@ -310,19 +318,19 @@ export async function exampleForgotPassword() {
 
 /**
  * Example 7: Change password for authenticated user
- * 
+ *
  * Usage in SettingsScreen:
  * ```typescript
  * const dispatch = useAppDispatch();
  * const loading = useAppSelector(selectAuthLoading('changePassword'));
- * 
+ *
  * const handleChangePassword = async () => {
  *   try {
  *     await dispatch(changePassword({
  *       oldPassword,
  *       newPassword
  *     })).unwrap();
- *     
+ *
  *     Alert.alert('Success', 'Password changed!');
  *   } catch (error) {
  *     Alert.alert('Error', error.message);
@@ -334,12 +342,14 @@ export async function exampleChangePassword() {
   console.log('=== Example 7: Change Password ===\n');
 
   try {
-    await store.dispatch(
-      changePassword({
-        oldPassword: 'SecurePass123!',
-        newPassword: 'NewSecurePass999!',
-      })
-    ).unwrap();
+    await store
+      .dispatch(
+        changePassword({
+          oldPassword: 'SecurePass123!',
+          newPassword: 'NewSecurePass999!',
+        }),
+      )
+      .unwrap();
 
     console.log('✅ Password changed successfully!');
   } catch (error) {
@@ -351,11 +361,11 @@ export async function exampleChangePassword() {
 
 /**
  * Example 8: Sign out user
- * 
+ *
  * Usage in any screen with sign out button:
  * ```typescript
  * const dispatch = useAppDispatch();
- * 
+ *
  * const handleSignOut = async () => {
  *   try {
  *     await dispatch(signOut()).unwrap();
@@ -387,7 +397,7 @@ export async function exampleSignOut() {
 
 /**
  * Example 9: Access auth state with selectors
- * 
+ *
  * Usage in React components:
  * ```typescript
  * import { useAppSelector } from '@/redux/hooks';
@@ -399,7 +409,7 @@ export async function exampleSignOut() {
  *   selectUserGroups,
  *   selectHasRole
  * } from '@/redux/slices/auth.slice';
- * 
+ *
  * function ProfileScreen() {
  *   const user = useAppSelector(selectUser);
  *   const isAuthenticated = useAppSelector(selectIsAuthenticated);
@@ -407,9 +417,9 @@ export async function exampleSignOut() {
  *   const email = useAppSelector(selectUserEmail);
  *   const groups = useAppSelector(selectUserGroups);
  *   const isTeamLeader = useAppSelector(selectHasRole('team-leader'));
- *   
+ *
  *   if (!isAuthenticated) return <LoginScreen />;
- *   
+ *
  *   return (
  *     <View>
  *       <Text>Welcome, {user?.username}</Text>
@@ -463,7 +473,7 @@ export function exampleSelectors() {
 
 /**
  * Example 10: Manual token refresh
- * 
+ *
  * Usually automatic, but can be triggered manually
  */
 export async function exampleTokenRefresh() {
@@ -473,7 +483,10 @@ export async function exampleTokenRefresh() {
     const result = await store.dispatch(refreshTokens()).unwrap();
 
     console.log('✅ Tokens refreshed!');
-    console.log('New expiration:', new Date(result.tokens.expiresAt).toLocaleString());
+    console.log(
+      'New expiration:',
+      new Date(result.tokens.expiresAt).toLocaleString(),
+    );
   } catch (error) {
     console.error('❌ Token refresh failed:', error);
   }
@@ -483,7 +496,7 @@ export async function exampleTokenRefresh() {
 
 /**
  * Example 11: Check token expiration and refresh if needed
- * 
+ *
  * This should be called periodically or on app resume
  * Usage in App.tsx:
  * ```typescript
@@ -491,7 +504,7 @@ export async function exampleTokenRefresh() {
  *   const interval = setInterval(() => {
  *     dispatch(checkTokenExpiration());
  *   }, 60000); // Check every minute
- *   
+ *
  *   return () => clearInterval(interval);
  * }, [dispatch]);
  * ```
@@ -504,7 +517,10 @@ export async function exampleCheckTokenExpiration() {
 
     if (result) {
       console.log('✅ Token was expiring, refreshed automatically');
-      console.log('New expiration:', new Date(result.tokens.expiresAt).toLocaleString());
+      console.log(
+        'New expiration:',
+        new Date(result.tokens.expiresAt).toLocaleString(),
+      );
     } else {
       console.log('ℹ️ Token still valid, no refresh needed');
     }
@@ -517,12 +533,12 @@ export async function exampleCheckTokenExpiration() {
 
 /**
  * Example 12: Handle auth errors in components
- * 
+ *
  * Usage:
  * ```typescript
  * const dispatch = useAppDispatch();
  * const error = useAppSelector(selectAuthError);
- * 
+ *
  * useEffect(() => {
  *   if (error) {
  *     Alert.alert('Error', error.message);
@@ -536,25 +552,27 @@ export async function exampleErrorHandling() {
 
   try {
     // Attempt sign in with wrong credentials
-    await store.dispatch(
-      signIn({
-        username: 'wrong.user',
-        password: 'WrongPass123!',
-      })
-    ).unwrap();
+    await store
+      .dispatch(
+        signIn({
+          username: 'wrong.user',
+          password: 'WrongPass123!',
+        }),
+      )
+      .unwrap();
   } catch {
     console.log('❌ Expected error occurred');
-    
+
     // Error is in Redux state
     const state = store.getState();
     const authError = selectAuthError(state);
-    
+
     console.log('Error code:', authError?.code);
     console.log('Error message:', authError?.message);
-    
+
     // Clear error after handling
     store.dispatch(clearError());
-    
+
     console.log('Error cleared from state');
   }
 }
@@ -563,22 +581,22 @@ export async function exampleErrorHandling() {
 
 /**
  * Example 13: Track user activity
- * 
+ *
  * Usage in App.tsx or root component:
  * ```typescript
  * const dispatch = useAppDispatch();
- * 
+ *
  * useEffect(() => {
  *   const handleUserActivity = () => {
  *     dispatch(updateLastActivity());
  *   };
- *   
+ *
  *   // Track touches, navigation, etc.
  *   const subscription = DeviceEventEmitter.addListener(
  *     'userActivity',
  *     handleUserActivity
  *   );
- *   
+ *
  *   return () => subscription.remove();
  * }, [dispatch]);
  * ```
@@ -593,7 +611,10 @@ export function exampleUpdateActivity() {
   const lastActivity = state.auth.lastActivity;
 
   if (lastActivity) {
-    console.log('Last activity updated:', new Date(lastActivity).toLocaleString());
+    console.log(
+      'Last activity updated:',
+      new Date(lastActivity).toLocaleString(),
+    );
   }
 }
 
@@ -601,7 +622,7 @@ export function exampleUpdateActivity() {
 
 /**
  * Run all Redux auth slice examples
- * 
+ *
  * NOTE: This is for testing/demo purposes only.
  * In production, these actions are dispatched from React components.
  */

@@ -1,11 +1,11 @@
 /**
  * Redux Store Configuration for Smart Inspector Pro
- * 
+ *
  * Configures the Redux store with:
  * - Auth slice
  * - Redux DevTools (development only)
  * - Middleware configuration
- * 
+ *
  * @module redux/store
  */
 
@@ -23,7 +23,7 @@ export const store = configureStore({
     // workflows: workflowsReducer,
     // reports: reportsReducer,
   },
-  middleware: (getDefaultMiddleware) =>
+  middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
       serializableCheck: {
         // Ignore these action types for serialization check
