@@ -1,7 +1,7 @@
 # Smart Inspector Pro - Quick Reference
 
-**Version**: 1.0.0  
-**Last Updated**: October 17, 2025  
+**Version**: 1.0.0
+**Last Updated**: October 17, 2025
 **Purpose**: Fast lookup for common development tasks
 
 ---
@@ -171,7 +171,7 @@ export const [ComponentName]: React.FC<[ComponentName]Props> = ({
   // props
 }) => {
   const { theme } = useTheme();
-  
+
   const styles = StyleSheet.create({
     container: {
       flex: 1,
@@ -182,7 +182,7 @@ export const [ComponentName]: React.FC<[ComponentName]Props> = ({
       fontSize: 16,
     },
   });
-  
+
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Component content</Text>
@@ -201,7 +201,7 @@ import { useTheme } from '../theme/ThemeProvider';
 
 export const [ScreenName]: React.FC = () => {
   const { theme, isDark } = useTheme();
-  
+
   const styles = StyleSheet.create({
     container: {
       flex: 1,
@@ -219,7 +219,7 @@ export const [ScreenName]: React.FC = () => {
       color: theme.colors.text.primary,
     },
   });
-  
+
   return (
     <>
       <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} />
@@ -380,14 +380,14 @@ describe('[ComponentName]', () => {
     const { getByTestId } = render(
       <[ComponentName] onPress={onPress} testID="component" />
     );
-    
+
     fireEvent.press(getByTestId('component'));
     expect(onPress).toHaveBeenCalledTimes(1);
   });
 
   it('handles async operations', async () => {
     const { getByText } = render(<[ComponentName] />);
-    
+
     await waitFor(() => {
       expect(getByText('Loaded')).toBeTruthy();
     });
@@ -529,7 +529,7 @@ WHERE user_id = 'user-123'
 ORDER BY created_at DESC;
 
 -- Inspection with records
-SELECT 
+SELECT
   i.id,
   i.property_address,
   COUNT(ir.id) as record_count
@@ -538,7 +538,7 @@ LEFT JOIN inspection_records ir ON i.id = ir.inspection_id
 GROUP BY i.id, i.property_address;
 
 -- Condition distribution
-SELECT 
+SELECT
   condition,
   COUNT(*) as count
 FROM inspection_records
@@ -608,7 +608,7 @@ import { Storage } from 'aws-amplify';
 const uploadPhoto = async (file: File, inspectionId: string) => {
   try {
     const key = `inspections/${inspectionId}/photos/${Date.now()}-${file.name}`;
-    
+
     const result = await Storage.put(key, file, {
       contentType: file.type,
       level: 'private',
@@ -1135,5 +1135,5 @@ export const InspectionCard = React.memo<InspectionCardProps>(
 
 Found a useful command or snippet? Add it to this document!
 
-**Maintainer**: Development Team  
+**Maintainer**: Development Team
 **Last Review**: October 17, 2025
