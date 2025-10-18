@@ -186,5 +186,7 @@
   "workbench.colorTheme": "Default Dark+",
   "workbench.iconTheme": "vs-seti",
   "workbench.editor.enablePreview": false,
-  "workbench.editor.closeEmptyGroups": true
+  "workbench.editor.closeEmptyGroups": true,
+  "java.configuration.updateBuildConfiguration": "interactive",
+  "java.compile.nullAnalysis.mode": "automatic"
 }

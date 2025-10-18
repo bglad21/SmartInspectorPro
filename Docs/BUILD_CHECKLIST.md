@@ -34,6 +34,7 @@ For every task assigned, the Copilot will adhere to the following protocol to en
 ## Global References
 
 **Primary Documentation:**
+
 - `Smart_Inspector_Pro_Build_Layout.md` - Complete app specification (2,189 lines)
 - `IMPLEMENTATION_ROADMAP.md` - Detailed 20-phase roadmap
 - `APP_STRUCTURE_OVERVIEW.md` - Project architecture
@@ -41,15 +42,18 @@ For every task assigned, the Copilot will adhere to the following protocol to en
 - `API_DOCUMENTATION.md` - Backend API reference
 
 **Data Files:**
+
 - `Single_Family.csv` - Main inspection data (33,432 items)
 - `single_family_sample.csv` - Sample data for testing (2,504 items)
 
 **AWS Infrastructure:**
+
 - `AWS_INFRASTRUCTURE_COMPLETED.md` - AWS setup documentation
 - `AWS_Services_Inventory.md` - Services checklist
 - `CLOUDFRONT_SETUP_COMPLETE.md` - CDN configuration
 
 **Configuration:**
+
 - `PROJECT_CONFIGURATION.md` - Project decisions and settings
 - `MEMBERSHIP_TIERS_REVISED.md` - Subscription tiers
 - `.github/copilot-instructions.md` - AI agent instructions
@@ -59,11 +63,13 @@ For every task assigned, the Copilot will adhere to the following protocol to en
 ## Documents to Update
 
 **During Build:**
+
 - `CHANGELOG.md` - Document all changes, features, fixes
 - `DECISION_LOG.md` - Record architectural decisions (create if needed)
 - `BUILD_NOTES.md` - Track build progress and issues (create if needed)
 
 **Upon Completion:**
+
 - `DEPLOYMENT_GUIDE.md` - Add deployment instructions
 - `TROUBLESHOOTING.md` - Add common issues and solutions
 - `TESTING_GUIDELINES.md` - Document testing procedures
@@ -73,12 +79,14 @@ For every task assigned, the Copilot will adhere to the following protocol to en
 ## Governance & Repo Hygiene
 
 **Git Workflow:**
+
 - Commit after each completed task
 - Use conventional commit messages: `feat:`, `fix:`, `docs:`, `test:`, `refactor:`
 - Create feature branches for major phases
 - Tag releases: `v1.0.0-alpha`, `v1.0.0-beta`, `v1.0.0`
 
 **Code Quality:**
+
 - Run TypeScript type checking: `npx tsc --noEmit`
 - Run linter: `npm run lint`
 - Format code: `npm run format` (Prettier)
@@ -117,6 +125,7 @@ Before starting Phase 1, ensure you have:
 ### ✅ P1-T01: Install Core Development Tools
 
 - **Copilot Prompt:**
+
   ```
   Please complete task P1-T01: Install Core Development Tools.
 
@@ -149,10 +158,12 @@ Before starting Phase 1, ensure you have:
 - **SOP Reminder:** Follow Standard Copilot Operating Procedure above. Acknowledge task, plan, execute, validate, document.
 
 - **Copilot Reference:**
+
   - `IMPLEMENTATION_ROADMAP.md` - Phase 1, Section 1.1
   - `DEVELOPMENT_SETUP_GUIDE.md`
 
 - **Steps:**
+
   1. [x] Install Homebrew (if not already installed)
   2. [x] Install Node.js 18+ via Homebrew: `brew install node`
   3. [x] Install Watchman: `brew install watchman`
@@ -165,6 +176,7 @@ Before starting Phase 1, ensure you have:
   10. [x] Verify all installations with version checks
 
 - **Acceptance Criteria:**
+
   - [x] Node.js version >= 18.0.0 (`node --version`)
   - [x] npm version >= 9.0.0 (`npm --version`)
   - [x] React Native CLI installed (`react-native --version`)
@@ -177,12 +189,14 @@ Before starting Phase 1, ensure you have:
   - [x] VS Code with 5+ recommended extensions
 
 - **Evidence Required:**
+
   - Screenshot or terminal output of all version checks
   - Output of `xcode-select -p` showing Xcode path
   - Output of `echo $ANDROID_HOME` showing SDK path
   - VS Code extensions list (`code --list-extensions`)
 
 - **Documents to Update:**
+
   - `DECISION_LOG.md` - Note any installation issues or custom configurations
   - `BUILD_NOTES.md` - Record setup time and any deviations from standard
 
@@ -195,6 +209,7 @@ Before starting Phase 1, ensure you have:
 ### ✅ P1-T02: Configure iOS Development Environment
 
 - **Copilot Prompt:**
+
   ```
   Please complete task P1-T02: Configure iOS Development Environment.
 
@@ -224,9 +239,11 @@ Before starting Phase 1, ensure you have:
 - **Prerequisites:** P1-T01 complete, Xcode installed
 
 - **Copilot Reference:**
+
   - `IMPLEMENTATION_ROADMAP.md` - Phase 1, Section 1.2
 
 - **Steps:**
+
   1. [x] Open Xcode and accept license agreement
   2. [x] Install additional iOS simulators via Xcode preferences
   3. [x] Create Apple Developer account (if not exists)
@@ -236,6 +253,7 @@ Before starting Phase 1, ensure you have:
   7. [x] Configure simulator settings (timezone, language)
 
 - **Acceptance Criteria:**
+
   - [x] Xcode opens without errors
   - [x] At least 3 iOS simulators installed (iPhone 14, iPhone SE, iPad)
   - [x] Apple Developer account configured in Xcode
@@ -243,6 +261,7 @@ Before starting Phase 1, ensure you have:
   - [x] Can install test app on simulator
 
 - **Evidence Required:**
+
   - Screenshot of Xcode with installed simulators
   - Screenshot of running iPhone 14 simulator
   - Output of `xcrun simctl list devices` showing available simulators
@@ -255,6 +274,7 @@ Before starting Phase 1, ensure you have:
 ### ✅ P1-T03: Configure Android Development Environment
 
 - **Copilot Prompt:**
+
   ```
   Please complete task P1-T03: Configure Android Development Environment.
 
@@ -285,9 +305,11 @@ Before starting Phase 1, ensure you have:
 - **Prerequisites:** P1-T01 complete, Android Studio installed
 
 - **Copilot Reference:**
+
   - `IMPLEMENTATION_ROADMAP.md` - Phase 1, Section 1.3
 
 - **Steps:**
+
   1. [x] Open Android Studio and complete setup wizard
   2. [x] Open SDK Manager and install SDK Platform 31, 32, 33, 34
   3. [x] Install Android SDK Build-Tools 33+
@@ -298,6 +320,7 @@ Before starting Phase 1, ensure you have:
   8. [x] Configure emulator settings (RAM, storage)
 
 - **Acceptance Criteria:**
+
   - [x] Android Studio opens without errors
   - [x] SDK Platform 31+ installed
   - [x] Build-Tools 33+ installed
@@ -306,6 +329,7 @@ Before starting Phase 1, ensure you have:
   - [x] Can install test app on emulator
 
 - **Evidence Required:**
+
   - Screenshot of Android Studio SDK Manager
   - Screenshot of AVD Manager showing created devices
   - Screenshot of running Pixel 5 emulator
@@ -321,6 +345,7 @@ Before starting Phase 1, ensure you have:
 ### ✅ P2-T01: Initialize React Native Project
 
 - **Copilot Prompt:**
+
   ```
   Please complete task P2-T01: Initialize React Native Project.
 
@@ -354,11 +379,13 @@ Before starting Phase 1, ensure you have:
 - **Prerequisites:** P1-T01, P1-T02, P1-T03 complete
 
 - **Copilot Reference:**
+
   - `IMPLEMENTATION_ROADMAP.md` - Phase 2, Section 2.1
   - `APP_STRUCTURE_OVERVIEW.md`
   - `PROJECT_CONFIGURATION.md`
 
 - **Steps:**
+
   1. [x] Run `npx react-native init SmartInspectorPro --template react-native-template-typescript`
   2. [x] Verify project creation in `/Users/brandongladysz/GitHub/SmartInspectorPro`
   3. [x] Update `package.json` with project metadata (description, author, version 0.1.0)
@@ -369,6 +396,7 @@ Before starting Phase 1, ensure you have:
   8. [x] Test Android build: `npx react-native run-android` (configuration verified)
 
 - **Acceptance Criteria:**
+
   - [x] Project directory created at correct path
   - [x] TypeScript configuration present (`tsconfig.json`)
   - [x] Git repository initialized with proper `.gitignore`
@@ -378,6 +406,7 @@ Before starting Phase 1, ensure you have:
   - [x] Initial commit made with conventional commit message
 
 - **Evidence Required:**
+
   - Output of `npx react-native run-ios` showing successful build
   - Output of `npx react-native run-android` showing successful build
   - Screenshot of app running on iOS simulator
@@ -393,6 +422,7 @@ Before starting Phase 1, ensure you have:
 ### P2-T02: Install Core Dependencies
 
 - **Copilot Prompt:**
+
   ```
   Please complete task P2-T02: Install Core Dependencies.
 
@@ -450,9 +480,11 @@ Before starting Phase 1, ensure you have:
 - **Prerequisites:** P2-T01 complete
 
 - **Copilot Reference:**
+
   - `IMPLEMENTATION_ROADMAP.md` - Phase 2, Section 2.2
 
 - **Steps:**
+
   1. [ ] Install state management: `npm install @reduxjs/toolkit react-redux`
   2. [ ] Install navigation: `npm install @react-navigation/native @react-navigation/native-stack react-native-screens react-native-safe-area-context`
   3. [ ] Install UI libraries: `npm install react-native-elements react-native-paper react-native-vector-icons`
@@ -465,6 +497,7 @@ Before starting Phase 1, ensure you have:
   10. [ ] Test builds: `npx react-native run-ios` and `npx react-native run-android`
 
 - **Acceptance Criteria:**
+
   - [ ] All packages installed without errors
   - [ ] `package.json` shows all dependencies with correct versions
   - [ ] iOS pods installed successfully
@@ -474,12 +507,14 @@ Before starting Phase 1, ensure you have:
   - [ ] App launches on both platforms
 
 - **Evidence Required:**
+
   - Output of `npm list --depth=0` showing installed packages
   - Output of `pod install` showing successful installation
   - Output of successful iOS and Android builds
   - Screenshot showing app still runs
 
 - **Documents to Update:**
+
   - `CHANGELOG.md` - Add dependencies installation
   - `BUILD_NOTES.md` - Note any linking issues
 
@@ -492,6 +527,7 @@ Before starting Phase 1, ensure you have:
 ### P2-T03: Create Folder Structure
 
 - **Copilot Prompt:**
+
   ```
   Please complete task P2-T03: Create Folder Structure.
 
@@ -550,10 +586,12 @@ Before starting Phase 1, ensure you have:
 - **Prerequisites:** P2-T01, P2-T02 complete
 
 - **Copilot Reference:**
+
   - `IMPLEMENTATION_ROADMAP.md` - Phase 2, Section 2.3
   - `APP_STRUCTURE_OVERVIEW.md`
 
 - **Steps:**
+
   1. [ ] Create `mobile/src/` directory
   2. [ ] Create component directories with README.md files
   3. [ ] Create screen directories for each major feature
@@ -566,6 +604,7 @@ Before starting Phase 1, ensure you have:
   10. [ ] Update `tsconfig.json` with path aliases (@components, @screens, etc.)
 
 - **Acceptance Criteria:**
+
   - [ ] All directories created as specified
   - [ ] README.md files exist in major directories
   - [ ] CSV files copied to `mobile/src/data/`
@@ -574,6 +613,7 @@ Before starting Phase 1, ensure you have:
   - [ ] Project still builds successfully
 
 - **Evidence Required:**
+
   - Output of `tree -L 3 mobile/src/` or `find mobile/src -type d`
   - Content of `tsconfig.json` showing path aliases
   - Output of `npx tsc --noEmit` showing no errors
@@ -589,6 +629,7 @@ Before starting Phase 1, ensure you have:
 ### P3-T01: Configure AWS Amplify
 
 - **Copilot Prompt:**
+
   ```
   Please complete task P3-T01: Configure AWS Amplify.
 
@@ -623,11 +664,13 @@ Before starting Phase 1, ensure you have:
 - **Prerequisites:** P2-T03 complete, AWS infrastructure deployed
 
 - **Copilot Reference:**
+
   - `IMPLEMENTATION_ROADMAP.md` - Phase 3
   - `AWS_INFRASTRUCTURE_COMPLETED.md`
   - `AWS_Services_Inventory.md`
 
 - **Steps:**
+
   1. [ ] Install Amplify CLI: `npm install -g @aws-amplify/cli`
   2. [ ] Configure AWS credentials: `amplify configure`
   3. [ ] Create `mobile/src/config/aws-config.ts` with existing resource IDs
@@ -638,6 +681,7 @@ Before starting Phase 1, ensure you have:
   8. [ ] Test configuration with simple auth check
 
 - **Acceptance Criteria:**
+
   - [ ] Amplify configured without creating new resources
   - [ ] `aws-config.ts` contains all required AWS resource IDs
   - [ ] Amplify initializes without errors on app launch
@@ -646,6 +690,7 @@ Before starting Phase 1, ensure you have:
   - [ ] TypeScript types for AWS config defined
 
 - **Evidence Required:**
+
   - Content of `mobile/src/config/aws-config.ts`
   - Console log output showing successful Amplify initialization
   - Test output showing Cognito connection successful
@@ -659,6 +704,7 @@ Before starting Phase 1, ensure you have:
 ### P3-T02: Configure S3 Integration
 
 - **Copilot Prompt:**
+
   ```
   Please complete task P3-T02: Configure S3 Integration.
 
@@ -692,11 +738,13 @@ Before starting Phase 1, ensure you have:
 - **Prerequisites:** P3-T01 complete
 
 - **Copilot Reference:**
+
   - `IMPLEMENTATION_ROADMAP.md` - Phase 3, Section 3.2
   - `CLOUDFRONT_SETUP_COMPLETE.md`
   - `AWS_INFRASTRUCTURE_COMPLETED.md`
 
 - **Steps:**
+
   1. [ ] Create `mobile/src/services/s3.service.ts`
   2. [ ] Implement upload method with progress callback
   3. [ ] Implement download method
@@ -707,6 +755,7 @@ Before starting Phase 1, ensure you have:
   8. [ ] Write unit tests for S3 service
 
 - **Acceptance Criteria:**
+
   - [ ] S3 service class created with upload/download/delete methods
   - [ ] Progress tracking functional
   - [ ] CloudFront URLs generated correctly
@@ -715,6 +764,7 @@ Before starting Phase 1, ensure you have:
   - [ ] Unit tests written and passing
 
 - **Evidence Required:**
+
   - Content of `mobile/src/services/s3.service.ts`
   - Test output showing S3 operations work
   - Example of progress callback in action
@@ -730,6 +780,7 @@ Before starting Phase 1, ensure you have:
 ### P4-T01: Create Authentication Service
 
 - **Copilot Prompt:**
+
   ```
   Please complete task P4-T01: Create Authentication Service.
 
@@ -763,10 +814,12 @@ Before starting Phase 1, ensure you have:
 - **Prerequisites:** P3-T01 complete, Cognito User Pool configured
 
 - **Copilot Reference:**
+
   - `IMPLEMENTATION_ROADMAP.md` - Phase 4
   - `AWS_INFRASTRUCTURE_COMPLETED.md`
 
 - **Steps:**
+
   1. [ ] Create `mobile/src/services/auth.service.ts`
   2. [ ] Implement sign up method with email verification
   3. [ ] Implement sign in method returning JWT tokens
@@ -779,6 +832,7 @@ Before starting Phase 1, ensure you have:
   10. [ ] Write unit tests
 
 - **Acceptance Criteria:**
+
   - [ ] Auth service created with all CRUD methods
   - [ ] JWT tokens stored securely
   - [ ] Token refresh works automatically
@@ -787,6 +841,7 @@ Before starting Phase 1, ensure you have:
   - [ ] Unit tests passing
 
 - **Evidence Required:**
+
   - Content of `mobile/src/services/auth.service.ts`
   - Test output showing successful authentication flow
   - Token refresh working in tests
@@ -800,6 +855,7 @@ Before starting Phase 1, ensure you have:
 ### P4-T02: Create Redux Auth Slice
 
 - **Copilot Prompt:**
+
   ```
   Please complete task P4-T02: Create Redux Auth Slice.
 
@@ -832,10 +888,12 @@ Before starting Phase 1, ensure you have:
 - **Prerequisites:** P4-T01 complete, Redux Toolkit installed
 
 - **Copilot Reference:**
+
   - `IMPLEMENTATION_ROADMAP.md` - Phase 4, Section 4.2
   - `CODE_STANDARDS.md` - Redux patterns
 
 - **Steps:**
+
   1. [ ] Create `mobile/src/redux/slices/auth.slice.ts`
   2. [ ] Define auth state interface
   3. [ ] Create async thunks (login, logout, register, refresh)
@@ -846,6 +904,7 @@ Before starting Phase 1, ensure you have:
   8. [ ] Write unit tests for slice
 
 - **Acceptance Criteria:**
+
   - [ ] Auth slice created with all actions
   - [ ] Async thunks working correctly
   - [ ] State updates properly on auth actions
@@ -854,6 +913,7 @@ Before starting Phase 1, ensure you have:
   - [ ] Unit tests passing
 
 - **Evidence Required:**
+
   - Content of `mobile/src/redux/slices/auth.slice.ts`
   - Test output showing state updates correctly
 
@@ -866,6 +926,7 @@ Before starting Phase 1, ensure you have:
 ### P4-T03: Create Authentication Screens
 
 - **Copilot Prompt:**
+
   ```
   Please complete task P4-T03: Create Authentication Screens.
 
@@ -908,10 +969,12 @@ Before starting Phase 1, ensure you have:
 - **Prerequisites:** P4-T02 complete, navigation configured
 
 - **Copilot Reference:**
+
   - `IMPLEMENTATION_ROADMAP.md` - Phase 4, Section 4.3
   - `Smart_Inspector_Pro_Build_Layout.md` - Phase 10
 
 - **Steps:**
+
   1. [ ] Create themed components (ThemedView, ThemedText, TextInput, Button)
   2. [ ] Create LoginScreen with form and validation
   3. [ ] Create RegisterScreen with business name field
@@ -922,6 +985,7 @@ Before starting Phase 1, ensure you have:
   8. [ ] Test full auth flow (register → verify → login)
 
 - **Acceptance Criteria:**
+
   - [ ] All 4 auth screens created
   - [ ] Forms validate input correctly
   - [ ] Redux actions dispatched on form submission
@@ -932,6 +996,7 @@ Before starting Phase 1, ensure you have:
   - [ ] Password reset flow works
 
 - **Evidence Required:**
+
   - Screenshots of all 4 auth screens
   - Video or screenshots showing complete auth flow
   - Test output of successful registration and login
@@ -947,6 +1012,7 @@ Before starting Phase 1, ensure you have:
 ### P5-T01: Create SQLite Database Schema
 
 - **Copilot Prompt:**
+
   ```
   Please complete task P5-T01: Create SQLite Database Schema.
 
@@ -985,10 +1051,12 @@ Before starting Phase 1, ensure you have:
 - **Prerequisites:** P2-T02 complete (react-native-sqlite-storage installed)
 
 - **Copilot Reference:**
+
   - `IMPLEMENTATION_ROADMAP.md` - Phase 5
   - `Smart_Inspector_Pro_Build_Layout.md` - Phase 2.1
 
 - **Steps:**
+
   1. [ ] Design database schema matching backend PostgreSQL
   2. [ ] Create `mobile/src/services/database.service.ts`
   3. [ ] Implement database initialization on app first launch
@@ -999,6 +1067,7 @@ Before starting Phase 1, ensure you have:
   8. [ ] Write unit tests for database operations
 
 - **Acceptance Criteria:**
+
   - [ ] All tables created with correct schema
   - [ ] Indexes added to foreign keys and frequently queried columns
   - [ ] CRUD operations work for all tables
@@ -1007,6 +1076,7 @@ Before starting Phase 1, ensure you have:
   - [ ] Unit tests passing
 
 - **Evidence Required:**
+
   - SQL schema definition
   - Content of `database.service.ts`
   - Test output showing CRUD operations working
@@ -1021,6 +1091,7 @@ Before starting Phase 1, ensure you have:
 ### P5-T02: Create CSV Parser Service
 
 - **Copilot Prompt:**
+
   ```
   Please complete task P5-T02: Create CSV Parser Service.
 
@@ -1057,11 +1128,13 @@ Before starting Phase 1, ensure you have:
 - **Prerequisites:** P5-T01 complete, Papa Parse installed
 
 - **Copilot Reference:**
+
   - `IMPLEMENTATION_ROADMAP.md` - Phase 5, Section 5.2
   - `Single_Family.csv`
   - `.github/copilot-instructions.md` - CSV structure
 
 - **Steps:**
+
   1. [ ] Copy `single_family_sample.csv` to `mobile/src/data/`
   2. [ ] Create `mobile/src/types/csv.types.ts` with interfaces
   3. [ ] Create `mobile/src/services/csv-parser.service.ts`
@@ -1074,6 +1147,7 @@ Before starting Phase 1, ensure you have:
   10. [ ] Write unit tests
 
 - **Acceptance Criteria:**
+
   - [ ] CSV parser loads sample data successfully
   - [ ] All 2,504 rows parsed correctly
   - [ ] Data stored in SQLite database
@@ -1083,6 +1157,7 @@ Before starting Phase 1, ensure you have:
   - [ ] Unit tests passing
 
 - **Evidence Required:**
+
   - Content of `csv-parser.service.ts`
   - Console output showing parse progress
   - Database query showing CSV data loaded
@@ -1097,6 +1172,7 @@ Before starting Phase 1, ensure you have:
 ### P5-T03: Create Offline Sync Service
 
 - **Copilot Prompt:**
+
   ```
   Please complete task P5-T03: Create Offline Sync Service.
 
@@ -1129,9 +1205,11 @@ Before starting Phase 1, ensure you have:
 - **Prerequisites:** P5-T01, P5-T02 complete
 
 - **Copilot Reference:**
+
   - `IMPLEMENTATION_ROADMAP.md` - Phase 5, Section 5.3
 
 - **Steps:**
+
   1. [ ] Create `mobile/src/services/sync.service.ts`
   2. [ ] Design sync queue table in SQLite
   3. [ ] Implement "add to queue" when offline changes occur
@@ -1143,6 +1221,7 @@ Before starting Phase 1, ensure you have:
   9. [ ] Write unit tests
 
 - **Acceptance Criteria:**
+
   - [ ] Sync queue stores offline changes
   - [ ] Sync processes queue when online
   - [ ] Conflicts resolved using last-write-wins
@@ -1151,6 +1230,7 @@ Before starting Phase 1, ensure you have:
   - [ ] Unit tests passing
 
 - **Evidence Required:**
+
   - Content of `sync.service.ts`
   - Test showing offline changes queue correctly
   - Test showing sync when back online
@@ -1166,6 +1246,7 @@ Before starting Phase 1, ensure you have:
 ### P6-T01: Create Theme System
 
 - **Copilot Prompt:**
+
   ```
   Please complete task P6-T01: Create Theme System.
 
@@ -1211,11 +1292,13 @@ Before starting Phase 1, ensure you have:
 - **Prerequisites:** P2-T03 complete (folder structure created)
 
 - **Copilot Reference:**
+
   - `IMPLEMENTATION_ROADMAP.md` - Phase 6
   - `Smart_Inspector_Pro_Build_Layout.md` - Phase 10
   - `THEMING_IMPLEMENTATION_SUMMARY.md`
 
 - **Steps:**
+
   1. [ ] Create theme type definitions in `types.ts`
   2. [ ] Create `lightTheme.ts` with complete color palette
   3. [ ] Create `darkTheme.ts` with dark mode colors
@@ -1227,6 +1310,7 @@ Before starting Phase 1, ensure you have:
   9. [ ] Test theme switching works
 
 - **Acceptance Criteria:**
+
   - [ ] Theme types defined
   - [ ] Light theme complete with all colors
   - [ ] Dark theme complete
@@ -1236,6 +1320,7 @@ Before starting Phase 1, ensure you have:
   - [ ] useTheme hook returns theme and toggleTheme
 
 - **Evidence Required:**
+
   - Content of all theme files
   - Screenshot of app in light mode
   - Screenshot of app in dark mode
@@ -1250,6 +1335,7 @@ Before starting Phase 1, ensure you have:
 ### P6-T02: Create Themed UI Components
 
 - **Copilot Prompt:**
+
   ```
   Please complete task P6-T02: Create Themed UI Components.
 
@@ -1290,10 +1376,12 @@ Before starting Phase 1, ensure you have:
 - **Prerequisites:** P6-T01 complete
 
 - **Copilot Reference:**
+
   - `IMPLEMENTATION_ROADMAP.md` - Phase 6, Section 6.2
   - `COMPONENT_LIBRARY.md`
 
 - **Steps:**
+
   1. [ ] Create `ThemedView.tsx` with theme background
   2. [ ] Create `ThemedText.tsx` with typography variants
   3. [ ] Create `Button.tsx` with multiple variants
@@ -1306,6 +1394,7 @@ Before starting Phase 1, ensure you have:
   10. [ ] Write Storybook stories or demo screen
 
 - **Acceptance Criteria:**
+
   - [ ] All components created with theme support
   - [ ] Components render correctly in light and dark modes
   - [ ] TypeScript interfaces defined for all props
@@ -1314,6 +1403,7 @@ Before starting Phase 1, ensure you have:
   - [ ] Demo screen shows all components
 
 - **Evidence Required:**
+
   - Screenshots of all components in light mode
   - Screenshots of all components in dark mode
   - Content of component files showing theme integration
@@ -1329,6 +1419,7 @@ Before starting Phase 1, ensure you have:
 ### P7-T01: Create Inspection Components
 
 - **Copilot Prompt:**
+
   ```
   Please complete task P7-T01: Create Inspection Components.
 
@@ -1368,11 +1459,13 @@ Before starting Phase 1, ensure you have:
 - **Prerequisites:** P6-T02 complete (themed components available)
 
 - **Copilot Reference:**
+
   - `IMPLEMENTATION_ROADMAP.md` - Phase 7
   - `Smart_Inspector_Pro_Build_Layout.md` - Phase 9
   - `COMPONENT_LIBRARY.md`
 
 - **Steps:**
+
   1. [ ] Create `InspectionCard.tsx` with status, date, address
   2. [ ] Create `PhotoThumbnail.tsx` with image optimization
   3. [ ] Create `HierarchySelector.tsx` with dropdown list
@@ -1383,6 +1476,7 @@ Before starting Phase 1, ensure you have:
   8. [ ] Create demo screen showing all components
 
 - **Acceptance Criteria:**
+
   - [ ] All 6 components created
   - [ ] Components render correctly on iOS and Android
   - [ ] Touch interactions work smoothly
@@ -1392,6 +1486,7 @@ Before starting Phase 1, ensure you have:
   - [ ] Unit tests passing
 
 - **Evidence Required:**
+
   - Screenshots of all components
   - Video of touch interactions
   - Test output showing all tests passing
@@ -1405,6 +1500,7 @@ Before starting Phase 1, ensure you have:
 ### P7-T02: Create Data Display Components
 
 - **Copilot Prompt:**
+
   ```
   Please complete task P7-T02: Create Data Display Components.
 
@@ -1443,9 +1539,11 @@ Before starting Phase 1, ensure you have:
 - **Prerequisites:** P7-T01 complete
 
 - **Copilot Reference:**
+
   - `IMPLEMENTATION_ROADMAP.md` - Phase 7, Section 7.2
 
 - **Steps:**
+
   1. [ ] Create `CSVDataTable.tsx` with FlatList virtualization
   2. [ ] Create `FilterChips.tsx` with multi-select
   3. [ ] Create `HierarchyNavigator.tsx` breadcrumb
@@ -1456,6 +1554,7 @@ Before starting Phase 1, ensure you have:
   8. [ ] Optimize render performance
 
 - **Acceptance Criteria:**
+
   - [ ] All 6 components created
   - [ ] Table handles 2,504 rows smoothly (60fps)
   - [ ] Filter chips work with multi-select
@@ -1465,6 +1564,7 @@ Before starting Phase 1, ensure you have:
   - [ ] Performance benchmarks met
 
 - **Evidence Required:**
+
   - Screenshots of all components with data
   - Performance metrics (frame rate, render time)
   - Video showing smooth scrolling
@@ -1478,6 +1578,7 @@ Before starting Phase 1, ensure you have:
 ### P7-T03: Create Collapsible Section Component
 
 - **Copilot Prompt:**
+
   ```
   Please complete task P7-T03: Create Collapsible Section Component.
 
@@ -1517,10 +1618,12 @@ Before starting Phase 1, ensure you have:
 - **Prerequisites:** P6-T02 complete
 
 - **Copilot Reference:**
+
   - `IMPLEMENTATION_ROADMAP.md` - Phase 7, Section 7.3
   - `Smart_Inspector_Pro_Build_Layout.md` - Phase 9.1
 
 - **Steps:**
+
   1. [ ] Create `CollapsibleSection.tsx` with Animated API
   2. [ ] Implement expand/collapse animation (200ms duration)
   3. [ ] Add chevron icon rotation
@@ -1531,6 +1634,7 @@ Before starting Phase 1, ensure you have:
   8. [ ] Write unit tests
 
 - **Acceptance Criteria:**
+
   - [ ] Component created with smooth animation
   - [ ] Expanded state persists across app restarts
   - [ ] Custom styling works (colors, icons)
@@ -1540,6 +1644,7 @@ Before starting Phase 1, ensure you have:
   - [ ] Unit tests passing
 
 - **Evidence Required:**
+
   - Video showing expand/collapse animation
   - Screenshot showing persistence after restart
   - Performance metrics during animation
@@ -1555,6 +1660,7 @@ Before starting Phase 1, ensure you have:
 ### P8-T01: Configure React Navigation
 
 - **Copilot Prompt:**
+
   ```
   Please complete task P8-T01: Configure React Navigation.
 
@@ -1592,10 +1698,12 @@ Before starting Phase 1, ensure you have:
 - **Prerequisites:** P4-T03 complete (auth screens created)
 
 - **Copilot Reference:**
+
   - `IMPLEMENTATION_ROADMAP.md` - Phase 8
   - `Smart_Inspector_Pro_Build_Layout.md` - Phase 9.1
 
 - **Steps:**
+
   1. [ ] Create `navigation/index.tsx` with NavigationContainer
   2. [ ] Create `AuthStack.tsx` with auth screens
   3. [ ] Create `MainStack.tsx` for authenticated screens
@@ -1606,6 +1714,7 @@ Before starting Phase 1, ensure you have:
   8. [ ] Test navigation flow
 
 - **Acceptance Criteria:**
+
   - [ ] Navigation configured without errors
   - [ ] Auth flow works (login → main stack)
   - [ ] Logout returns to auth stack
@@ -1615,6 +1724,7 @@ Before starting Phase 1, ensure you have:
   - [ ] Can navigate between all auth screens
 
 - **Evidence Required:**
+
   - Video showing complete auth flow navigation
   - Screenshot of themed navigation headers
   - Test of deep link opening app
@@ -1628,6 +1738,7 @@ Before starting Phase 1, ensure you have:
 ### P8-T02: Create Home Screen
 
 - **Copilot Prompt:**
+
   ```
   Please complete task P8-T02: Create Home Screen.
 
@@ -1669,10 +1780,12 @@ Before starting Phase 1, ensure you have:
 - **Prerequisites:** P7-T03 complete (CollapsibleSection component)
 
 - **Copilot Reference:**
+
   - `IMPLEMENTATION_ROADMAP.md` - Phase 8, Section 8.2
   - `Smart_Inspector_Pro_Build_Layout.md` - Phase 9.1 (ASCII layout)
 
 - **Steps:**
+
   1. [ ] Create `HomeScreen.tsx` with ScrollView
   2. [ ] Add header with user greeting from Redux auth state
   3. [ ] Add notifications icon (placeholder for now)
@@ -1686,6 +1799,7 @@ Before starting Phase 1, ensure you have:
   11. [ ] Test section persistence
 
 - **Acceptance Criteria:**
+
   - [ ] Home screen renders with all 6 sections
   - [ ] Each section expands/collapses smoothly
   - [ ] User greeting displays correct name
@@ -1695,6 +1809,7 @@ Before starting Phase 1, ensure you have:
   - [ ] Layout matches Build Layout specification
 
 - **Evidence Required:**
+
   - Screenshot of complete home screen
   - Video showing all sections expanding/collapsing
   - Screenshot showing persistence after restart
@@ -1708,6 +1823,7 @@ Before starting Phase 1, ensure you have:
 ### P8-T03: Create Placeholder Screens
 
 - **Copilot Prompt:**
+
   ```
   Please complete task P8-T03: Create Placeholder Screens.
 
@@ -1751,9 +1867,11 @@ Before starting Phase 1, ensure you have:
 - **Prerequisites:** P8-T02 complete
 
 - **Copilot Reference:**
+
   - `IMPLEMENTATION_ROADMAP.md` - Phase 8, Section 8.3
 
 - **Steps:**
+
   1. [ ] Create all 11 placeholder screens
   2. [ ] Add screens to MainStack navigator
   3. [ ] Connect home screen cards to navigation
@@ -1763,6 +1881,7 @@ Before starting Phase 1, ensure you have:
   7. [ ] Test navigation type safety
 
 - **Acceptance Criteria:**
+
   - [ ] All 11 screens created
   - [ ] All screens added to navigator
   - [ ] Home screen navigation works to all screens
@@ -1771,6 +1890,7 @@ Before starting Phase 1, ensure you have:
   - [ ] No navigation warnings in console
 
 - **Evidence Required:**
+
   - Video navigating to all 11 screens
   - Screenshot of each placeholder screen
   - TypeScript compile with no errors
@@ -1786,6 +1906,7 @@ Before starting Phase 1, ensure you have:
 ### P9-T01: Create Inspection State Management
 
 - **Copilot Prompt:**
+
   ```
   Please complete task P9-T01: Create Inspection State Management.
 
@@ -1834,10 +1955,12 @@ Before starting Phase 1, ensure you have:
 - **Prerequisites:** P4-T02 complete (Redux configured)
 
 - **Copilot Reference:**
+
   - `IMPLEMENTATION_ROADMAP.md` - Phase 9
   - `Smart_Inspector_Pro_Build_Layout.md` - Phase 2.1
 
 - **Steps:**
+
   1. [ ] Create `inspection.types.ts` with interfaces
   2. [ ] Create `inspection.slice.ts` with actions and reducers
   3. [ ] Define Inspection interface
@@ -1848,6 +1971,7 @@ Before starting Phase 1, ensure you have:
   8. [ ] Write unit tests
 
 - **Acceptance Criteria:**
+
   - [ ] Inspection types defined
   - [ ] Slice created with all actions
   - [ ] State updates correctly
@@ -1856,6 +1980,7 @@ Before starting Phase 1, ensure you have:
   - [ ] Unit tests passing
 
 - **Evidence Required:**
+
   - Content of inspection types and slice files
   - Test output showing state updates work
 
@@ -1868,6 +1993,7 @@ Before starting Phase 1, ensure you have:
 ### P9-T02: Build Create Inspection Screen
 
 - **Copilot Prompt:**
+
   ```
   Please complete task P9-T02: Build Create Inspection Screen.
 
@@ -1903,10 +2029,12 @@ Before starting Phase 1, ensure you have:
 - **Prerequisites:** P9-T01 complete
 
 - **Copilot Reference:**
+
   - `IMPLEMENTATION_ROADMAP.md` - Phase 9, Section 9.2
   - `Smart_Inspector_Pro_Build_Layout.md` - Phase 3.1
 
 - **Steps:**
+
   1. [ ] Create CreateInspectionScreen with form fields
   2. [ ] Add form validation
   3. [ ] Integrate date picker component
@@ -1917,6 +2045,7 @@ Before starting Phase 1, ensure you have:
   8. [ ] Navigate to Smart Inspector screen
 
 - **Acceptance Criteria:**
+
   - [ ] Form renders with all fields
   - [ ] Validation works for all fields
   - [ ] Creates inspection in Redux and SQLite
@@ -1924,6 +2053,7 @@ Before starting Phase 1, ensure you have:
   - [ ] Can create inspection offline
 
 - **Evidence Required:**
+
   - Screenshots of form
   - Video of complete inspection creation
   - Database query showing created inspection
@@ -1936,6 +2066,7 @@ Before starting Phase 1, ensure you have:
 ### P9-T03: Build Smart Inspector Screen (6-Step Workflow)
 
 - **Copilot Prompt:**
+
   ```
   Please complete task P9-T03: Build Smart Inspector Screen (6-Step Workflow).
 
@@ -1970,11 +2101,13 @@ Before starting Phase 1, ensure you have:
 - **Prerequisites:** P9-T02 complete, P5-T02 complete (CSV data loaded)
 
 - **Copilot Reference:**
+
   - `IMPLEMENTATION_ROADMAP.md` - Phase 9, Section 9.3
   - `Smart_Inspector_Pro_Build_Layout.md` - Phase 4
   - `.github/copilot-instructions.md` - CSV structure
 
 - **Steps:**
+
   1. [ ] Create SmartInspectorScreen with multi-step layout
   2. [ ] Implement step navigation
   3. [ ] Build Section selector
@@ -1989,6 +2122,7 @@ Before starting Phase 1, ensure you have:
   12. [ ] Save complete record
 
 - **Acceptance Criteria:**
+
   - [ ] All 8 steps functional
   - [ ] Hierarchical filtering works correctly
   - [ ] Progress indicator accurate
@@ -1996,6 +2130,7 @@ Before starting Phase 1, ensure you have:
   - [ ] Can complete multiple records in succession
 
 - **Evidence Required:**
+
   - Video showing complete 8-step workflow
   - Screenshots of each step
   - Database query showing saved records
@@ -2010,6 +2145,7 @@ Before starting Phase 1, ensure you have:
 ### P10-T01: Integrate Camera and Image Picker
 
 - **Copilot Prompt:**
+
   ```
   Please complete task P10-T01: Integrate Camera and Image Picker.
 
@@ -2044,9 +2180,11 @@ Before starting Phase 1, ensure you have:
 - **Prerequisites:** P9-T03 complete
 
 - **Copilot Reference:**
+
   - `IMPLEMENTATION_ROADMAP.md` - Phase 10
 
 - **Steps:**
+
   1. [ ] Create camera.service.ts wrapper
   2. [ ] Configure iOS permissions in Info.plist
   3. [ ] Configure Android permissions
@@ -2057,6 +2195,7 @@ Before starting Phase 1, ensure you have:
   8. [ ] Test on both platforms
 
 - **Acceptance Criteria:**
+
   - [ ] Camera launches on iOS and Android
   - [ ] Gallery picker works
   - [ ] Permissions requested appropriately
@@ -2064,6 +2203,7 @@ Before starting Phase 1, ensure you have:
   - [ ] Images compressed to <500KB
 
 - **Evidence Required:**
+
   - Video of camera capture on both platforms
   - Screenshot showing photo preview
   - File size of compressed image
@@ -2076,6 +2216,7 @@ Before starting Phase 1, ensure you have:
 ### P10-T02: Implement Photo Upload to S3
 
 - **Copilot Prompt:**
+
   ```
   Please complete task P10-T02: Implement Photo Upload to S3.
 
@@ -2111,9 +2252,11 @@ Before starting Phase 1, ensure you have:
 - **Prerequisites:** P10-T01 complete, P3-T02 complete
 
 - **Copilot Reference:**
+
   - `IMPLEMENTATION_ROADMAP.md` - Phase 10, Section 10.2
 
 - **Steps:**
+
   1. [ ] Create photo-upload.service.ts
   2. [ ] Implement upload queue in SQLite
   3. [ ] Add upload method with progress
@@ -2124,6 +2267,7 @@ Before starting Phase 1, ensure you have:
   8. [ ] Test offline queueing
 
 - **Acceptance Criteria:**
+
   - [ ] Photos upload to S3 successfully
   - [ ] Upload progress displays (0-100%)
   - [ ] Photos queue when offline
@@ -2131,6 +2275,7 @@ Before starting Phase 1, ensure you have:
   - [ ] CloudFront URL generated
 
 - **Evidence Required:**
+
   - Screenshot of S3 bucket showing uploaded photo
   - Video of upload progress indicator
   - Test showing offline queueing works
@@ -2143,6 +2288,7 @@ Before starting Phase 1, ensure you have:
 ### P10-T03: Create Photo Gallery Component
 
 - **Copilot Prompt:**
+
   ```
   Please complete task P10-T03: Create Photo Gallery Component.
 
@@ -2178,9 +2324,11 @@ Before starting Phase 1, ensure you have:
 - **Prerequisites:** P10-T02 complete
 
 - **Copilot Reference:**
+
   - `IMPLEMENTATION_ROADMAP.md` - Phase 10, Section 10.3
 
 - **Steps:**
+
   1. [ ] Create PhotoGallery.tsx with FlatList
   2. [ ] Create PhotoLightbox.tsx with modal
   3. [ ] Implement grid layout
@@ -2191,6 +2339,7 @@ Before starting Phase 1, ensure you have:
   8. [ ] Add delete and share functionality
 
 - **Acceptance Criteria:**
+
   - [ ] Gallery displays all inspection photos
   - [ ] Tap opens full-screen lightbox
   - [ ] Pinch-to-zoom works smoothly
@@ -2199,6 +2348,7 @@ Before starting Phase 1, ensure you have:
   - [ ] Delete and share work
 
 - **Evidence Required:**
+
   - Screenshots of photo gallery
   - Video showing lightbox and zoom
 
@@ -2207,8 +2357,6 @@ Before starting Phase 1, ensure you have:
 
 ---
 
-
-
 ---
 
 ## Phase 11: Inspection Workflow - Part 2 (Days 37-41)
@@ -2216,6 +2364,7 @@ Before starting Phase 1, ensure you have:
 ### P11-T01: Create Workflow Editor Screen
 
 - **Copilot Prompt:**
+
   ```
   Please complete task P11-T01: Create Workflow Editor Screen.
 
@@ -2255,10 +2404,12 @@ Before starting Phase 1, ensure you have:
 - **Prerequisites:** P5-T02 complete (CSV data loaded)
 
 - **Copilot Reference:**
+
   - `IMPLEMENTATION_ROADMAP.md` - Phase 11
   - `Smart_Inspector_Pro_Build_Layout.md` - Phase 5
 
 - **Steps:**
+
   1. [ ] Create WorkflowEditorScreen.tsx
   2. [ ] Load CSV data from database
   3. [ ] Build Section filter with checkboxes
@@ -2273,6 +2424,7 @@ Before starting Phase 1, ensure you have:
   12. [ ] Test workflow creation and saving
 
 - **Acceptance Criteria:**
+
   - [ ] Can filter CSV data hierarchically
   - [ ] Cascading filters work correctly
   - [ ] Results count updates in real-time
@@ -2282,6 +2434,7 @@ Before starting Phase 1, ensure you have:
   - [ ] Workflow persists and can be loaded
 
 - **Evidence Required:**
+
   - Video showing complete workflow creation
   - Screenshot of filtering UI
   - Database query showing saved workflow
@@ -2296,6 +2449,7 @@ Before starting Phase 1, ensure you have:
 ### P11-T02: Implement Workflow Sharing
 
 - **Copilot Prompt:**
+
   ```
   Please complete task P11-T02: Implement Workflow Sharing.
 
@@ -2331,9 +2485,11 @@ Before starting Phase 1, ensure you have:
 - **Prerequisites:** P11-T01 complete
 
 - **Copilot Reference:**
+
   - `IMPLEMENTATION_ROADMAP.md` - Phase 11, Section 11.2
 
 - **Steps:**
+
   1. [ ] Create workflow-share.service.ts
   2. [ ] Implement share code generation algorithm
   3. [ ] Implement QR code generation using react-native-qrcode-svg
@@ -2345,6 +2501,7 @@ Before starting Phase 1, ensure you have:
   9. [ ] Test complete sharing flow
 
 - **Acceptance Criteria:**
+
   - [ ] Share codes generated correctly (8 chars)
   - [ ] QR codes display and scan correctly
   - [ ] Can import workflow from code
@@ -2354,6 +2511,7 @@ Before starting Phase 1, ensure you have:
   - [ ] Imported workflows save to database
 
 - **Evidence Required:**
+
   - Screenshot of generated QR code
   - Video of QR code scanning
   - Screenshot of workflow import screen
@@ -2368,6 +2526,7 @@ Before starting Phase 1, ensure you have:
 ### P11-T03: Create Continue Inspection Screen
 
 - **Copilot Prompt:**
+
   ```
   Please complete task P11-T03: Create Continue Inspection Screen.
 
@@ -2403,10 +2562,12 @@ Before starting Phase 1, ensure you have:
 - **Prerequisites:** P9-T01 complete (inspection state management)
 
 - **Copilot Reference:**
+
   - `IMPLEMENTATION_ROADMAP.md` - Phase 11, Section 11.3
   - `Smart_Inspector_Pro_Build_Layout.md` - Phase 3.2
 
 - **Steps:**
+
   1. [ ] Create ContinueInspectionScreen.tsx
   2. [ ] Load inspections from Redux state
   3. [ ] Display inspections in FlatList
@@ -2419,6 +2580,7 @@ Before starting Phase 1, ensure you have:
   10. [ ] Navigate to Smart Inspector on tap
 
 - **Acceptance Criteria:**
+
   - [ ] All inspections display correctly
   - [ ] Status badges show correct colors
   - [ ] Progress displays accurately (e.g., "15 of 42 items")
@@ -2429,6 +2591,7 @@ Before starting Phase 1, ensure you have:
   - [ ] Can resume inspection
 
 - **Evidence Required:**
+
   - Screenshot of inspection list
   - Video showing filter and search
   - Video showing swipe actions
@@ -2445,6 +2608,7 @@ Before starting Phase 1, ensure you have:
 ### P12-T01: Create OpenAI Service
 
 - **Copilot Prompt:**
+
   ```
   Please complete task P12-T01: Create OpenAI Service.
 
@@ -2483,11 +2647,13 @@ Before starting Phase 1, ensure you have:
 - **Prerequisites:** P2-T02 complete, OpenAI API key available
 
 - **Copilot Reference:**
+
   - `IMPLEMENTATION_ROADMAP.md` - Phase 12
   - `PROJECT_CONFIGURATION.md`
   - `MEMBERSHIP_TIERS_REVISED.md`
 
 - **Steps:**
+
   1. [ ] Create openai.service.ts
   2. [ ] Install OpenAI SDK: `npm install openai`
   3. [ ] Configure API client with key from env
@@ -2500,6 +2666,7 @@ Before starting Phase 1, ensure you have:
   10. [ ] Write unit tests
 
 - **Acceptance Criteria:**
+
   - [ ] OpenAI service created
   - [ ] API calls work correctly
   - [ ] Rate limiting enforces quota
@@ -2509,6 +2676,7 @@ Before starting Phase 1, ensure you have:
   - [ ] Unit tests passing
 
 - **Evidence Required:**
+
   - Content of openai.service.ts
   - Test showing successful API call
   - Test showing rate limiting works
@@ -2523,6 +2691,7 @@ Before starting Phase 1, ensure you have:
 ### P12-T02: Implement AI Photo Recognition
 
 - **Copilot Prompt:**
+
   ```
   Please complete task P12-T02: Implement AI Photo Recognition.
 
@@ -2560,10 +2729,12 @@ Before starting Phase 1, ensure you have:
 - **Prerequisites:** P12-T01 complete, P10-T01 complete (camera integration)
 
 - **Copilot Reference:**
+
   - `IMPLEMENTATION_ROADMAP.md` - Phase 12, Section 12.2
   - `.github/copilot-instructions.md` - AI accuracy targets
 
 - **Steps:**
+
   1. [ ] Create ai-recognition.service.ts
   2. [ ] Design GPT-4 Vision prompt for inspection analysis
   3. [ ] Implement photo analysis method
@@ -2576,6 +2747,7 @@ Before starting Phase 1, ensure you have:
   10. [ ] Test AI accuracy with sample photos
 
 - **Acceptance Criteria:**
+
   - [ ] AI analyzes photos successfully
   - [ ] Suggests Component with 95%+ accuracy
   - [ ] Suggests Material with 88%+ accuracy
@@ -2587,6 +2759,7 @@ Before starting Phase 1, ensure you have:
   - [ ] Fallback to manual workflow if AI fails
 
 - **Evidence Required:**
+
   - Video showing AI analysis workflow
   - Screenshot of suggested values
   - Test results showing accuracy percentages
@@ -2601,6 +2774,7 @@ Before starting Phase 1, ensure you have:
 ### P12-T03: Implement AI Report Generation
 
 - **Copilot Prompt:**
+
   ```
   Please complete task P12-T03: Implement AI Report Generation.
 
@@ -2635,9 +2809,11 @@ Before starting Phase 1, ensure you have:
 - **Prerequisites:** P12-T01 complete
 
 - **Copilot Reference:**
+
   - `IMPLEMENTATION_ROADMAP.md` - Phase 12, Section 12.3
 
 - **Steps:**
+
   1. [ ] Create ai-report.service.ts
   2. [ ] Design GPT-4 Turbo prompt for report generation
   3. [ ] Implement generateSummary method
@@ -2648,6 +2824,7 @@ Before starting Phase 1, ensure you have:
   8. [ ] Test with various inspection data
 
 - **Acceptance Criteria:**
+
   - [ ] AI generates professional summaries
   - [ ] Recommendations are relevant and actionable
   - [ ] Tone customization works
@@ -2657,6 +2834,7 @@ Before starting Phase 1, ensure you have:
   - [ ] Available to Professional and Enterprise tiers
 
 - **Evidence Required:**
+
   - Sample AI-generated report
   - Video showing report generation
   - Test of different tones
@@ -2673,6 +2851,7 @@ Before starting Phase 1, ensure you have:
 ### P13-T01: Create Report Template System
 
 - **Copilot Prompt:**
+
   ```
   Please complete task P13-T01: Create Report Template System.
 
@@ -2709,10 +2888,12 @@ Before starting Phase 1, ensure you have:
 - **Prerequisites:** P9-T01 complete (inspection data available)
 
 - **Copilot Reference:**
+
   - `IMPLEMENTATION_ROADMAP.md` - Phase 13
   - `Smart_Inspector_Pro_Build_Layout.md` - Phase 6
 
 - **Steps:**
+
   1. [ ] Create report.types.ts with template interfaces
   2. [ ] Create report-template.service.ts
   3. [ ] Define template structure (sections, fields, styling)
@@ -2724,6 +2905,7 @@ Before starting Phase 1, ensure you have:
   9. [ ] Write unit tests
 
 - **Acceptance Criteria:**
+
   - [ ] Report template types defined
   - [ ] 3 default templates created
   - [ ] Templates save to SQLite
@@ -2733,6 +2915,7 @@ Before starting Phase 1, ensure you have:
   - [ ] Template sharing works
 
 - **Evidence Required:**
+
   - Content of report types file
   - Screenshots of 3 default templates
   - Database query showing saved templates
@@ -2746,6 +2929,7 @@ Before starting Phase 1, ensure you have:
 ### P13-T02: Implement PDF Report Generation
 
 - **Copilot Prompt:**
+
   ```
   Please complete task P13-T02: Implement PDF Report Generation.
 
@@ -2785,9 +2969,11 @@ Before starting Phase 1, ensure you have:
 - **Prerequisites:** P13-T01 complete, P12-T03 complete (AI report generation)
 
 - **Copilot Reference:**
+
   - `IMPLEMENTATION_ROADMAP.md` - Phase 13, Section 13.2
 
 - **Steps:**
+
   1. [ ] Install react-native-pdf and react-native-html-to-pdf
   2. [ ] Create pdf-generator.service.ts
   3. [ ] Design HTML template for PDF
@@ -2803,6 +2989,7 @@ Before starting Phase 1, ensure you have:
   13. [ ] Test PDF generation with sample data
 
 - **Acceptance Criteria:**
+
   - [ ] PDF generates successfully
   - [ ] Photos display correctly in PDF
   - [ ] Company logo appears in header
@@ -2815,6 +3002,7 @@ Before starting Phase 1, ensure you have:
   - [ ] PDF file size reasonable (<10MB)
 
 - **Evidence Required:**
+
   - Sample generated PDF file
   - Screenshots of PDF preview
   - Video showing complete generation flow
@@ -2829,6 +3017,7 @@ Before starting Phase 1, ensure you have:
 ### P13-T03: Create Digital Forms System
 
 - **Copilot Prompt:**
+
   ```
   Please complete task P13-T03: Create Digital Forms System.
 
@@ -2868,9 +3057,11 @@ Before starting Phase 1, ensure you have:
 - **Prerequisites:** P13-T02 complete
 
 - **Copilot Reference:**
+
   - `IMPLEMENTATION_ROADMAP.md` - Phase 13, Section 13.3
 
 - **Steps:**
+
   1. [ ] Install react-native-signature-canvas
   2. [ ] Create form templates (3 forms)
   3. [ ] Create DigitalFormsScreen
@@ -2884,6 +3075,7 @@ Before starting Phase 1, ensure you have:
   11. [ ] Test complete form flow
 
 - **Acceptance Criteria:**
+
   - [ ] All 3 forms render correctly
   - [ ] Form validation works
   - [ ] Signature capture smooth and accurate
@@ -2894,6 +3086,7 @@ Before starting Phase 1, ensure you have:
   - [ ] Can email forms to client
 
 - **Evidence Required:**
+
   - Screenshots of all 3 forms
   - Video showing signature capture
   - Sample PDF of completed form
@@ -2910,6 +3103,7 @@ Before starting Phase 1, ensure you have:
 ### P14-T01: Create Team Management System
 
 - **Copilot Prompt:**
+
   ```
   Please complete task P14-T01: Create Team Management System.
 
@@ -2950,11 +3144,13 @@ Before starting Phase 1, ensure you have:
 - **Prerequisites:** P4-T01 complete (auth system)
 
 - **Copilot Reference:**
+
   - `IMPLEMENTATION_ROADMAP.md` - Phase 14
   - `Smart_Inspector_Pro_Build_Layout.md` - Phase 7
   - `.github/copilot-instructions.md` - RBAC roles
 
 - **Steps:**
+
   1. [ ] Create team.types.ts with interfaces
   2. [ ] Create team.slice.ts with Redux state
   3. [ ] Define 3 roles (Team Leader, Senior Inspector, Assistant)
@@ -2969,6 +3165,7 @@ Before starting Phase 1, ensure you have:
   12. [ ] Test RBAC enforcement
 
 - **Acceptance Criteria:**
+
   - [ ] Can create team
   - [ ] Can invite members via email, code, QR
   - [ ] Team members display correctly
@@ -2979,6 +3176,7 @@ Before starting Phase 1, ensure you have:
   - [ ] Team settings save correctly
 
 - **Evidence Required:**
+
   - Screenshots of team management screens
   - Video showing complete team creation
   - Test showing RBAC enforcement
@@ -2993,6 +3191,7 @@ Before starting Phase 1, ensure you have:
 ### P14-T02: Implement Real-Time Collaboration
 
 - **Copilot Prompt:**
+
   ```
   Please complete task P14-T02: Implement Real-Time Collaboration.
 
@@ -3032,9 +3231,11 @@ Before starting Phase 1, ensure you have:
 - **Prerequisites:** P14-T01 complete
 
 - **Copilot Reference:**
+
   - `IMPLEMENTATION_ROADMAP.md` - Phase 14, Section 14.2
 
 - **Steps:**
+
   1. [ ] Install socket.io-client
   2. [ ] Create socket.service.ts
   3. [ ] Configure Socket.io connection
@@ -3049,6 +3250,7 @@ Before starting Phase 1, ensure you have:
   12. [ ] Test real-time sync with 2+ users
 
 - **Acceptance Criteria:**
+
   - [ ] Socket.io connects successfully
   - [ ] Can join team inspection room
   - [ ] Inspection records sync in real-time
@@ -3060,6 +3262,7 @@ Before starting Phase 1, ensure you have:
   - [ ] Works offline (queues updates)
 
 - **Evidence Required:**
+
   - Video showing real-time sync with 2 devices
   - Screenshots of presence indicators
   - Test of conflict resolution
@@ -3074,6 +3277,7 @@ Before starting Phase 1, ensure you have:
 ### P14-T03: Create Join Team Inspection Screen
 
 - **Copilot Prompt:**
+
   ```
   Please complete task P14-T03: Create Join Team Inspection Screen.
 
@@ -3109,10 +3313,12 @@ Before starting Phase 1, ensure you have:
 - **Prerequisites:** P14-T02 complete
 
 - **Copilot Reference:**
+
   - `IMPLEMENTATION_ROADMAP.md` - Phase 14, Section 14.3
   - `Smart_Inspector_Pro_Build_Layout.md` - Phase 3.3
 
 - **Steps:**
+
   1. [ ] Create JoinTeamInspectionScreen
   2. [ ] Load active team inspections
   3. [ ] Display inspection list with team info
@@ -3125,6 +3331,7 @@ Before starting Phase 1, ensure you have:
   10. [ ] Test join flow
 
 - **Acceptance Criteria:**
+
   - [ ] Active inspections display correctly
   - [ ] Can join via code
   - [ ] Can join via QR scan
@@ -3135,6 +3342,7 @@ Before starting Phase 1, ensure you have:
   - [ ] Socket.io room joined on entry
 
 - **Evidence Required:**
+
   - Screenshots of join inspection screen
   - Video showing join via code and QR
   - Screenshot of activity feed
@@ -3151,6 +3359,7 @@ Before starting Phase 1, ensure you have:
 ### P15-T01: Create Calendar Integration
 
 - **Copilot Prompt:**
+
   ```
   Please complete task P15-T01: Create Calendar Integration.
 
@@ -3190,9 +3399,11 @@ Before starting Phase 1, ensure you have:
 - **Prerequisites:** P9-T01 complete (inspection state)
 
 - **Copilot Reference:**
+
   - `IMPLEMENTATION_ROADMAP.md` - Phase 15
 
 - **Steps:**
+
   1. [ ] Install react-native-calendars and react-native-calendar-events
   2. [ ] Create CalendarScreen with month/week/day views
   3. [ ] Create calendar.service.ts
@@ -3205,6 +3416,7 @@ Before starting Phase 1, ensure you have:
   10. [ ] Test calendar sync
 
 - **Acceptance Criteria:**
+
   - [ ] Calendar displays all views (month, week, day)
   - [ ] Can schedule appointments
   - [ ] Reminders trigger notifications
@@ -3215,6 +3427,7 @@ Before starting Phase 1, ensure you have:
   - [ ] Calendar updates in real-time
 
 - **Evidence Required:**
+
   - Screenshots of all calendar views
   - Video showing scheduling and rescheduling
   - Screenshot of device calendar showing synced event
@@ -3229,6 +3442,7 @@ Before starting Phase 1, ensure you have:
 ### P15-T02: Create Contacts Management
 
 - **Copilot Prompt:**
+
   ```
   Please complete task P15-T02: Create Contacts Management.
 
@@ -3269,9 +3483,11 @@ Before starting Phase 1, ensure you have:
 - **Prerequisites:** None (standalone feature)
 
 - **Copilot Reference:**
+
   - `IMPLEMENTATION_ROADMAP.md` - Phase 15, Section 15.2
 
 - **Steps:**
+
   1. [ ] Install react-native-contacts
   2. [ ] Create contact.types.ts
   3. [ ] Create contacts.service.ts
@@ -3286,6 +3502,7 @@ Before starting Phase 1, ensure you have:
   12. [ ] Add quick actions (call, email, message)
 
 - **Acceptance Criteria:**
+
   - [ ] Can add/edit/delete contacts
   - [ ] All contact fields save correctly
   - [ ] Categories work
@@ -3296,6 +3513,7 @@ Before starting Phase 1, ensure you have:
   - [ ] Quick actions launch apps (Phone, Mail, Messages)
 
 - **Evidence Required:**
+
   - Screenshots of contacts screen
   - Video showing add/edit/delete flow
   - Test of device import
@@ -3310,6 +3528,7 @@ Before starting Phase 1, ensure you have:
 ### P15-T03: Create Basic Accounting Tools
 
 - **Copilot Prompt:**
+
   ```
   Please complete task P15-T03: Create Basic Accounting Tools.
 
@@ -3348,9 +3567,11 @@ Before starting Phase 1, ensure you have:
 - **Prerequisites:** P9-T01 complete (inspection data for income)
 
 - **Copilot Reference:**
+
   - `IMPLEMENTATION_ROADMAP.md` - Phase 15, Section 15.3
 
 - **Steps:**
+
   1. [ ] Create accounting.types.ts
   2. [ ] Create accounting.service.ts
   3. [ ] Create AccountingScreen
@@ -3365,6 +3586,7 @@ Before starting Phase 1, ensure you have:
   12. [ ] Test calculations
 
 - **Acceptance Criteria:**
+
   - [ ] Can add income entries
   - [ ] Can add expense entries
   - [ ] Categories work correctly
@@ -3376,6 +3598,7 @@ Before starting Phase 1, ensure you have:
   - [ ] Calculations accurate
 
 - **Evidence Required:**
+
   - Screenshots of accounting screens
   - Sample monthly report
   - Screenshot of income vs. expenses chart
@@ -3392,6 +3615,7 @@ Before starting Phase 1, ensure you have:
 ### P16-T01: Create Marketplace Browser
 
 - **Copilot Prompt:**
+
   ```
   Please complete task P16-T01: Create Marketplace Browser.
 
@@ -3430,10 +3654,12 @@ Before starting Phase 1, ensure you have:
 - **Prerequisites:** P11-T01 complete (workflow system)
 
 - **Copilot Reference:**
+
   - `IMPLEMENTATION_ROADMAP.md` - Phase 16
   - `Smart_Inspector_Pro_Build_Layout.md` - Phase 8
 
 - **Steps:**
+
   1. [ ] Create MarketplaceScreen
   2. [ ] Create marketplace.service.ts
   3. [ ] Design marketplace item structure
@@ -3447,6 +3673,7 @@ Before starting Phase 1, ensure you have:
   11. [ ] Test purchase flow
 
 - **Acceptance Criteria:**
+
   - [ ] Marketplace displays all items
   - [ ] Search and filter work
   - [ ] Item details display correctly
@@ -3457,6 +3684,7 @@ Before starting Phase 1, ensure you have:
   - [ ] Can re-download purchased items
 
 - **Evidence Required:**
+
   - Screenshots of marketplace screens
   - Video showing complete purchase flow
   - Test of add-on installation
@@ -3471,6 +3699,7 @@ Before starting Phase 1, ensure you have:
 ### P16-T02: Create Workflow Publishing System
 
 - **Copilot Prompt:**
+
   ```
   Please complete task P16-T02: Create Workflow Publishing System.
 
@@ -3508,9 +3737,11 @@ Before starting Phase 1, ensure you have:
 - **Prerequisites:** P16-T01 complete
 
 - **Copilot Reference:**
+
   - `IMPLEMENTATION_ROADMAP.md` - Phase 16, Section 16.2
 
 - **Steps:**
+
   1. [ ] Create PublishWorkflowScreen
   2. [ ] Create workflow-publish.service.ts
   3. [ ] Build publish form (metadata, pricing)
@@ -3524,6 +3755,7 @@ Before starting Phase 1, ensure you have:
   11. [ ] Test complete publishing flow
 
 - **Acceptance Criteria:**
+
   - [ ] Can publish workflow
   - [ ] All metadata saved correctly
   - [ ] Preview images upload
@@ -3534,6 +3766,7 @@ Before starting Phase 1, ensure you have:
   - [ ] Can unpublish workflows
 
 - **Evidence Required:**
+
   - Screenshots of publish workflow screen
   - Video showing complete publishing flow
   - Screenshot of publisher dashboard
@@ -3548,6 +3781,7 @@ Before starting Phase 1, ensure you have:
 ### P16-T03: Integrate Payment Processing
 
 - **Copilot Prompt:**
+
   ```
   Please complete task P16-T03: Integrate Payment Processing.
 
@@ -3588,10 +3822,12 @@ Before starting Phase 1, ensure you have:
 - **Prerequisites:** P16-T01 complete
 
 - **Copilot Reference:**
+
   - `IMPLEMENTATION_ROADMAP.md` - Phase 16, Section 16.3
   - `MEMBERSHIP_TIERS_REVISED.md`
 
 - **Steps:**
+
   1. [ ] Install @stripe/stripe-react-native
   2. [ ] Create payment.service.ts
   3. [ ] Configure Stripe SDK
@@ -3606,6 +3842,7 @@ Before starting Phase 1, ensure you have:
   12. [ ] Test all payment flows
 
 - **Acceptance Criteria:**
+
   - [ ] Stripe SDK configured
   - [ ] Can complete one-time purchases
   - [ ] Can subscribe to Professional tier ($89.99/mo)
@@ -3618,6 +3855,7 @@ Before starting Phase 1, ensure you have:
   - [ ] Webhooks receive events
 
 - **Evidence Required:**
+
   - Test purchase in Stripe test mode
   - Screenshot of subscription screen
   - Screenshot of payment method management
@@ -3635,6 +3873,7 @@ Before starting Phase 1, ensure you have:
 ### P17-T01: Comprehensive Unit Testing
 
 - **Copilot Prompt:**
+
   ```
   Please complete task P17-T01: Comprehensive Unit Testing.
 
@@ -3675,10 +3914,12 @@ Before starting Phase 1, ensure you have:
 - **Prerequisites:** All services implemented (P1-P16)
 
 - **Copilot Reference:**
+
   - `IMPLEMENTATION_ROADMAP.md` - Phase 17
   - `TESTING_GUIDELINES.md`
 
 - **Steps:**
+
   1. [ ] Install testing libraries
   2. [ ] Configure Jest
   3. [ ] Write auth service tests
@@ -3695,6 +3936,7 @@ Before starting Phase 1, ensure you have:
   14. [ ] Fix failing tests
 
 - **Acceptance Criteria:**
+
   - [ ] 80%+ code coverage achieved
   - [ ] All critical paths tested
   - [ ] All tests passing
@@ -3703,6 +3945,7 @@ Before starting Phase 1, ensure you have:
   - [ ] No flaky tests
 
 - **Evidence Required:**
+
   - Coverage report showing 80%+
   - Test output showing all tests passing
   - Number of unit tests written
@@ -3716,6 +3959,7 @@ Before starting Phase 1, ensure you have:
 ### P17-T02: Integration and E2E Testing
 
 - **Copilot Prompt:**
+
   ```
   Please complete task P17-T02: Integration and E2E Testing.
 
@@ -3751,9 +3995,11 @@ Before starting Phase 1, ensure you have:
 - **Prerequisites:** P17-T01 complete
 
 - **Copilot Reference:**
+
   - `IMPLEMENTATION_ROADMAP.md` - Phase 17, Section 17.2
 
 - **Steps:**
+
   1. [ ] Install Detox for E2E testing
   2. [ ] Configure Detox for iOS and Android
   3. [ ] Write authentication E2E test
@@ -3768,6 +4014,7 @@ Before starting Phase 1, ensure you have:
   12. [ ] Fix failing tests
 
 - **Acceptance Criteria:**
+
   - [ ] All 8 critical flows tested
   - [ ] Tests run on iOS
   - [ ] Tests run on Android
@@ -3775,6 +4022,7 @@ Before starting Phase 1, ensure you have:
   - [ ] Tests complete in reasonable time (<10 min)
 
 - **Evidence Required:**
+
   - Video of E2E tests running
   - Test output showing all tests passing
   - Execution time for full suite
@@ -3788,6 +4036,7 @@ Before starting Phase 1, ensure you have:
 ### P17-T03: Cross-Platform Testing and Bug Fixes
 
 - **Copilot Prompt:**
+
   ```
   Please complete task P17-T03: Cross-Platform Testing and Bug Fixes.
 
@@ -3821,9 +4070,11 @@ Before starting Phase 1, ensure you have:
 - **Prerequisites:** P17-T02 complete
 
 - **Copilot Reference:**
+
   - `IMPLEMENTATION_ROADMAP.md` - Phase 17, Section 17.3
 
 - **Steps:**
+
   1. [ ] Test on iPhone SE (iOS 16+)
   2. [ ] Test on iPhone 14 (iOS 17)
   3. [ ] Test on iPhone 14 Pro (iOS 17)
@@ -3839,6 +4090,7 @@ Before starting Phase 1, ensure you have:
   13. [ ] Run performance benchmarks
 
 - **Acceptance Criteria:**
+
   - [ ] Tested on 4+ iOS devices
   - [ ] Tested on 4+ Android devices
   - [ ] All critical bugs fixed
@@ -3848,6 +4100,7 @@ Before starting Phase 1, ensure you have:
   - [ ] No platform-specific crashes
 
 - **Evidence Required:**
+
   - Bug report with all issues found
   - Screenshots from each device type
   - Performance benchmark results
@@ -3865,6 +4118,7 @@ Before starting Phase 1, ensure you have:
 ### P18-T01: Optimize Bundle Size and Startup Time
 
 - **Copilot Prompt:**
+
   ```
   Please complete task P18-T01: Optimize Bundle Size and Startup Time.
 
@@ -3900,9 +4154,11 @@ Before starting Phase 1, ensure you have:
 - **Prerequisites:** P17-T03 complete (all features tested)
 
 - **Copilot Reference:**
+
   - `IMPLEMENTATION_ROADMAP.md` - Phase 18
 
 - **Steps:**
+
   1. [ ] Enable Hermes engine (if not already)
   2. [ ] Configure ProGuard for Android release
   3. [ ] Run bundle analyzer
@@ -3917,6 +4173,7 @@ Before starting Phase 1, ensure you have:
   12. [ ] Optimize until targets met
 
 - **Acceptance Criteria:**
+
   - [ ] Hermes engine enabled
   - [ ] ProGuard configured
   - [ ] Bundle size <50MB (iOS and Android)
@@ -3927,6 +4184,7 @@ Before starting Phase 1, ensure you have:
   - [ ] Console statements removed
 
 - **Evidence Required:**
+
   - Bundle size report (before/after)
   - Startup time benchmark (before/after)
   - Bundle analyzer screenshot
@@ -3941,6 +4199,7 @@ Before starting Phase 1, ensure you have:
 ### P18-T02: Optimize Rendering and Animation Performance
 
 - **Copilot Prompt:**
+
   ```
   Please complete task P18-T02: Optimize Rendering and Animation Performance.
 
@@ -3976,9 +4235,11 @@ Before starting Phase 1, ensure you have:
 - **Prerequisites:** P18-T01 complete
 
 - **Copilot Reference:**
+
   - `IMPLEMENTATION_ROADMAP.md` - Phase 18, Section 18.2
 
 - **Steps:**
+
   1. [ ] Audit all FlatList configurations
   2. [ ] Optimize windowSize and pagination
   3. [ ] Apply React.memo to expensive components
@@ -3992,6 +4253,7 @@ Before starting Phase 1, ensure you have:
   11. [ ] Fix performance bottlenecks
 
 - **Acceptance Criteria:**
+
   - [ ] All lists use FlatList with optimization
   - [ ] React.memo applied to heavy components
   - [ ] useCallback and useMemo used appropriately
@@ -4002,6 +4264,7 @@ Before starting Phase 1, ensure you have:
   - [ ] No performance warnings
 
 - **Evidence Required:**
+
   - FPS measurements during heavy operations
   - React DevTools profiler screenshots
   - Before/after performance comparison
@@ -4015,6 +4278,7 @@ Before starting Phase 1, ensure you have:
 ### P18-T03: Memory and Network Optimization
 
 - **Copilot Prompt:**
+
   ```
   Please complete task P18-T03: Memory and Network Optimization.
 
@@ -4050,9 +4314,11 @@ Before starting Phase 1, ensure you have:
 - **Prerequisites:** P18-T02 complete
 
 - **Copilot Reference:**
+
   - `IMPLEMENTATION_ROADMAP.md` - Phase 18, Section 18.3
 
 - **Steps:**
+
   1. [ ] Profile memory usage
   2. [ ] Fix memory leaks (listeners, timers)
   3. [ ] Implement FastImage for caching
@@ -4065,6 +4331,7 @@ Before starting Phase 1, ensure you have:
   10. [ ] Test with large datasets
 
 - **Acceptance Criteria:**
+
   - [ ] No memory leaks detected
   - [ ] Memory usage <100MB average
   - [ ] Image caching implemented
@@ -4075,6 +4342,7 @@ Before starting Phase 1, ensure you have:
   - [ ] App runs smoothly with 1000+ records
 
 - **Evidence Required:**
+
   - Memory profiler screenshots
   - Network traffic comparison (before/after)
   - Database query performance benchmarks
@@ -4090,6 +4358,7 @@ Before starting Phase 1, ensure you have:
 ### P19-T01: Prepare App Store Assets
 
 - **Copilot Prompt:**
+
   ```
   Please complete task P19-T01: Prepare App Store Assets.
 
@@ -4125,9 +4394,11 @@ Before starting Phase 1, ensure you have:
 - **Prerequisites:** P18-T03 complete (app fully optimized)
 
 - **Copilot Reference:**
+
   - `IMPLEMENTATION_ROADMAP.md` - Phase 19
 
 - **Steps:**
+
   1. [ ] Design app icon (1024x1024)
   2. [ ] Generate all icon sizes
   3. [ ] Create launch screens
@@ -4142,6 +4413,7 @@ Before starting Phase 1, ensure you have:
   12. [ ] Organize all assets
 
 - **Acceptance Criteria:**
+
   - [ ] App icon in all required sizes
   - [ ] Launch screens for iOS and Android
   - [ ] Screenshots for all device sizes
@@ -4154,6 +4426,7 @@ Before starting Phase 1, ensure you have:
   - [ ] Support URL active
 
 - **Evidence Required:**
+
   - All icon files
   - All screenshot files
   - App preview videos
@@ -4169,6 +4442,7 @@ Before starting Phase 1, ensure you have:
 ### P19-T02: Configure App Store Listings
 
 - **Copilot Prompt:**
+
   ```
   Please complete task P19-T02: Configure App Store Listings.
 
@@ -4204,9 +4478,11 @@ Before starting Phase 1, ensure you have:
 - **Prerequisites:** P19-T01 complete
 
 - **Copilot Reference:**
+
   - `IMPLEMENTATION_ROADMAP.md` - Phase 19, Section 19.2
 
 - **Steps:**
+
   1. [ ] Create App Store Connect record
   2. [ ] Create Google Play Console record
   3. [ ] Upload app icon and screenshots
@@ -4221,6 +4497,7 @@ Before starting Phase 1, ensure you have:
   12. [ ] Submit for TestFlight/Internal Testing
 
 - **Acceptance Criteria:**
+
   - [ ] App Store Connect configured
   - [ ] Google Play Console configured
   - [ ] All assets uploaded
@@ -4232,6 +4509,7 @@ Before starting Phase 1, ensure you have:
   - [ ] Submitted for beta testing
 
 - **Evidence Required:**
+
   - Screenshots of App Store Connect
   - Screenshots of Google Play Console
   - TestFlight invite link
@@ -4246,6 +4524,7 @@ Before starting Phase 1, ensure you have:
 ### P19-T03: Beta Testing and Final Fixes
 
 - **Copilot Prompt:**
+
   ```
   Please complete task P19-T03: Beta Testing and Final Fixes.
 
@@ -4280,9 +4559,11 @@ Before starting Phase 1, ensure you have:
 - **Prerequisites:** P19-T02 complete
 
 - **Copilot Reference:**
+
   - `IMPLEMENTATION_ROADMAP.md` - Phase 19, Section 19.3
 
 - **Steps:**
+
   1. [ ] Invite beta testers
   2. [ ] Send beta testing guidelines
   3. [ ] Create feedback form
@@ -4296,6 +4577,7 @@ Before starting Phase 1, ensure you have:
   11. [ ] Prepare production build
 
 - **Acceptance Criteria:**
+
   - [ ] 10+ beta testers recruited
   - [ ] Feedback collected from majority
   - [ ] All critical bugs fixed
@@ -4305,6 +4587,7 @@ Before starting Phase 1, ensure you have:
   - [ ] Ready for production release
 
 - **Evidence Required:**
+
   - Beta tester list
   - Feedback summary
   - Bug fix changelog
@@ -4323,6 +4606,7 @@ Before starting Phase 1, ensure you have:
 ### P20-T01: Production Deployment
 
 - **Copilot Prompt:**
+
   ```
   Please complete task P20-T01: Production Deployment.
 
@@ -4360,11 +4644,13 @@ Before starting Phase 1, ensure you have:
 - **Prerequisites:** P19-T03 complete (beta testing done)
 
 - **Copilot Reference:**
+
   - `IMPLEMENTATION_ROADMAP.md` - Phase 20
   - `AWS_INFRASTRUCTURE_COMPLETED.md`
   - `DEPLOYMENT_GUIDE.md`
 
 - **Steps:**
+
   1. [ ] Scale AWS infrastructure
   2. [ ] Configure production environment variables
   3. [ ] Enable CloudWatch alarms
@@ -4378,6 +4664,7 @@ Before starting Phase 1, ensure you have:
   11. [ ] Monitor review status
 
 - **Acceptance Criteria:**
+
   - [ ] AWS infrastructure scaled for production
   - [ ] Production environment configured
   - [ ] CloudWatch alarms active
@@ -4388,6 +4675,7 @@ Before starting Phase 1, ensure you have:
   - [ ] No submission errors
 
 - **Evidence Required:**
+
   - AWS dashboard showing scaled resources
   - Screenshot of App Store submission
   - Screenshot of Play Store submission
@@ -4402,6 +4690,7 @@ Before starting Phase 1, ensure you have:
 ### P20-T02: Launch Day Monitoring and Support
 
 - **Copilot Prompt:**
+
   ```
   Please complete task P20-T02: Launch Day Monitoring and Support.
 
@@ -4436,9 +4725,11 @@ Before starting Phase 1, ensure you have:
 - **Prerequisites:** P20-T01 complete (apps approved)
 
 - **Copilot Reference:**
+
   - `IMPLEMENTATION_ROADMAP.md` - Phase 20, Section 20.2
 
 - **Steps:**
+
   1. [ ] Monitor app store approval status
   2. [ ] Apps approved and go live!
   3. [ ] Execute marketing campaign
@@ -4452,6 +4743,7 @@ Before starting Phase 1, ensure you have:
   11. [ ] Celebrate successful launch! 🎉
 
 - **Acceptance Criteria:**
+
   - [ ] Apps live on both stores
   - [ ] Marketing campaign executed
   - [ ] No critical errors in first 24 hours
@@ -4461,6 +4753,7 @@ Before starting Phase 1, ensure you have:
   - [ ] Launch announcement posted
 
 - **Evidence Required:**
+
   - Screenshots of live app store listings
   - CloudWatch metrics (first 24 hours)
   - App store reviews/ratings
@@ -4476,6 +4769,7 @@ Before starting Phase 1, ensure you have:
 ### P20-T03: Post-Launch Optimization and Roadmap
 
 - **Copilot Prompt:**
+
   ```
   Please complete task P20-T03: Post-Launch Optimization and Roadmap.
 
@@ -4511,9 +4805,11 @@ Before starting Phase 1, ensure you have:
 - **Prerequisites:** P20-T02 complete (launch successful)
 
 - **Copilot Reference:**
+
   - `IMPLEMENTATION_ROADMAP.md` - Phase 20, Section 20.3
 
 - **Steps:**
+
   1. [ ] Set up analytics dashboard
   2. [ ] Track DAU, MAU, retention
   3. [ ] Track subscription conversions
@@ -4527,6 +4823,7 @@ Before starting Phase 1, ensure you have:
   11. [ ] Scale infrastructure if needed
 
 - **Acceptance Criteria:**
+
   - [ ] Analytics dashboard configured
   - [ ] User metrics tracked
   - [ ] Revenue metrics tracked
@@ -4537,6 +4834,7 @@ Before starting Phase 1, ensure you have:
   - [ ] Lessons learned documented
 
 - **Evidence Required:**
+
   - Analytics dashboard screenshot
   - User/revenue metrics report
   - Prioritized bug/feature list
@@ -4556,6 +4854,7 @@ Before starting Phase 1, ensure you have:
 **Total Phases**: 20 phases
 **Total Timeline**: 86-90+ days (approximately 17-20 weeks)
 **Task Breakdown by Phase**:
+
 - Phase 1-2: Setup & Initialization (6 tasks)
 - Phase 3-6: Core Infrastructure (8 tasks)
 - Phase 7-10: Core Features (12 tasks)
