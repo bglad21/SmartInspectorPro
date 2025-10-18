@@ -1,9 +1,9 @@
 /**
  * Database Service
- * 
+ *
  * Provides SQLite database operations for Smart Inspector Pro.
  * Implements offline-first architecture with local storage and sync queue.
- * 
+ *
  * Features:
  * - Database initialization and migrations
  * - CRUD operations for all tables
@@ -11,11 +11,14 @@
  * - Sync queue management
  * - CSV data loading
  * - Indexed queries for performance
- * 
+ *
  * @service
  */
 
-import SQLite, { type SQLiteDatabase, type ResultSet } from 'react-native-sqlite-storage';
+import SQLite, {
+  type ResultSet,
+  type SQLiteDatabase,
+} from 'react-native-sqlite-storage';
 
 // Enable promise API and debugging
 SQLite.DEBUG(process.env.NODE_ENV === 'development');
@@ -75,7 +78,12 @@ export interface InspectionRecord {
   location: string | null;
   component: string;
   material: string;
-  condition: 'Acceptable' | 'Monitor' | 'Repair/Replace' | 'Safety Hazard' | 'Access Restricted';
+  condition:
+    | 'Acceptable'
+    | 'Monitor'
+    | 'Repair/Replace'
+    | 'Safety Hazard'
+    | 'Access Restricted';
   comment: string;
   photoUri: string | null; // Local file path or S3 URL
   photoS3Key: string | null; // S3 object key
@@ -114,7 +122,12 @@ export interface CSVData {
   location: string | null;
   component: string;
   material: string;
-  condition: 'Acceptable' | 'Monitor' | 'Repair/Replace' | 'Safety Hazard' | 'Access Restricted';
+  condition:
+    | 'Acceptable'
+    | 'Monitor'
+    | 'Repair/Replace'
+    | 'Safety Hazard'
+    | 'Access Restricted';
   comment: string;
   propertyType: 'single-family' | 'multi-family' | 'commercial';
 }
@@ -160,7 +173,7 @@ class DatabaseService {
   async initialize(): Promise<void> {
     try {
       console.log('[DatabaseService] Initializing database...');
-      
+
       // Open database
       this.db = await SQLite.openDatabase({
         name: DATABASE_NAME,
@@ -319,35 +332,73 @@ class DatabaseService {
     const db = this.getDB();
 
     // Users indexes
-    await db.executeSql('CREATE INDEX IF NOT EXISTS idx_users_username ON users(username);');
-    await db.executeSql('CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);');
+    await db.executeSql(
+      'CREATE INDEX IF NOT EXISTS idx_users_username ON users(username);',
+    );
+    await db.executeSql(
+      'CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);',
+    );
 
     // Inspections indexes
-    await db.executeSql('CREATE INDEX IF NOT EXISTS idx_inspections_userId ON inspections(userId);');
-    await db.executeSql('CREATE INDEX IF NOT EXISTS idx_inspections_status ON inspections(status);');
-    await db.executeSql('CREATE INDEX IF NOT EXISTS idx_inspections_scheduledDate ON inspections(scheduledDate);');
-    await db.executeSql('CREATE INDEX IF NOT EXISTS idx_inspections_syncedAt ON inspections(syncedAt);');
+    await db.executeSql(
+      'CREATE INDEX IF NOT EXISTS idx_inspections_userId ON inspections(userId);',
+    );
+    await db.executeSql(
+      'CREATE INDEX IF NOT EXISTS idx_inspections_status ON inspections(status);',
+    );
+    await db.executeSql(
+      'CREATE INDEX IF NOT EXISTS idx_inspections_scheduledDate ON inspections(scheduledDate);',
+    );
+    await db.executeSql(
+      'CREATE INDEX IF NOT EXISTS idx_inspections_syncedAt ON inspections(syncedAt);',
+    );
 
     // InspectionRecords indexes
-    await db.executeSql('CREATE INDEX IF NOT EXISTS idx_inspectionRecords_inspectionId ON inspectionRecords(inspectionId);');
-    await db.executeSql('CREATE INDEX IF NOT EXISTS idx_inspectionRecords_section ON inspectionRecords(section);');
-    await db.executeSql('CREATE INDEX IF NOT EXISTS idx_inspectionRecords_condition ON inspectionRecords(condition);');
-    await db.executeSql('CREATE INDEX IF NOT EXISTS idx_inspectionRecords_syncedAt ON inspectionRecords(syncedAt);');
+    await db.executeSql(
+      'CREATE INDEX IF NOT EXISTS idx_inspectionRecords_inspectionId ON inspectionRecords(inspectionId);',
+    );
+    await db.executeSql(
+      'CREATE INDEX IF NOT EXISTS idx_inspectionRecords_section ON inspectionRecords(section);',
+    );
+    await db.executeSql(
+      'CREATE INDEX IF NOT EXISTS idx_inspectionRecords_condition ON inspectionRecords(condition);',
+    );
+    await db.executeSql(
+      'CREATE INDEX IF NOT EXISTS idx_inspectionRecords_syncedAt ON inspectionRecords(syncedAt);',
+    );
 
     // Workflows indexes
-    await db.executeSql('CREATE INDEX IF NOT EXISTS idx_workflows_userId ON workflows(userId);');
-    await db.executeSql('CREATE INDEX IF NOT EXISTS idx_workflows_propertyType ON workflows(propertyType);');
-    await db.executeSql('CREATE INDEX IF NOT EXISTS idx_workflows_sharedCode ON workflows(sharedCode);');
+    await db.executeSql(
+      'CREATE INDEX IF NOT EXISTS idx_workflows_userId ON workflows(userId);',
+    );
+    await db.executeSql(
+      'CREATE INDEX IF NOT EXISTS idx_workflows_propertyType ON workflows(propertyType);',
+    );
+    await db.executeSql(
+      'CREATE INDEX IF NOT EXISTS idx_workflows_sharedCode ON workflows(sharedCode);',
+    );
 
     // CSVData indexes
-    await db.executeSql('CREATE INDEX IF NOT EXISTS idx_csvData_section ON csvData(section);');
-    await db.executeSql('CREATE INDEX IF NOT EXISTS idx_csvData_system ON csvData(system);');
-    await db.executeSql('CREATE INDEX IF NOT EXISTS idx_csvData_component ON csvData(component);');
-    await db.executeSql('CREATE INDEX IF NOT EXISTS idx_csvData_propertyType ON csvData(propertyType);');
+    await db.executeSql(
+      'CREATE INDEX IF NOT EXISTS idx_csvData_section ON csvData(section);',
+    );
+    await db.executeSql(
+      'CREATE INDEX IF NOT EXISTS idx_csvData_system ON csvData(system);',
+    );
+    await db.executeSql(
+      'CREATE INDEX IF NOT EXISTS idx_csvData_component ON csvData(component);',
+    );
+    await db.executeSql(
+      'CREATE INDEX IF NOT EXISTS idx_csvData_propertyType ON csvData(propertyType);',
+    );
 
     // SyncQueue indexes
-    await db.executeSql('CREATE INDEX IF NOT EXISTS idx_syncQueue_status ON syncQueue(status);');
-    await db.executeSql('CREATE INDEX IF NOT EXISTS idx_syncQueue_tableName ON syncQueue(tableName);');
+    await db.executeSql(
+      'CREATE INDEX IF NOT EXISTS idx_syncQueue_status ON syncQueue(status);',
+    );
+    await db.executeSql(
+      'CREATE INDEX IF NOT EXISTS idx_syncQueue_tableName ON syncQueue(tableName);',
+    );
 
     console.log('[DatabaseService] Indexes created successfully');
   }
@@ -359,7 +410,9 @@ class DatabaseService {
   /**
    * Insert or update user
    */
-  async upsertUser(user: Omit<User, 'createdAt' | 'updatedAt' | 'syncedAt'>): Promise<void> {
+  async upsertUser(
+    user: Omit<User, 'createdAt' | 'updatedAt' | 'syncedAt'>,
+  ): Promise<void> {
     const db = this.getDB();
     const now = new Date().toISOString();
 
@@ -382,7 +435,7 @@ class DatabaseService {
         user.groups,
         now,
         now,
-      ]
+      ],
     );
   }
 
@@ -391,7 +444,9 @@ class DatabaseService {
    */
   async getUserById(userId: string): Promise<User | null> {
     const db = this.getDB();
-    const [result] = await db.executeSql('SELECT * FROM users WHERE id = ?;', [userId]);
+    const [result] = await db.executeSql('SELECT * FROM users WHERE id = ?;', [
+      userId,
+    ]);
 
     if (result.rows.length === 0) {
       return null;
@@ -405,7 +460,10 @@ class DatabaseService {
    */
   async getUserByUsername(username: string): Promise<User | null> {
     const db = this.getDB();
-    const [result] = await db.executeSql('SELECT * FROM users WHERE username = ?;', [username]);
+    const [result] = await db.executeSql(
+      'SELECT * FROM users WHERE username = ?;',
+      [username],
+    );
 
     if (result.rows.length === 0) {
       return null;
@@ -421,7 +479,9 @@ class DatabaseService {
   /**
    * Create inspection
    */
-  async createInspection(inspection: Omit<Inspection, 'createdAt' | 'updatedAt' | 'syncedAt'>): Promise<void> {
+  async createInspection(
+    inspection: Omit<Inspection, 'createdAt' | 'updatedAt' | 'syncedAt'>,
+  ): Promise<void> {
     const db = this.getDB();
     const now = new Date().toISOString();
 
@@ -445,17 +505,25 @@ class DatabaseService {
         inspection.notes,
         now,
         now,
-      ]
+      ],
     );
 
     // Add to sync queue
-    await this.addToSyncQueue('inspections', inspection.id, 'INSERT', inspection);
+    await this.addToSyncQueue(
+      'inspections',
+      inspection.id,
+      'INSERT',
+      inspection,
+    );
   }
 
   /**
    * Update inspection
    */
-  async updateInspection(id: string, updates: Partial<Inspection>): Promise<void> {
+  async updateInspection(
+    id: string,
+    updates: Partial<Inspection>,
+  ): Promise<void> {
     const db = this.getDB();
     const now = new Date().toISOString();
 
@@ -479,11 +547,14 @@ class DatabaseService {
 
     await db.executeSql(
       `UPDATE inspections SET ${fields.join(', ')} WHERE id = ?;`,
-      values
+      values,
     );
 
     // Add to sync queue
-    await this.addToSyncQueue('inspections', id, 'UPDATE', { ...updates, updatedAt: now });
+    await this.addToSyncQueue('inspections', id, 'UPDATE', {
+      ...updates,
+      updatedAt: now,
+    });
   }
 
   /**
@@ -491,7 +562,10 @@ class DatabaseService {
    */
   async getInspectionById(id: string): Promise<Inspection | null> {
     const db = this.getDB();
-    const [result] = await db.executeSql('SELECT * FROM inspections WHERE id = ?;', [id]);
+    const [result] = await db.executeSql(
+      'SELECT * FROM inspections WHERE id = ?;',
+      [id],
+    );
 
     if (result.rows.length === 0) {
       return null;
@@ -503,7 +577,10 @@ class DatabaseService {
   /**
    * Get inspections by user ID
    */
-  async getInspectionsByUserId(userId: string, status?: string): Promise<Inspection[]> {
+  async getInspectionsByUserId(
+    userId: string,
+    status?: string,
+  ): Promise<Inspection[]> {
     const db = this.getDB();
     let query = 'SELECT * FROM inspections WHERE userId = ?';
     const params: unknown[] = [userId];
@@ -544,7 +621,9 @@ class DatabaseService {
   /**
    * Create inspection record
    */
-  async createInspectionRecord(record: Omit<InspectionRecord, 'createdAt' | 'updatedAt' | 'syncedAt'>): Promise<void> {
+  async createInspectionRecord(
+    record: Omit<InspectionRecord, 'createdAt' | 'updatedAt' | 'syncedAt'>,
+  ): Promise<void> {
     const db = this.getDB();
     const now = new Date().toISOString();
 
@@ -569,7 +648,7 @@ class DatabaseService {
         record.sequenceNumber,
         now,
         now,
-      ]
+      ],
     );
 
     // Add to sync queue
@@ -579,7 +658,10 @@ class DatabaseService {
   /**
    * Update inspection record
    */
-  async updateInspectionRecord(id: string, updates: Partial<InspectionRecord>): Promise<void> {
+  async updateInspectionRecord(
+    id: string,
+    updates: Partial<InspectionRecord>,
+  ): Promise<void> {
     const db = this.getDB();
     const now = new Date().toISOString();
 
@@ -603,21 +685,26 @@ class DatabaseService {
 
     await db.executeSql(
       `UPDATE inspectionRecords SET ${fields.join(', ')} WHERE id = ?;`,
-      values
+      values,
     );
 
     // Add to sync queue
-    await this.addToSyncQueue('inspectionRecords', id, 'UPDATE', { ...updates, updatedAt: now });
+    await this.addToSyncQueue('inspectionRecords', id, 'UPDATE', {
+      ...updates,
+      updatedAt: now,
+    });
   }
 
   /**
    * Get inspection records by inspection ID
    */
-  async getInspectionRecords(inspectionId: string): Promise<InspectionRecord[]> {
+  async getInspectionRecords(
+    inspectionId: string,
+  ): Promise<InspectionRecord[]> {
     const db = this.getDB();
     const [result] = await db.executeSql(
       'SELECT * FROM inspectionRecords WHERE inspectionId = ? ORDER BY sequenceNumber ASC;',
-      [inspectionId]
+      [inspectionId],
     );
 
     const records: InspectionRecord[] = [];
@@ -647,7 +734,9 @@ class DatabaseService {
   /**
    * Create workflow
    */
-  async createWorkflow(workflow: Omit<Workflow, 'createdAt' | 'updatedAt' | 'syncedAt'>): Promise<void> {
+  async createWorkflow(
+    workflow: Omit<Workflow, 'createdAt' | 'updatedAt' | 'syncedAt'>,
+  ): Promise<void> {
     const db = this.getDB();
     const now = new Date().toISOString();
 
@@ -668,7 +757,7 @@ class DatabaseService {
         workflow.sharedCode,
         now,
         now,
-      ]
+      ],
     );
 
     // Add to sync queue
@@ -702,11 +791,14 @@ class DatabaseService {
 
     await db.executeSql(
       `UPDATE workflows SET ${fields.join(', ')} WHERE id = ?;`,
-      values
+      values,
     );
 
     // Add to sync queue
-    await this.addToSyncQueue('workflows', id, 'UPDATE', { ...updates, updatedAt: now });
+    await this.addToSyncQueue('workflows', id, 'UPDATE', {
+      ...updates,
+      updatedAt: now,
+    });
   }
 
   /**
@@ -716,7 +808,7 @@ class DatabaseService {
     const db = this.getDB();
     const [result] = await db.executeSql(
       'SELECT * FROM workflows WHERE userId = ? ORDER BY isDefault DESC, name ASC;',
-      [userId]
+      [userId],
     );
 
     const workflows: Workflow[] = [];
@@ -734,7 +826,7 @@ class DatabaseService {
     const db = this.getDB();
     const [result] = await db.executeSql(
       'SELECT * FROM workflows WHERE sharedCode = ?;',
-      [sharedCode]
+      [sharedCode],
     );
 
     if (result.rows.length === 0) {
@@ -767,7 +859,7 @@ class DatabaseService {
     const db = this.getDB();
 
     // Use transaction for bulk insert
-    await db.transaction(async (tx) => {
+    await db.transaction(async tx => {
       for (const row of data) {
         await tx.executeSql(
           `INSERT INTO csvData (section, system, location, component, material, condition, comment, propertyType)
@@ -781,7 +873,7 @@ class DatabaseService {
             row.condition,
             row.comment,
             row.propertyType,
-          ]
+          ],
         );
       }
     });
@@ -869,7 +961,10 @@ class DatabaseService {
   /**
    * Get distinct systems for a section
    */
-  async getDistinctSystems(section: string, propertyType?: string): Promise<string[]> {
+  async getDistinctSystems(
+    section: string,
+    propertyType?: string,
+  ): Promise<string[]> {
     const db = this.getDB();
     let query = 'SELECT DISTINCT system FROM csvData WHERE section = ?';
     const params: unknown[] = [section];
@@ -894,9 +989,14 @@ class DatabaseService {
   /**
    * Get distinct components for a section and system
    */
-  async getDistinctComponents(section: string, system: string, propertyType?: string): Promise<string[]> {
+  async getDistinctComponents(
+    section: string,
+    system: string,
+    propertyType?: string,
+  ): Promise<string[]> {
     const db = this.getDB();
-    let query = 'SELECT DISTINCT component FROM csvData WHERE section = ? AND system = ?';
+    let query =
+      'SELECT DISTINCT component FROM csvData WHERE section = ? AND system = ?';
     const params: unknown[] = [section, system];
 
     if (propertyType) {
@@ -923,10 +1023,11 @@ class DatabaseService {
     section: string,
     system: string,
     component: string,
-    propertyType?: string
+    propertyType?: string,
   ): Promise<string[]> {
     const db = this.getDB();
-    let query = 'SELECT DISTINCT material FROM csvData WHERE section = ? AND system = ? AND component = ?';
+    let query =
+      'SELECT DISTINCT material FROM csvData WHERE section = ? AND system = ? AND component = ?';
     const params: unknown[] = [section, system, component];
 
     if (propertyType) {
@@ -955,10 +1056,10 @@ class DatabaseService {
     component: string,
     material: string,
     condition: string,
-    propertyType?: string
+    propertyType?: string,
   ): Promise<string[]> {
     const db = this.getDB();
-    let query = `SELECT DISTINCT comment FROM csvData 
+    let query = `SELECT DISTINCT comment FROM csvData
                  WHERE section = ? AND system = ? AND component = ? AND material = ? AND condition = ?`;
     const params: unknown[] = [section, system, component, material, condition];
 
@@ -990,7 +1091,7 @@ class DatabaseService {
     tableName: string,
     recordId: string,
     operation: 'INSERT' | 'UPDATE' | 'DELETE',
-    data: unknown
+    data: unknown,
   ): Promise<void> {
     const db = this.getDB();
     const now = new Date().toISOString();
@@ -998,7 +1099,7 @@ class DatabaseService {
     await db.executeSql(
       `INSERT INTO syncQueue (tableName, recordId, operation, data, createdAt, attempts, status)
        VALUES (?, ?, ?, ?, ?, 0, 'pending');`,
-      [tableName, recordId, operation, JSON.stringify(data), now]
+      [tableName, recordId, operation, JSON.stringify(data), now],
     );
   }
 
@@ -1009,7 +1110,7 @@ class DatabaseService {
     const db = this.getDB();
     const [result] = await db.executeSql(
       `SELECT * FROM syncQueue WHERE status = 'pending' ORDER BY createdAt ASC LIMIT ?;`,
-      [limit]
+      [limit],
     );
 
     const items: SyncQueueItem[] = [];
@@ -1026,14 +1127,14 @@ class DatabaseService {
   async updateSyncQueueItem(
     id: number,
     status: 'in-progress' | 'completed' | 'failed',
-    error?: string
+    error?: string,
   ): Promise<void> {
     const db = this.getDB();
     const now = new Date().toISOString();
 
     await db.executeSql(
       `UPDATE syncQueue SET status = ?, lastAttemptAt = ?, attempts = attempts + 1, error = ? WHERE id = ?;`,
-      [status, now, error || null, id]
+      [status, now, error || null, id],
     );
   }
 
@@ -1074,13 +1175,23 @@ class DatabaseService {
   async getStatistics(): Promise<DatabaseStats> {
     const db = this.getDB();
 
-    const [usersResult] = await db.executeSql('SELECT COUNT(*) as count FROM users;');
-    const [inspectionsResult] = await db.executeSql('SELECT COUNT(*) as count FROM inspections;');
-    const [recordsResult] = await db.executeSql('SELECT COUNT(*) as count FROM inspectionRecords;');
-    const [workflowsResult] = await db.executeSql('SELECT COUNT(*) as count FROM workflows;');
-    const [csvResult] = await db.executeSql('SELECT COUNT(*) as count FROM csvData;');
+    const [usersResult] = await db.executeSql(
+      'SELECT COUNT(*) as count FROM users;',
+    );
+    const [inspectionsResult] = await db.executeSql(
+      'SELECT COUNT(*) as count FROM inspections;',
+    );
+    const [recordsResult] = await db.executeSql(
+      'SELECT COUNT(*) as count FROM inspectionRecords;',
+    );
+    const [workflowsResult] = await db.executeSql(
+      'SELECT COUNT(*) as count FROM workflows;',
+    );
+    const [csvResult] = await db.executeSql(
+      'SELECT COUNT(*) as count FROM csvData;',
+    );
     const [syncResult] = await db.executeSql(
-      "SELECT COUNT(*) as count FROM syncQueue WHERE status = 'pending';"
+      "SELECT COUNT(*) as count FROM syncQueue WHERE status = 'pending';",
     );
 
     return {
@@ -1107,7 +1218,7 @@ class DatabaseService {
   async clearAllData(): Promise<void> {
     const db = this.getDB();
 
-    await db.transaction(async (tx) => {
+    await db.transaction(async tx => {
       await tx.executeSql('DELETE FROM syncQueue;');
       await tx.executeSql('DELETE FROM inspectionRecords;');
       await tx.executeSql('DELETE FROM inspections;');
