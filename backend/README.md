@@ -5,9 +5,11 @@ Node.js/Express.js backend API server for Smart Inspector Pro.
 ## Structure
 
 ### `routes/` - API Routes
+
 Express route definitions organized by feature.
 
 **Routes:**
+
 - `auth.routes.ts` - Authentication endpoints (login, register, refresh)
 - `inspections.routes.ts` - Inspection CRUD operations
 - `workflows.routes.ts` - Workflow management
@@ -17,18 +19,22 @@ Express route definitions organized by feature.
 - `team.routes.ts` - Team collaboration features
 
 ### `controllers/` - Request Handlers
+
 Business logic for handling HTTP requests.
 
 **Controllers:**
+
 - `auth.controller.ts` - User authentication logic
 - `inspections.controller.ts` - Inspection operations
 - `ai.controller.ts` - AI photo analysis
 - `storage.controller.ts` - S3 upload/download
 
 ### `models/` - Database Models
+
 PostgreSQL database models (using Sequelize or TypeORM).
 
 **Models:**
+
 - `User.model.ts` - User account data
 - `Inspection.model.ts` - Inspection records
 - `InspectionRecord.model.ts` - Individual inspection items
@@ -36,18 +42,22 @@ PostgreSQL database models (using Sequelize or TypeORM).
 - `Team.model.ts` - Team collaboration
 
 ### `middleware/` - Express Middleware
+
 Custom middleware for authentication, validation, error handling.
 
 **Middleware:**
+
 - `auth.middleware.ts` - JWT token validation (Cognito)
 - `errorHandler.middleware.ts` - Global error handler
 - `validation.middleware.ts` - Request validation (Joi/Zod)
 - `rateLimit.middleware.ts` - Rate limiting for AI endpoints
 
 ### `services/` - External Services
+
 Integration with external APIs and services.
 
 **Services:**
+
 - `cognito.service.ts` - AWS Cognito authentication
 - `s3.service.ts` - AWS S3 storage operations
 - `openai.service.ts` - OpenAI GPT-4 API client
@@ -57,6 +67,7 @@ Integration with external APIs and services.
 ## API Structure
 
 ### Route Definition
+
 ```typescript
 // routes/inspections.routes.ts
 import { Router } from 'express';
@@ -76,6 +87,7 @@ export default router;
 ```
 
 ### Controller Pattern
+
 ```typescript
 // controllers/inspections.controller.ts
 import { Request, Response, NextFunction } from 'express';
@@ -103,6 +115,7 @@ export class InspectionsController {
 ```
 
 ### Middleware Example
+
 ```typescript
 // middleware/auth.middleware.ts
 import { Request, Response, NextFunction } from 'express';
@@ -111,7 +124,7 @@ import jwt from 'jsonwebtoken';
 export const authMiddleware = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const token = req.headers.authorization?.split(' ')[1];

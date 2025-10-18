@@ -5,9 +5,11 @@ Global state management using Redux Toolkit with TypeScript.
 ## Structure
 
 ### `slices/` - Redux Slices
+
 Each slice manages a specific domain of state.
 
 **Core Slices:**
+
 - `authSlice.ts` - User authentication (token, user info, login state)
 - `inspectionsSlice.ts` - Inspection data (active, completed, sync queue)
 - `workflowsSlice.ts` - Custom workflows and filters
@@ -16,6 +18,7 @@ Each slice manages a specific domain of state.
 - `aiSlice.ts` - AI analysis results and quota tracking
 
 ### Root Files
+
 - `store.ts` - Redux store configuration with RTK Query
 - `hooks.ts` - Typed `useAppDispatch` and `useAppSelector`
 
@@ -72,7 +75,7 @@ export const store = configureStore({
     inspections: inspectionsReducer,
     // More reducers...
   },
-  middleware: (getDefaultMiddleware) =>
+  middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
       serializableCheck: {
         // Ignore specific actions if needed
@@ -104,12 +107,12 @@ import { setActiveInspection } from '@/redux/slices/inspectionsSlice';
 
 const MyComponent = () => {
   const dispatch = useAppDispatch();
-  const inspections = useAppSelector((state) => state.inspections.items);
-  
+  const inspections = useAppSelector(state => state.inspections.items);
+
   const handleSelectInspection = (id: string) => {
     dispatch(setActiveInspection(id));
   };
-  
+
   // Component logic...
 };
 ```
@@ -124,12 +127,12 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 export const api = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: '/api' }),
-  endpoints: (builder) => ({
+  endpoints: builder => ({
     getInspections: builder.query<Inspection[], void>({
       query: () => 'inspections',
     }),
     createInspection: builder.mutation<Inspection, CreateInspectionDto>({
-      query: (body) => ({
+      query: body => ({
         url: 'inspections',
         method: 'POST',
         body,

@@ -5,9 +5,11 @@ Reusable React Native components organized by feature domain.
 ## Structure
 
 ### `common/` - Generic UI Components
+
 Reusable components used throughout the app. No business logic.
 
 **Examples:**
+
 - `Button.tsx` - Custom button with loading states
 - `Card.tsx` - Container with shadow and borders
 - `Modal.tsx` - Fullscreen/partial modal overlay
@@ -16,14 +18,17 @@ Reusable components used throughout the app. No business logic.
 - `ErrorBoundary.tsx` - Error handling component
 
 **Usage:**
+
 ```typescript
 import { Button, Card, Modal } from '@/components/common';
 ```
 
 ### `inspection/` - Inspection Feature Components
+
 Components specific to the inspection workflow.
 
 **Examples:**
+
 - `PhotoCapture.tsx` - Camera interface with photo preview
 - `AIPredictor.tsx` - AI analysis results display
 - `InspectionTracker.tsx` - Progress indicator for inspection steps
@@ -32,9 +37,11 @@ Components specific to the inspection workflow.
 - `CommentsList.tsx` - Pre-written comments selection
 
 ### `data/` - Data Visualization Components
+
 Components for displaying and filtering CSV data.
 
 **Examples:**
+
 - `CSVViewer.tsx` - Table view of CSV data
 - `FilterButtons.tsx` - Drag-and-drop filter controls
 - `HierarchyNavigator.tsx` - Breadcrumb navigation for CSV hierarchy
@@ -43,6 +50,7 @@ Components for displaying and filtering CSV data.
 ## Component Standards
 
 ### File Structure
+
 ```typescript
 // Button.tsx
 import React from 'react';
@@ -55,11 +63,11 @@ interface ButtonProps {
   loading?: boolean;
 }
 
-export const Button: React.FC<ButtonProps> = ({ 
-  title, 
-  onPress, 
+export const Button: React.FC<ButtonProps> = ({
+  title,
+  onPress,
   variant = 'primary',
-  loading = false 
+  loading = false,
 }) => {
   // Component implementation
 };
@@ -70,14 +78,18 @@ const styles = StyleSheet.create({
 ```
 
 ### Export Pattern
+
 Use named exports for components:
+
 ```typescript
 export { Button } from './Button';
 export { Card } from './Card';
 ```
 
 ### Props Interface
+
 Always define TypeScript interfaces for props:
+
 ```typescript
 interface ComponentProps {
   required: string;
@@ -87,7 +99,9 @@ interface ComponentProps {
 ```
 
 ### Testing
+
 Create test files next to components:
+
 ```
 Button.tsx
 Button.test.tsx

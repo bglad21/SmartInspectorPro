@@ -5,9 +5,11 @@ Database migrations and schema management for PostgreSQL.
 ## Structure
 
 ### `migrations/` - Database Migrations
+
 Version-controlled database schema changes.
 
 **Migration Files:**
+
 - `001_create_users_table.sql` - Users table
 - `002_create_inspections_table.sql` - Inspections table
 - `003_create_inspection_records_table.sql` - Individual inspection items
@@ -18,6 +20,7 @@ Version-controlled database schema changes.
 ## Migration Pattern
 
 ### SQL Migration Example
+
 ```sql
 -- 001_create_users_table.sql
 -- UP Migration
@@ -39,19 +42,36 @@ CREATE INDEX idx_users_email ON users(email);
 ```
 
 ### Using Migration Tool (Node.js)
+
 ```typescript
 // Example using node-pg-migrate or similar
 import { MigrationBuilder } from 'node-pg-migrate';
 
 export async function up(pgm: MigrationBuilder) {
   pgm.createTable('users', {
-    id: { type: 'uuid', primaryKey: true, default: pgm.func('gen_random_uuid()') },
+    id: {
+      type: 'uuid',
+      primaryKey: true,
+      default: pgm.func('gen_random_uuid()'),
+    },
     cognito_id: { type: 'varchar(255)', notNull: true, unique: true },
     email: { type: 'varchar(255)', notNull: true, unique: true },
     business_name: { type: 'varchar(255)' },
-    membership_tier: { type: 'varchar(50)', notNull: true, default: 'professional' },
-    created_at: { type: 'timestamp', notNull: true, default: pgm.func('current_timestamp') },
-    updated_at: { type: 'timestamp', notNull: true, default: pgm.func('current_timestamp') },
+    membership_tier: {
+      type: 'varchar(50)',
+      notNull: true,
+      default: 'professional',
+    },
+    created_at: {
+      type: 'timestamp',
+      notNull: true,
+      default: pgm.func('current_timestamp'),
+    },
+    updated_at: {
+      type: 'timestamp',
+      notNull: true,
+      default: pgm.func('current_timestamp'),
+    },
   });
 
   pgm.createIndex('users', 'cognito_id');
@@ -66,6 +86,7 @@ export async function down(pgm: MigrationBuilder) {
 ## Core Tables
 
 ### Users Table
+
 ```sql
 CREATE TABLE users (
   id UUID PRIMARY KEY,
@@ -80,6 +101,7 @@ CREATE TABLE users (
 ```
 
 ### Inspections Table
+
 ```sql
 CREATE TABLE inspections (
   id UUID PRIMARY KEY,
@@ -94,6 +116,7 @@ CREATE TABLE inspections (
 ```
 
 ### Inspection Records Table
+
 ```sql
 CREATE TABLE inspection_records (
   id UUID PRIMARY KEY,
@@ -112,6 +135,7 @@ CREATE TABLE inspection_records (
 ```
 
 ### Workflows Table
+
 ```sql
 CREATE TABLE workflows (
   id UUID PRIMARY KEY,
@@ -141,6 +165,7 @@ npm run migrate create add_new_column
 ## Environment Setup
 
 ### PostgreSQL Connection
+
 ```bash
 # .env
 DATABASE_URL=postgresql://username:password@localhost:5432/smartinspector
@@ -149,6 +174,7 @@ DATABASE_POOL_MAX=10
 ```
 
 ### AWS RDS Production
+
 ```bash
 DATABASE_URL=postgresql://admin:password@smartinspector.xxxxx.us-east-1.rds.amazonaws.com:5432/smartinspector
 ```

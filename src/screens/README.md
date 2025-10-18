@@ -5,24 +5,30 @@ Full-screen views for the Smart Inspector Pro app. Each screen is a route in the
 ## Structure
 
 ### `home/` - Home Dashboard
+
 Main landing screen after login with navigation to all features.
 
 **Screens:**
+
 - `HomeScreen.tsx` - Dashboard with feature cards and quick actions
 
 ### `auth/` - Authentication
+
 Login, registration, and password management.
 
 **Screens:**
+
 - `LoginScreen.tsx` - Email/password login
 - `RegisterScreen.tsx` - New user registration
 - `ForgotPasswordScreen.tsx` - Password reset
 - `VerifyEmailScreen.tsx` - Email verification (Cognito)
 
 ### `inspection/` - Smart Inspector Workflow
+
 Core inspection functionality with AI-powered photo analysis.
 
 **Screens:**
+
 - `InspectionListScreen.tsx` - List of all inspections (active, completed, scheduled)
 - `CreateInspectionScreen.tsx` - New inspection form
 - `SmartInspectorScreen.tsx` - 6-step hierarchical workflow (photo → AI → manual)
@@ -30,17 +36,21 @@ Core inspection functionality with AI-powered photo analysis.
 - `PhotoGalleryScreen.tsx` - All photos for an inspection
 
 ### `workflow/` - Workflow Management
+
 Create and edit custom inspection workflows.
 
 **Screens:**
+
 - `WorkflowEditorScreen.tsx` - Drag-and-drop CSV filtering interface
 - `WorkflowListScreen.tsx` - Saved workflows (default + custom)
 - `WorkflowShareScreen.tsx` - Share workflow via code/QR
 
 ### `business/` - Business Tools
+
 Tools for managing inspection business operations.
 
 **Screens:**
+
 - `SchedulingScreen.tsx` - Calendar and appointment management
 - `ContactsScreen.tsx` - Client contact database
 - `AccountingScreen.tsx` - Revenue tracking and expense management
@@ -48,9 +58,11 @@ Tools for managing inspection business operations.
 - `FormsScreen.tsx` - Digital forms and signature capture
 
 ### `settings/` - App Settings
+
 User preferences, account management, and app configuration.
 
 **Screens:**
+
 - `SettingsScreen.tsx` - Main settings menu
 - `ProfileScreen.tsx` - Edit user profile
 - `SubscriptionScreen.tsx` - Manage membership tier
@@ -60,6 +72,7 @@ User preferences, account management, and app configuration.
 ## Screen Standards
 
 ### File Structure
+
 ```typescript
 // HomeScreen.tsx
 import React from 'react';
@@ -85,7 +98,9 @@ const styles = StyleSheet.create({
 ```
 
 ### Navigation Types
+
 Define route params in `navigation/types.ts`:
+
 ```typescript
 export type RootStackParamList = {
   Home: undefined;
@@ -95,7 +110,9 @@ export type RootStackParamList = {
 ```
 
 ### Export Pattern
+
 Use named exports:
+
 ```typescript
 export { HomeScreen } from './HomeScreen';
 ```
@@ -103,6 +120,7 @@ export { HomeScreen } from './HomeScreen';
 ## Screen Organization
 
 For complex screens with multiple components:
+
 ```
 inspection/
 ├── InspectionDetailScreen.tsx
