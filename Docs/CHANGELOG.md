@@ -9,7 +9,80 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased] - Pre-Development Phase
 
-### Data Layer & CSV Management - Phase 5 in Progress (January 2025)
+### Data Layer & CSV Management - Phase 5 Complete (October 2025)
+
+#### Added - October 18, 2025
+
+- **Offline Sync Service (P5-T03)**: Complete offline-first synchronization system with background sync and conflict resolution
+
+  - **Files Created**: 2 files, 1,126 lines of code
+    - `src/services/sync.service.ts` (868 lines) - Offline sync service
+    - `src/__tests__/sync.test.ts` (258 lines) - Comprehensive test suite (14 scenarios)
+  - **Dependencies Added**:
+    - `@react-native-community/netinfo@11.4.1` - Network connectivity monitoring
+  - **Core Features**:
+    - Background sync scheduling with configurable interval (default: 5 minutes)
+    - Network state monitoring with auto-sync on reconnect
+    - Sync queue processing with batch operations (default: 50 items)
+    - Progress tracking with callback system (5 phases)
+    - Service lifecycle management (initialize, start, stop, shutdown)
+  - **Conflict Resolution**:
+    - Last-write-wins strategy using timestamp comparison
+    - Compares local vs remote `updatedAt` timestamps
+    - Returns winner ('local' or 'remote') for UI handling
+  - **Retry Logic** (exponential backoff):
+    - Max retries: 5 attempts (configurable)
+    - Delay schedule: 1s → 2s → 4s → 8s → 16s → 60s max
+    - Automatic retry scheduling on failure
+    - Failed items persist in queue for manual retry
+  - **Delta Sync**:
+    - Time-based filtering (sync since timestamp)
+    - Reduces bandwidth by syncing only changes
+    - Same batch processing and error handling as full sync
+  - **Network Monitoring**:
+    - Real-time connectivity detection with NetInfo
+    - Tracks connection status, internet reachability, and type
+    - Pre-sync connectivity check
+    - Graceful degradation when offline
+  - **Status & Diagnostics** (5 query methods):
+    - `getStatus()` - Service state, network, pending/failed counts
+    - `getStatistics()` - Total counts by status, by-table breakdown
+    - `isSyncing()` - Check if sync in progress
+    - `cleanupCompleted()` - Remove completed items from queue
+    - `retryFailed()` - Reset and retry all failed items
+  - **Progress Tracking**:
+    - Observer pattern with callback registration
+    - Real-time progress updates (percentage, phase, message)
+    - Current item details (table, record, operation)
+    - Success/failure counts
+  - **MOCK API Implementation**:
+    - 90% success rate for testing
+    - Simulates network delay (100ms)
+    - TODO comments for backend integration
+    - Ready for API client swap-out
+  - **Test Suite** (14 scenarios):
+    - Initialize database and sync service
+    - Add test items to sync queue (inspection + record)
+    - Get sync statistics
+    - Test progress tracking callbacks
+    - Perform manual sync (MOCK API)
+    - Check network state
+    - Test retry failed items
+    - Cleanup completed items
+    - Test delta sync (24-hour window)
+    - Test conflict resolution (last-write-wins)
+    - Final status check
+    - Test auto sync start/stop
+    - Cleanup test data and shutdown
+  - **Integration Points**:
+    - Uses P5-T01 database service (sync queue table, CRUD methods)
+    - Ready for backend API integration (endpoint TODOs)
+    - Progress callbacks for UI components
+  - **Performance**:
+    - Batch processing prevents memory overflow
+    - Configurable batch size (default: 50 items)
+    - Network checks prevent unnecessary API calls
+    - Exponential backoff prevents network flooding
 
 #### Added - January 18, 2025
 

@@ -1,6 +1,6 @@
 /**
  * CSV Parser Test Script
- * 
+ *
  * Tests the CSV parser service to ensure it can:
  * 1. Initialize the database
  * 2. Load CSV data from file
@@ -8,8 +8,8 @@
  * 4. Generate statistics
  */
 
-import DB from '../services/database.service';
 import CSVParser, { type LoadProgress } from '../services/csv-parser.service';
+import DB from '../services/database.service';
 
 async function testCSVParser() {
   console.log('='.repeat(60));
@@ -31,10 +31,12 @@ async function testCSVParser() {
 
     // Step 3: Load CSV data with progress tracking
     console.log('\n[3] Loading CSV data...');
-    
+
     const progressCallback = (progress: LoadProgress) => {
       console.log(
-        `   [${progress.phase.toUpperCase()}] ${progress.percentage}% - ${progress.message}`
+        `   [${progress.phase.toUpperCase()}] ${progress.percentage}% - ${
+          progress.message
+        }`,
       );
     };
 
@@ -48,14 +50,16 @@ async function testCSVParser() {
     if (result.success) {
       console.log(`✅ Successfully loaded ${result.rowCount} records`);
       if (result.errors.length > 0) {
-        console.log(`⚠️  Warnings: ${result.errors.length} rows had validation errors`);
-        result.errors.slice(0, 5).forEach((error) => {
+        console.log(
+          `⚠️  Warnings: ${result.errors.length} rows had validation errors`,
+        );
+        result.errors.slice(0, 5).forEach(error => {
           console.log(`   - ${error}`);
         });
       }
     } else {
       console.log('❌ Failed to load CSV data');
-      result.errors.forEach((error) => {
+      result.errors.forEach(error => {
         console.log(`   - ${error}`);
       });
       return;
@@ -65,49 +69,64 @@ async function testCSVParser() {
     console.log('\n[4] Generating statistics...');
     const stats = await CSVParser.getStatistics();
     console.log(`   - Total Records: ${stats.totalRecords}`);
-    console.log(`   - Sections: ${stats.sections.length} (${stats.sections.join(', ')})`);
+    console.log(
+      `   - Sections: ${stats.sections.length} (${stats.sections.join(', ')})`,
+    );
     console.log(`   - Systems: ${stats.systems.length}`);
     console.log(`   - Components: ${stats.components.length}`);
     console.log(`   - Materials: ${stats.materials.length}`);
     console.log('   - Conditions:');
     console.log(`      * Acceptable: ${stats.conditions.Acceptable}`);
     console.log(`      * Monitor: ${stats.conditions.Monitor}`);
-    console.log(`      * Repair/Replace: ${stats.conditions['Repair/Replace']}`);
+    console.log(
+      `      * Repair/Replace: ${stats.conditions['Repair/Replace']}`,
+    );
     console.log(`      * Safety Hazard: ${stats.conditions['Safety Hazard']}`);
-    console.log(`      * Access Restricted: ${stats.conditions['Access Restricted']}`);
+    console.log(
+      `      * Access Restricted: ${stats.conditions['Access Restricted']}`,
+    );
 
     // Step 5: Test hierarchical queries
     console.log('\n[5] Testing hierarchical queries...');
-    
+
     const sections = await DB.getDistinctSections('single-family');
     console.log(`   - Found ${sections.length} sections`);
-    
+
     if (sections.length > 0) {
       const firstSection = sections[0];
       console.log(`   - Testing with section: "${firstSection}"`);
-      
-      const systems = await DB.getDistinctSystems(firstSection, 'single-family');
+
+      const systems = await DB.getDistinctSystems(
+        firstSection,
+        'single-family',
+      );
       console.log(`   - Found ${systems.length} systems in "${firstSection}"`);
-      
+
       if (systems.length > 0) {
         const firstSystem = systems[0];
         console.log(`   - Testing with system: "${firstSystem}"`);
-        
-        const components = await DB.getDistinctComponents(firstSection, firstSystem, 'single-family');
-        console.log(`   - Found ${components.length} components in "${firstSection}" → "${firstSystem}"`);
-        
+
+        const components = await DB.getDistinctComponents(
+          firstSection,
+          firstSystem,
+          'single-family',
+        );
+        console.log(
+          `   - Found ${components.length} components in "${firstSection}" → "${firstSystem}"`,
+        );
+
         if (components.length > 0) {
           const firstComponent = components[0];
           console.log(`   - Testing with component: "${firstComponent}"`);
-          
+
           const materials = await DB.getDistinctMaterials(
             firstSection,
             firstSystem,
             firstComponent,
-            'single-family'
+            'single-family',
           );
           console.log(
-            `   - Found ${materials.length} materials in "${firstSection}" → "${firstSystem}" → "${firstComponent}"`
+            `   - Found ${materials.length} materials in "${firstSection}" → "${firstSystem}" → "${firstComponent}"`,
           );
           console.log(`   - Materials: ${materials.join(', ')}`);
         }
@@ -118,7 +137,7 @@ async function testCSVParser() {
     console.log('\n[6] Getting sample data...');
     const sampleData = await CSVParser.getSampleData(5, 'single-family');
     console.log(`   - Retrieved ${sampleData.length} sample records`);
-    
+
     if (sampleData.length > 0) {
       const sample = sampleData[0];
       console.log('   - Sample Record:');
@@ -136,7 +155,7 @@ async function testCSVParser() {
     const dbStats = await DB.getStatistics();
     console.log(`   - Database total records: ${dbStats.csvData}`);
     console.log(`   - CSV parser total records: ${stats.totalRecords}`);
-    
+
     if (dbStats.csvData === stats.totalRecords) {
       console.log('✅ Database integrity verified - counts match');
     } else {
@@ -146,7 +165,6 @@ async function testCSVParser() {
     console.log('\n' + '='.repeat(60));
     console.log('✅ All tests passed successfully!');
     console.log('='.repeat(60));
-
   } catch (error) {
     console.error('\n❌ Test failed with error:', error);
     if (error instanceof Error) {
@@ -160,7 +178,7 @@ async function testCSVParser() {
 }
 
 // Run tests
-testCSVParser().catch((error) => {
+testCSVParser().catch(error => {
   console.error('Fatal error:', error);
   process.exit(1);
 });

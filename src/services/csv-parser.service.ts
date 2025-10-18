@@ -1,16 +1,16 @@
 /**
  * CSV Parser Service
- * 
+ *
  * Provides CSV parsing and loading capabilities for Smart Inspector Pro.
  * Loads inspection data from Single_Family.csv into SQLite database.
- * 
+ *
  * Features:
  * - Parse CSV files with Papa Parse
  * - Load from app bundle or external storage
  * - Bulk insert into SQLite with progress tracking
  * - Type-safe parsing with validation
  * - Error handling and retry logic
- * 
+ *
  * @service
  */
 
@@ -31,7 +31,12 @@ interface CSVRow {
   Location: string;
   Component: string;
   Material: string;
-  Condition: 'Acceptable' | 'Monitor' | 'Repair/Replace' | 'Safety Hazard' | 'Access Restricted';
+  Condition:
+    | 'Acceptable'
+    | 'Monitor'
+    | 'Repair/Replace'
+    | 'Safety Hazard'
+    | 'Access Restricted';
   Comment: string;
 }
 
@@ -94,7 +99,7 @@ class CSVParserService {
 
   /**
    * Load CSV file from app bundle and insert into database
-   * 
+   *
    * @param options Loading options with progress callback
    * @returns Promise<ParseResult>
    */
@@ -170,7 +175,9 @@ class CSVParserService {
         message: `Successfully loaded ${totalRows} records`,
       });
 
-      console.log(`[CSVParserService] Successfully loaded ${totalRows} records`);
+      console.log(
+        `[CSVParserService] Successfully loaded ${totalRows} records`,
+      );
 
       return {
         success: true,
@@ -179,8 +186,9 @@ class CSVParserService {
         data: parseResult.data,
       };
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      
+      const errorMessage =
+        error instanceof Error ? error.message : 'Unknown error';
+
       this.reportProgress(onProgress, {
         phase: 'error',
         totalRows: 0,
@@ -201,7 +209,7 @@ class CSVParserService {
 
   /**
    * Read CSV file from app bundle
-   * 
+   *
    * @returns Promise<string> - CSV file content
    */
   private async readCSVFile(): Promise<string> {
@@ -223,7 +231,7 @@ class CSVParserService {
         // Fallback: Try Docs folder (development)
         csvPath = `${RNFS.DocumentDirectoryPath}/../../Docs/${this.CSV_FILE_NAME}`;
         const docsExists = await RNFS.exists(csvPath);
-        
+
         if (!docsExists) {
           throw new Error(`CSV file not found: ${this.CSV_FILE_NAME}`);
         }
@@ -232,7 +240,7 @@ class CSVParserService {
       console.log(`[CSVParserService] Reading CSV from: ${csvPath}`);
 
       const content = await RNFS.readFile(csvPath, 'utf8');
-      
+
       console.log(`[CSVParserService] Read ${content.length} bytes`);
 
       return content;
@@ -244,46 +252,52 @@ class CSVParserService {
 
   /**
    * Parse CSV content into typed objects
-   * 
+   *
    * @param csvContent CSV file content as string
    * @param propertyType Property type to assign to all records
    * @returns Promise<ParseResult>
    */
   private async parseCSV(
     csvContent: string,
-    propertyType: 'single-family' | 'multi-family' | 'commercial'
+    propertyType: 'single-family' | 'multi-family' | 'commercial',
   ): Promise<ParseResult> {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       const errors: string[] = [];
       const validData: Omit<CSVData, 'id'>[] = [];
 
       Papa.parse<CSVRow>(csvContent, {
         header: true,
         skipEmptyLines: true,
-        transformHeader: (header) => header.trim(),
-        transform: (value) => value.trim(),
-        complete: (results) => {
+        transformHeader: header => header.trim(),
+        transform: value => value.trim(),
+        complete: results => {
           console.log(`[CSVParserService] Parsed ${results.data.length} rows`);
 
           // Validate and transform each row
           results.data.forEach((row, index) => {
             try {
-              const validatedRow = this.validateAndTransformRow(row, propertyType);
+              const validatedRow = this.validateAndTransformRow(
+                row,
+                propertyType,
+              );
               validData.push(validatedRow);
             } catch (error) {
-              const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+              const errorMessage =
+                error instanceof Error ? error.message : 'Unknown error';
               errors.push(`Row ${index + 2}: ${errorMessage}`); // +2 for header and 0-index
             }
           });
 
           // Report parsing errors (if any)
           if (results.errors.length > 0) {
-            results.errors.forEach((error) => {
+            results.errors.forEach(error => {
               errors.push(`Parse error: ${error.message}`);
             });
           }
 
-          console.log(`[CSVParserService] Validated ${validData.length} records, ${errors.length} errors`);
+          console.log(
+            `[CSVParserService] Validated ${validData.length} records, ${errors.length} errors`,
+          );
 
           resolve({
             success: errors.length === 0 || validData.length > 0,
@@ -306,14 +320,14 @@ class CSVParserService {
 
   /**
    * Validate and transform CSV row to database format
-   * 
+   *
    * @param row CSV row data
    * @param propertyType Property type
    * @returns Validated CSVData object
    */
   private validateAndTransformRow(
     row: CSVRow,
-    propertyType: 'single-family' | 'multi-family' | 'commercial'
+    propertyType: 'single-family' | 'multi-family' | 'commercial',
   ): Omit<CSVData, 'id'> {
     // Validate required fields
     if (!row.Section || row.Section === '') {
@@ -341,7 +355,13 @@ class CSVParserService {
     }
 
     // Validate condition enum
-    const validConditions = ['Acceptable', 'Monitor', 'Repair/Replace', 'Safety Hazard', 'Access Restricted'];
+    const validConditions = [
+      'Acceptable',
+      'Monitor',
+      'Repair/Replace',
+      'Safety Hazard',
+      'Access Restricted',
+    ];
     if (!validConditions.includes(row.Condition)) {
       throw new Error(`Invalid condition: ${row.Condition}`);
     }
@@ -366,7 +386,7 @@ class CSVParserService {
    */
   private reportProgress(
     callback: ((progress: LoadProgress) => void) | undefined,
-    progress: LoadProgress
+    progress: LoadProgress,
   ): void {
     if (callback) {
       callback(progress);
@@ -385,25 +405,33 @@ class CSVParserService {
    * Get CSV data statistics
    */
   async getStatistics(): Promise<CSVStatistics> {
-    const [countResult] = await DB.executeSql('SELECT COUNT(*) as count FROM csvData;');
+    const [countResult] = await DB.executeSql(
+      'SELECT COUNT(*) as count FROM csvData;',
+    );
     const totalRecords = countResult.rows.item(0).count;
 
     const sections = await DB.getDistinctSections();
 
     // Get all distinct values
-    const [systemsResult] = await DB.executeSql('SELECT DISTINCT system FROM csvData ORDER BY system;');
+    const [systemsResult] = await DB.executeSql(
+      'SELECT DISTINCT system FROM csvData ORDER BY system;',
+    );
     const systems: string[] = [];
     for (let i = 0; i < systemsResult.rows.length; i++) {
       systems.push(systemsResult.rows.item(i).system);
     }
 
-    const [componentsResult] = await DB.executeSql('SELECT DISTINCT component FROM csvData ORDER BY component;');
+    const [componentsResult] = await DB.executeSql(
+      'SELECT DISTINCT component FROM csvData ORDER BY component;',
+    );
     const components: string[] = [];
     for (let i = 0; i < componentsResult.rows.length; i++) {
       components.push(componentsResult.rows.item(i).component);
     }
 
-    const [materialsResult] = await DB.executeSql('SELECT DISTINCT material FROM csvData ORDER BY material;');
+    const [materialsResult] = await DB.executeSql(
+      'SELECT DISTINCT material FROM csvData ORDER BY material;',
+    );
     const materials: string[] = [];
     for (let i = 0; i < materialsResult.rows.length; i++) {
       materials.push(materialsResult.rows.item(i).material);
@@ -411,7 +439,7 @@ class CSVParserService {
 
     // Get condition counts
     const [conditionsResult] = await DB.executeSql(`
-      SELECT 
+      SELECT
         condition,
         COUNT(*) as count
       FROM csvData
@@ -445,7 +473,9 @@ class CSVParserService {
    * Check if CSV data is loaded
    */
   async isDataLoaded(): Promise<boolean> {
-    const [result] = await DB.executeSql('SELECT COUNT(*) as count FROM csvData;');
+    const [result] = await DB.executeSql(
+      'SELECT COUNT(*) as count FROM csvData;',
+    );
     const count = result.rows.item(0).count;
     return count > 0;
   }
@@ -459,16 +489,19 @@ class CSVParserService {
     recordCount: number;
   }> {
     const isLoaded = await this.isDataLoaded();
-    
+
     if (!isLoaded) {
       return {
         shouldLoad: true,
-        reason: 'No CSV data found in database. Load data to enable inspection workflows.',
+        reason:
+          'No CSV data found in database. Load data to enable inspection workflows.',
         recordCount: 0,
       };
     }
 
-    const [result] = await DB.executeSql('SELECT COUNT(*) as count FROM csvData;');
+    const [result] = await DB.executeSql(
+      'SELECT COUNT(*) as count FROM csvData;',
+    );
     const count = result.rows.item(0).count;
 
     return {
@@ -489,7 +522,7 @@ class CSVParserService {
       const data = await DB.queryCSVData({ propertyType });
 
       // Convert to CSV format
-      const csvRows = data.map((row) => ({
+      const csvRows = data.map(row => ({
         Section: row.section,
         System: row.system,
         Location: row.location || 'Null',
@@ -502,7 +535,15 @@ class CSVParserService {
       // Generate CSV content with Papa Parse
       const csvContent = Papa.unparse(csvRows, {
         header: true,
-        columns: ['Section', 'System', 'Location', 'Component', 'Material', 'Condition', 'Comment'],
+        columns: [
+          'Section',
+          'System',
+          'Location',
+          'Component',
+          'Material',
+          'Condition',
+          'Comment',
+        ],
       });
 
       // Write to file
@@ -535,7 +576,8 @@ class CSVParserService {
         rowCount: parseResult.rowCount,
       };
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      const errorMessage =
+        error instanceof Error ? error.message : 'Unknown error';
       return {
         valid: false,
         errors: [errorMessage],
@@ -547,7 +589,10 @@ class CSVParserService {
   /**
    * Get sample CSV data for preview (first N records)
    */
-  async getSampleData(limit: number = 10, propertyType?: string): Promise<CSVData[]> {
+  async getSampleData(
+    limit: number = 10,
+    propertyType?: string,
+  ): Promise<CSVData[]> {
     let query = 'SELECT * FROM csvData';
     const params: unknown[] = [];
 
@@ -575,10 +620,4 @@ export const CSVParser = new CSVParserService();
 export default CSVParser;
 
 // Export types
-export type {
-  CSVRow,
-  ParseResult,
-  LoadProgress,
-  LoadOptions,
-  CSVStatistics,
-};
+export type { CSVRow, CSVStatistics, LoadOptions, LoadProgress, ParseResult };
