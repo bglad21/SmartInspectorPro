@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Development Environment & Project Setup (October 2025)
 
 #### Added - October 18, 2025
+
 - **Core Dependencies (P2-T02)**: Installed 20+ npm packages across 7 categories
   - State Management: Redux Toolkit 2.9.1, React Redux 9.2.0
   - Navigation: React Navigation 7.1.18 with native-stack 7.3.28

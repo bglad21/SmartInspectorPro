@@ -9,7 +9,7 @@ index ff79b10..7d0395e 100644
 -        jcenter()
 +        mavenCentral()
      }
- 
+
      dependencies {
 diff --git a/node_modules/react-native-sqlite-storage/platforms/android/build/.transforms/0370daab44fb2946fec154668e62dd88/results.bin b/node_modules/react-native-sqlite-storage/platforms/android/build/.transforms/0370daab44fb2946fec154668e62dd88/results.bin
 new file mode 100644
