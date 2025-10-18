@@ -1,6 +1,6 @@
 /**
  * Authentication Service - Usage Examples & Test Scenarios
- * 
+ *
  * This file demonstrates all authentication features:
  * 1. User Registration with Email Verification
  * 2. Sign In and Token Management
@@ -10,7 +10,7 @@
  * 6. User Profile Management
  * 7. Role-Based Access Control
  * 8. Complete Authentication Workflow
- * 
+ *
  * @module auth.service.examples
  */
 
@@ -20,7 +20,7 @@ import AuthService from '../auth.service';
 
 /**
  * Example 1: Complete user registration with email verification
- * 
+ *
  * Flow:
  * 1. User signs up with credentials
  * 2. Cognito sends verification code to email
@@ -82,7 +82,7 @@ export async function exampleResendVerificationCode() {
 
 /**
  * Example 3: Sign in and receive JWT tokens
- * 
+ *
  * After sign in:
  * - User profile is retrieved
  * - JWT tokens are stored in AsyncStorage
@@ -194,7 +194,10 @@ export async function exampleTokenManagement() {
       console.log('🔄 Token expiring soon, refreshing...');
       const newTokens = await AuthService.refreshTokens();
       console.log('✅ Tokens refreshed!');
-      console.log('New expiration:', new Date(newTokens.expiresAt).toLocaleString());
+      console.log(
+        'New expiration:',
+        new Date(newTokens.expiresAt).toLocaleString(),
+      );
     }
   } catch (error) {
     console.error('❌ Token management error:', error);
@@ -205,7 +208,7 @@ export async function exampleTokenManagement() {
 
 /**
  * Example 7: Complete forgot password flow
- * 
+ *
  * Flow:
  * 1. User requests password reset
  * 2. Cognito sends verification code to email
@@ -221,7 +224,10 @@ export async function exampleForgotPassword() {
       username: 'john.inspector',
     });
 
-    console.log('✅ Password reset code sent to:', resetResult.nextStep.codeDeliveryDetails.destination);
+    console.log(
+      '✅ Password reset code sent to:',
+      resetResult.nextStep.codeDeliveryDetails.destination,
+    );
 
     // Step 2: User enters verification code and new password
     // In real app, prompt user for code and new password
@@ -329,7 +335,11 @@ export async function exampleCompleteWorkflow() {
     console.log('\n🔍 Step 4: Validate token...');
     const validation = await AuthService.validateToken();
     console.log('✅ Token valid:', validation.isValid);
-    console.log('   Expires in:', Math.floor(validation.expiresIn / 60), 'minutes');
+    console.log(
+      '   Expires in:',
+      Math.floor(validation.expiresIn / 60),
+      'minutes',
+    );
 
     // 5. Get access token for API request
     console.log('\n🎫 Step 5: Get access token...');
@@ -415,14 +425,22 @@ export async function exampleOfflineTokenStorage() {
 
   try {
     // Store tokens (happens automatically on sign in)
-    console.log('📱 Tokens are automatically stored in AsyncStorage on sign in');
+    console.log(
+      '📱 Tokens are automatically stored in AsyncStorage on sign in',
+    );
 
     // Retrieve stored tokens
     const storedTokens = await AuthService.getStoredTokens();
     if (storedTokens) {
       console.log('✅ Retrieved stored tokens:');
-      console.log('   Access token:', storedTokens.accessToken.substring(0, 30) + '...');
-      console.log('   Expires at:', new Date(storedTokens.expiresAt).toLocaleString());
+      console.log(
+        '   Access token:',
+        storedTokens.accessToken.substring(0, 30) + '...',
+      );
+      console.log(
+        '   Expires at:',
+        new Date(storedTokens.expiresAt).toLocaleString(),
+      );
     } else {
       console.log('❌ No stored tokens found');
     }
@@ -446,7 +464,7 @@ export async function exampleOfflineTokenStorage() {
 
 /**
  * Example 13: Automatic token refresh in background
- * 
+ *
  * Token refresh timer:
  * - Starts automatically on sign in
  * - Checks token every 60 seconds
@@ -490,7 +508,7 @@ export async function exampleAutomaticTokenRefresh() {
 
 /**
  * Run all authentication examples in sequence
- * 
+ *
  * NOTE: This is for testing/demo purposes only.
  * In production, these flows are triggered by user actions.
  */

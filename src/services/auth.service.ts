@@ -1,6 +1,6 @@
 /**
  * Enhanced Authentication Service for Smart Inspector Pro
- * 
+ *
  * Provides comprehensive authentication functionality using AWS Cognito:
  * - User registration and email verification
  * - Sign in/out with JWT token management
@@ -9,30 +9,30 @@
  * - Token validation and storage
  * - User profile management
  * - Role-based access control (RBAC)
- * 
+ *
  * Built on AWS Amplify v6 Auth API
  */
 
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import type { CognitoGroup } from '@/config/aws-config';
 import {
+  signIn as amplifySignIn,
+  signOut as amplifySignOut,
+  signUp as amplifySignUp,
   confirmResetPassword,
   confirmSignUp,
+  type ConfirmSignUpInput,
   fetchAuthSession,
   getCurrentUser,
   resendSignUpCode,
   resetPassword,
-  signIn as amplifySignIn,
-  signOut as amplifySignOut,
-  signUp as amplifySignUp,
-  updatePassword,
-  type ConfirmSignUpInput,
   type ResetPasswordOutput,
   type SignInInput,
   type SignInOutput,
   type SignUpInput,
   type SignUpOutput,
+  updatePassword,
 } from '@aws-amplify/auth';
-import type { CognitoGroup } from '@/config/aws-config';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // ==================== TypeScript Interfaces ====================
 
@@ -170,10 +170,10 @@ export const AuthService = {
 
   /**
    * Register new user with email verification
-   * 
+   *
    * @param params Registration parameters
    * @returns Sign up result with confirmation status
-   * 
+   *
    * @example
    * ```typescript
    * const result = await AuthService.signUp({
@@ -183,7 +183,7 @@ export const AuthService = {
    *   businessName: 'ABC Inspections',
    *   membershipTier: 'professional'
    * });
-   * 
+   *
    * if (result.needsEmailVerification) {
    *   // Prompt user to enter verification code from email
    * }
@@ -191,7 +191,8 @@ export const AuthService = {
    */
   async signUp(params: SignUpParams): Promise<SignUpResult> {
     try {
-      const { username, password, email, businessName, membershipTier } = params;
+      const { username, password, email, businessName, membershipTier } =
+        params;
 
       // Validate input
       if (!username || !password || !email) {
@@ -229,10 +230,10 @@ export const AuthService = {
 
   /**
    * Confirm sign up with email verification code
-   * 
+   *
    * @param params Confirmation parameters
    * @returns True if confirmation successful
-   * 
+   *
    * @example
    * ```typescript
    * await AuthService.confirmSignUp({
@@ -263,7 +264,7 @@ export const AuthService = {
 
   /**
    * Resend confirmation code to user's email
-   * 
+   *
    * @param username Username to resend code for
    * @returns True if code resent successfully
    */
@@ -282,17 +283,17 @@ export const AuthService = {
 
   /**
    * Sign in user with username and password
-   * 
+   *
    * @param credentials User credentials
    * @returns User profile with tokens stored
-   * 
+   *
    * @example
    * ```typescript
    * const user = await AuthService.signIn({
    *   username: 'john.doe',
    *   password: 'SecurePass123!'
    * });
-   * 
+   *
    * console.log('Welcome:', user.username);
    * console.log('Groups:', user.groups); // ['team-leader', 'senior-inspector']
    * ```
@@ -338,7 +339,7 @@ export const AuthService = {
 
   /**
    * Sign out current user and clear stored tokens
-   * 
+   *
    * @returns True if sign out successful
    */
   async signOut(): Promise<boolean> {
@@ -364,17 +365,19 @@ export const AuthService = {
 
   /**
    * Request password reset (sends code to user's email)
-   * 
+   *
    * @param params Password reset parameters
    * @returns Reset output with code delivery details
-   * 
+   *
    * @example
    * ```typescript
    * await AuthService.forgotPassword({ username: 'john.doe' });
    * // User receives email with 6-digit code
    * ```
    */
-  async forgotPassword(params: ForgotPasswordParams): Promise<ResetPasswordOutput> {
+  async forgotPassword(
+    params: ForgotPasswordParams,
+  ): Promise<ResetPasswordOutput> {
     try {
       const { username } = params;
 
@@ -390,10 +393,10 @@ export const AuthService = {
 
   /**
    * Confirm password reset with verification code
-   * 
+   *
    * @param params Password reset confirmation parameters
    * @returns True if password reset successful
-   * 
+   *
    * @example
    * ```typescript
    * await AuthService.confirmForgotPassword({
@@ -404,7 +407,9 @@ export const AuthService = {
    * // User can now sign in with new password
    * ```
    */
-  async confirmForgotPassword(params: ConfirmForgotPasswordParams): Promise<boolean> {
+  async confirmForgotPassword(
+    params: ConfirmForgotPasswordParams,
+  ): Promise<boolean> {
     try {
       const { username, confirmationCode, newPassword } = params;
 
@@ -424,10 +429,10 @@ export const AuthService = {
 
   /**
    * Change password for authenticated user
-   * 
+   *
    * @param params Password change parameters
    * @returns True if password changed successfully
-   * 
+   *
    * @example
    * ```typescript
    * await AuthService.changePassword({
@@ -454,9 +459,9 @@ export const AuthService = {
 
   /**
    * Get current authenticated user profile
-   * 
+   *
    * @returns User profile with Cognito attributes and groups
-   * 
+   *
    * @example
    * ```typescript
    * const user = await AuthService.getCurrentUser();
@@ -484,7 +489,9 @@ export const AuthService = {
         email: (customAttributes.email as string) || '',
         emailVerified: (customAttributes.email_verified as boolean) || false,
         businessName: customAttributes['custom:businessName'] as string,
-        membershipTier: customAttributes['custom:membershipTier'] as 'professional' | 'enterprise',
+        membershipTier: customAttributes['custom:membershipTier'] as
+          | 'professional'
+          | 'enterprise',
         groups: groups as CognitoGroup[],
         createdAt: customAttributes['custom:createdAt'] as string,
         updatedAt: customAttributes.updated_at as string,
@@ -500,7 +507,7 @@ export const AuthService = {
 
   /**
    * Check if user is authenticated
-   * 
+   *
    * @returns True if user has valid session
    */
   async isAuthenticated(): Promise<boolean> {
@@ -514,7 +521,7 @@ export const AuthService = {
 
   /**
    * Check if user has specific role/group
-   * 
+   *
    * @param role Cognito group to check
    * @returns True if user has the role
    */
@@ -531,7 +538,7 @@ export const AuthService = {
 
   /**
    * Get current JWT tokens from Cognito session
-   * 
+   *
    * @returns JWT tokens with expiration
    */
   async getTokens(): Promise<AuthTokens> {
@@ -544,7 +551,7 @@ export const AuthService = {
 
       const accessToken = session.tokens.accessToken?.toString() || '';
       const idToken = session.tokens.idToken?.toString() || '';
-      
+
       // Note: Amplify v6 doesn't expose refresh token directly
       // It's managed internally by Amplify
       const refreshToken = '';
@@ -568,7 +575,7 @@ export const AuthService = {
 
   /**
    * Get access token for API requests
-   * 
+   *
    * @returns JWT access token string
    */
   async getAccessToken(): Promise<string> {
@@ -583,7 +590,7 @@ export const AuthService = {
 
   /**
    * Validate current token
-   * 
+   *
    * @returns Token validation result with expiration info
    */
   async validateToken(): Promise<TokenValidation> {
@@ -610,7 +617,7 @@ export const AuthService = {
 
   /**
    * Refresh tokens if expired or expiring soon
-   * 
+   *
    * @returns New tokens
    */
   async refreshTokens(): Promise<AuthTokens> {
@@ -747,7 +754,7 @@ export const AuthService = {
 
   /**
    * Handle and format Cognito authentication errors
-   * 
+   *
    * @param error Original error from Cognito
    * @returns Formatted authentication error
    */
@@ -760,17 +767,23 @@ export const AuthService = {
     const errorMap: Record<string, string> = {
       UserNotFoundException: 'User not found. Please check your username.',
       NotAuthorizedException: 'Incorrect username or password.',
-      UsernameExistsException: 'Username already exists. Please choose a different username.',
+      UsernameExistsException:
+        'Username already exists. Please choose a different username.',
       InvalidPasswordException:
         'Password does not meet requirements. Must be at least 8 characters with uppercase, lowercase, and numbers.',
       CodeMismatchException: 'Invalid verification code. Please try again.',
-      ExpiredCodeException: 'Verification code has expired. Please request a new code.',
+      ExpiredCodeException:
+        'Verification code has expired. Please request a new code.',
       LimitExceededException: 'Too many attempts. Please try again later.',
       InvalidParameterException: 'Invalid parameters provided.',
-      UserNotConfirmedException: 'User email not verified. Please check your email for verification code.',
-      PasswordResetRequiredException: 'Password reset required. Please reset your password.',
-      TooManyRequestsException: 'Too many requests. Please wait a moment and try again.',
-      TooManyFailedAttemptsException: 'Too many failed attempts. Please try again later.',
+      UserNotConfirmedException:
+        'User email not verified. Please check your email for verification code.',
+      PasswordResetRequiredException:
+        'Password reset required. Please reset your password.',
+      TooManyRequestsException:
+        'Too many requests. Please wait a moment and try again.',
+      TooManyFailedAttemptsException:
+        'Too many failed attempts. Please try again later.',
     };
 
     const formattedMessage = errorMap[errorCode] || errorMessage;

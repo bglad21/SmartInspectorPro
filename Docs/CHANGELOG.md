@@ -13,6 +13,128 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Added - January 24, 2025
 
+- **Redux Auth Slice (P4-T02)**: Complete Redux Toolkit authentication state management
+
+  - **Files Created**: 4 files, 1,299 lines of code
+    - `src/redux/slices/auth.slice.ts` (611 lines)
+    - `src/redux/store.ts` (56 lines)
+    - `src/redux/hooks.ts` (29 lines)
+    - `src/redux/__tests__/auth.slice.examples.ts` (603 lines)
+
+  **10 Async Thunks** (with auth.service.ts integration):
+
+  - `initializeAuth()` - Restore session from AsyncStorage on app startup
+  - `signIn()` - Sign in with username/password
+  - `signUp()` - Register new user
+  - `confirmSignUp()` - Confirm email with verification code
+  - `resendConfirmationCode()` - Resend verification code
+  - `signOut()` - Sign out and clear state
+  - `forgotPassword()` - Request password reset
+  - `confirmForgotPassword()` - Confirm password reset with code
+  - `changePassword()` - Change password for authenticated user
+  - `refreshTokens()` - Manually refresh JWT tokens
+  - `checkTokenExpiration()` - Check and refresh if needed
+
+  **4 Sync Actions**:
+
+  - `clearError()` - Clear error state
+  - `updateLastActivity()` - Update activity timestamp
+  - `setUser()` - Manually set user
+  - `clearAuthState()` - Force logout
+
+  **18 Selectors**:
+
+  - `selectAuth` - Entire auth state
+  - `selectUser` - Current user profile
+  - `selectIsAuthenticated` - Authentication status
+  - `selectIsInitialized` - Initialization status
+  - `selectAuthLoading(operation)` - Loading state for specific operation
+  - `selectIsAnyLoading` - True if any operation loading
+  - `selectAuthError` - Current error
+  - `selectTokens` - JWT tokens
+  - `selectAccessToken` - Access token only
+  - `selectUserEmail` - User email
+  - `selectUserBusinessName` - Business name
+  - `selectUserMembershipTier` - Membership tier
+  - `selectUserGroups` - User groups (roles)
+  - `selectHasRole(role)` - Check specific role
+  - `selectLastActivity` - Last activity timestamp
+
+  **Redux Store Configuration**:
+
+  - Configured with Redux Toolkit `configureStore`
+  - Middleware with serializable check settings
+  - TypeScript types exported (RootState, AppDispatch)
+  - Redux DevTools enabled in development
+
+  **Typed Redux Hooks**:
+
+  - `useAppDispatch()` - Typed dispatch hook
+  - `useAppSelector()` - Typed selector hook
+  - Full TypeScript type safety for components
+
+  **State Shape**:
+
+  ```typescript
+  interface AuthState {
+    user: UserProfile | null;
+    tokens: AuthTokens | null;
+    isAuthenticated: boolean;
+    isInitialized: boolean;
+    loading: {
+      signIn: boolean;
+      signUp: boolean;
+      signOut: boolean;
+      confirmSignUp: boolean;
+      forgotPassword: boolean;
+      confirmForgotPassword: boolean;
+      changePassword: boolean;
+      refreshTokens: boolean;
+      initialize: boolean;
+    };
+    error: AuthError | null;
+    lastActivity: number | null;
+  }
+  ```
+
+  **13 Usage Examples Documented**:
+
+  1. `exampleInitializeAuth()` - App startup session restoration
+  2. `exampleSignIn()` - Login with Redux state management
+  3. `exampleSignUp()` - Registration flow
+  4. `exampleConfirmSignUp()` - Email verification
+  5. `exampleResendCode()` - Resend verification
+  6. `exampleForgotPassword()` - Password reset flow
+  7. `exampleChangePassword()` - Update password
+  8. `exampleSignOut()` - Logout
+  9. `exampleSelectors()` - Using all selectors in components
+  10. `exampleTokenRefresh()` - Manual token refresh
+  11. `exampleCheckTokenExpiration()` - Automatic expiration checking
+  12. `exampleErrorHandling()` - Error state management
+  13. `exampleUpdateActivity()` - Activity tracking
+
+  **Key Features**:
+
+  - **Per-Operation Loading States**: Track loading for each auth operation independently
+  - **Automatic Token Refresh Integration**: Works with auth.service.ts background timer
+  - **Error Handling**: User-friendly error messages with `clearError()` action
+  - **TypeScript Type Safety**: RootState and AppDispatch types for all components
+  - **Session Persistence**: Initialize auth from AsyncStorage on app startup
+  - **Activity Tracking**: Last activity timestamp for session timeout
+  - **Role-Based Selectors**: `selectHasRole()` for RBAC checks
+  - **Memoization Ready**: Selectors can be enhanced with `createSelector`
+
+  **Integration Points**:
+
+  - Redux Provider required in App.tsx
+  - Navigation integration with `selectIsAuthenticated`
+  - API interceptor can use `selectAccessToken`
+  - All async thunks call auth.service.ts methods
+
+  **TypeScript Compilation**: ✅ 0 errors
+
+  **Completion Summary**: `CompletedTaskEvidence/Phase_04/P4-T02_COMPLETION_SUMMARY.md`
+
 - **Enhanced Authentication Service (P4-T01)**: Enterprise-grade authentication with AWS Cognito
 
   - **File**: `src/services/auth.service.ts` (757 lines)
