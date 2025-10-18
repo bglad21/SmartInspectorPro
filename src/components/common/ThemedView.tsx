@@ -1,10 +1,10 @@
 /**
  * ThemedView Component
- * 
+ *
  * A View component that automatically applies theme-aware background colors.
  * This is a minimal implementation to unblock P4-T03.
  * Full theme system will be implemented in P6-T01.
- * 
+ *
  * @component
  * @example
  * ```tsx
@@ -15,14 +15,14 @@
  */
 
 import type React from 'react';
-import { View, type ViewProps, StyleSheet, useColorScheme } from 'react-native';
+import { StyleSheet, useColorScheme, View, type ViewProps } from 'react-native';
 
 export interface ThemedViewProps extends ViewProps {
   /**
    * Use dark background even in light mode
    */
   darkMode?: boolean;
-  
+
   /**
    * Use light background even in dark mode
    */
@@ -51,16 +51,13 @@ export const ThemedView: React.FC<ThemedViewProps> = ({
 }) => {
   const colorScheme = useColorScheme();
   const isDark = darkMode || (colorScheme === 'dark' && !lightMode);
-  
+
   const backgroundColor = isDark
     ? COLORS.dark.background
     : COLORS.light.background;
 
   return (
-    <View
-      style={[styles.container, { backgroundColor }, style]}
-      {...props}
-    />
+    <View style={[styles.container, { backgroundColor }, style]} {...props} />
   );
 };
 

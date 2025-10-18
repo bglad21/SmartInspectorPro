@@ -1,41 +1,41 @@
 /**
  * RegisterScreen Component
- * 
+ *
  * Allows new users to create an account with business name, email, and password.
  * Integrates with Redux auth slice for state management.
- * 
+ *
  * Features:
  * - Complete registration form with validation
  * - Business name, email, password fields
  * - Loading states
  * - Error handling
  * - Navigation to email verification on success
- * 
+ *
  * @screen
  */
 
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import {
-  View,
-  StyleSheet,
+  Alert,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
-  Alert,
+  StyleSheet,
+  View,
 } from 'react-native';
-import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import {
-  signUp,
-  selectAuthLoading,
-  selectAuthError,
-  clearError,
-} from '../../redux/slices/auth.slice';
-import {
-  ThemedView,
-  ThemedText,
   Button,
   TextInput,
+  ThemedText,
+  ThemedView,
 } from '../../components/common';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import {
+  clearError,
+  selectAuthError,
+  selectAuthLoading,
+  signUp,
+} from '../../redux/slices/auth.slice';
 
 interface RegisterScreenProps {
   navigation: {
@@ -44,7 +44,9 @@ interface RegisterScreenProps {
   };
 }
 
-export const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
+export const RegisterScreen: React.FC<RegisterScreenProps> = ({
+  navigation,
+}) => {
   const dispatch = useAppDispatch();
   const loading = useAppSelector(selectAuthLoading('signUp'));
   const error = useAppSelector(selectAuthError);
@@ -81,9 +83,9 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) =>
    * Update form field
    */
   const updateField = (field: keyof typeof formData, value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
+    setFormData(prev => ({ ...prev, [field]: value }));
     if (errors[field]) {
-      setErrors((prev) => ({ ...prev, [field]: undefined }));
+      setErrors(prev => ({ ...prev, [field]: undefined }));
     }
   };
 
@@ -159,7 +161,7 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) =>
           email: formData.email,
           businessName: formData.businessName,
           membershipTier: 'professional', // Default tier
-        })
+        }),
       ).unwrap();
 
       if (result.needsEmailVerification) {
@@ -197,7 +199,11 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) =>
             <ThemedText variant="h1" style={styles.title}>
               Create Account
             </ThemedText>
-            <ThemedText variant="body" color="secondary" style={styles.subtitle}>
+            <ThemedText
+              variant="body"
+              color="secondary"
+              style={styles.subtitle}
+            >
               Start your professional inspection journey
             </ThemedText>
           </View>
@@ -207,7 +213,7 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) =>
             <TextInput
               label="Business Name"
               value={formData.businessName}
-              onChangeText={(text) => updateField('businessName', text)}
+              onChangeText={text => updateField('businessName', text)}
               error={errors.businessName}
               autoCapitalize="words"
               placeholder="Enter your business name"
@@ -217,7 +223,7 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) =>
             <TextInput
               label="Email"
               value={formData.email}
-              onChangeText={(text) => updateField('email', text)}
+              onChangeText={text => updateField('email', text)}
               error={errors.email}
               autoCapitalize="none"
               autoCorrect={false}
@@ -230,7 +236,7 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) =>
             <TextInput
               label="Username"
               value={formData.username}
-              onChangeText={(text) => updateField('username', text)}
+              onChangeText={text => updateField('username', text)}
               error={errors.username}
               autoCapitalize="none"
               autoCorrect={false}
@@ -242,7 +248,7 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) =>
             <TextInput
               label="Password"
               value={formData.password}
-              onChangeText={(text) => updateField('password', text)}
+              onChangeText={text => updateField('password', text)}
               error={errors.password}
               secureTextEntry
               showPasswordToggle
@@ -254,7 +260,7 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) =>
             <TextInput
               label="Confirm Password"
               value={formData.confirmPassword}
-              onChangeText={(text) => updateField('confirmPassword', text)}
+              onChangeText={text => updateField('confirmPassword', text)}
               error={errors.confirmPassword}
               secureTextEntry
               showPasswordToggle

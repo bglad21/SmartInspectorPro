@@ -1,10 +1,10 @@
 /**
  * TextInput Component
- * 
+ *
  * A themed text input component with label, error message, and icons.
  * This is a minimal implementation to unblock P4-T03.
  * Full input system will be enhanced in P6-T02.
- * 
+ *
  * @component
  * @example
  * ```tsx
@@ -22,10 +22,10 @@ import { useState } from 'react';
 import {
   TextInput as RNTextInput,
   type TextInputProps as RNTextInputProps,
-  View,
   StyleSheet,
-  useColorScheme,
   TouchableOpacity,
+  useColorScheme,
+  View,
 } from 'react-native';
 import ThemedText from './ThemedText';
 
@@ -34,12 +34,12 @@ export interface TextInputProps extends RNTextInputProps {
    * Input label
    */
   label?: string;
-  
+
   /**
    * Error message
    */
   error?: string;
-  
+
   /**
    * Show password toggle for secure text entry
    */
@@ -79,10 +79,10 @@ export const TextInput: React.FC<TextInputProps> = ({
   const colorScheme = useColorScheme();
   const isDark = colorScheme === 'dark';
   const theme = isDark ? COLORS.dark : COLORS.light;
-  
+
   const [isFocused, setIsFocused] = useState(false);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  
+
   const borderColor = error
     ? theme.borderError
     : isFocused
@@ -110,7 +110,9 @@ export const TextInput: React.FC<TextInputProps> = ({
           placeholderTextColor={theme.placeholder}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
-          secureTextEntry={showPasswordToggle ? !isPasswordVisible : secureTextEntry}
+          secureTextEntry={
+            showPasswordToggle ? !isPasswordVisible : secureTextEntry
+          }
           {...props}
         />
         {showPasswordToggle && (

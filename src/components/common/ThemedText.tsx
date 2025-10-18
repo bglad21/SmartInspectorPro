@@ -1,10 +1,10 @@
 /**
  * ThemedText Component
- * 
+ *
  * A Text component with theme-aware colors and typography variants.
  * This is a minimal implementation to unblock P4-T03.
  * Full theme system with complete typography will be implemented in P6-T01.
- * 
+ *
  * @component
  * @example
  * ```tsx
@@ -15,27 +15,42 @@
  */
 
 import type React from 'react';
-import { Text, type TextProps, StyleSheet, useColorScheme } from 'react-native';
+import { StyleSheet, Text, type TextProps, useColorScheme } from 'react-native';
 
-export type TextVariant = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'body' | 'caption' | 'button';
-export type TextColor = 'primary' | 'secondary' | 'error' | 'success' | 'warning' | 'default';
+export type TextVariant =
+  | 'h1'
+  | 'h2'
+  | 'h3'
+  | 'h4'
+  | 'h5'
+  | 'h6'
+  | 'body'
+  | 'caption'
+  | 'button';
+export type TextColor =
+  | 'primary'
+  | 'secondary'
+  | 'error'
+  | 'success'
+  | 'warning'
+  | 'default';
 
 export interface ThemedTextProps extends TextProps {
   /**
    * Typography variant
    */
   variant?: TextVariant;
-  
+
   /**
    * Text color variant
    */
   color?: TextColor;
-  
+
   /**
    * Use dark text even in light mode
    */
   darkMode?: boolean;
-  
+
   /**
    * Use light text even in dark mode
    */
@@ -89,9 +104,9 @@ export const ThemedText: React.FC<ThemedTextProps> = ({
 }) => {
   const colorScheme = useColorScheme();
   const isDark = darkMode || (colorScheme === 'dark' && !lightMode);
-  
+
   const theme = isDark ? COLORS.dark : COLORS.light;
-  
+
   // Determine text color
   let textColor: string;
   switch (color) {
@@ -113,17 +128,12 @@ export const ThemedText: React.FC<ThemedTextProps> = ({
     default:
       textColor = theme.text;
   }
-  
+
   const typography = TYPOGRAPHY[variant];
 
   return (
     <Text
-      style={[
-        styles.base,
-        typography,
-        { color: textColor },
-        style,
-      ]}
+      style={[styles.base, typography, { color: textColor }, style]}
       {...props}
     />
   );

@@ -9,7 +9,46 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased] - Pre-Development Phase
 
-### Authentication System - Phase 4 in Progress (January 2025)
+### Data Layer & CSV Management - Phase 5 in Progress (January 2025)
+
+#### Added - January 18, 2025
+
+- **SQLite Database Schema (P5-T01)**: Complete database service for offline-first architecture
+
+  - **File Created**: `src/services/database.service.ts` (1,125 lines)
+  - **Database Tables** (6 tables with foreign keys and constraints):
+    - `users` - Cognito user data with membership tiers
+    - `inspections` - Inspection metadata with property details
+    - `inspectionRecords` - Individual inspection items with photos
+    - `workflows` - Custom workflow configurations
+    - `csvData` - Hierarchical inspection data from Single_Family.csv
+    - `syncQueue` - Offline change tracking for cloud sync
+  - **Indexes** (21 indexes for query optimization):
+    - Users: username, email
+    - Inspections: userId, status, scheduledDate, syncedAt
+    - InspectionRecords: inspectionId, section, condition, syncedAt
+    - Workflows: userId, propertyType, sharedCode
+    - CSVData: section, system, component, propertyType
+    - SyncQueue: status, tableName
+  - **CRUD Operations** (33 methods across all tables):
+    - Users: 3 methods (upsert, getById, getByUsername)
+    - Inspections: 5 methods (create, update, getById, getByUserId, delete)
+    - InspectionRecords: 4 methods (create, update, getRecords, delete)
+    - Workflows: 5 methods (create, update, getByUserId, getBySharedCode, delete)
+    - CSVData: 7 methods (bulkInsert, query, getDistinctSections/Systems/Components/Materials, getComments)
+    - SyncQueue: 5 methods (addToQueue, getPending, updateStatus, cleanup, getCount)
+    - Utilities: 4 methods (getStatistics, executeSql, clearAllData, close)
+  - **Features**:
+    - Singleton pattern with exported `DB` instance
+    - Transaction support for bulk operations
+    - Foreign key constraints with cascade delete
+    - CHECK constraints for enum-like columns
+    - Automatic sync queue for offline changes
+    - TypeScript interfaces for all tables
+    - Debug logging in development mode
+    - Hierarchical CSV data queries for 6-step inspection workflow
+
+### Authentication System - Phase 4 Complete (January 2025)
 
 #### Added - October 18, 2025
 
@@ -28,12 +67,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
       - `src/components/common/TextInput.tsx` (147 lines) - Input with label, error, password toggle
 
   **Authentication Workflows**:
+
   - Sign In → Username/password → Auto-navigate on success
   - Sign Up → Register → Email verification → Login
   - Forgot Password → Request code → Confirm with code + new password → Login
   - Email Verification → Enter 6-digit code → Resend code option
 
   **Form Validation**:
+
   - Email format validation (`/^[^\s@]+@[^\s@]+\.[^\s@]+$/`)
   - Password strength (8+ chars, uppercase, lowercase, number)
   - Password match validation
@@ -41,6 +82,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Required field validation
 
   **Redux Integration** (6 async thunks used):
+
   - `signIn` - LoginScreen
   - `signUp` - RegisterScreen
   - `confirmSignUp` - VerifyEmailScreen
@@ -49,6 +91,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `confirmForgotPassword` - ForgotPasswordScreen (step 2)
 
   **UX Features**:
+
   - Per-operation loading states (button + form disabled)
   - Alert dialogs for Redux errors with auto-clear
   - Inline validation errors

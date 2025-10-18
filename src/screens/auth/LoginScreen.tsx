@@ -1,40 +1,40 @@
 /**
  * LoginScreen Component
- * 
+ *
  * Allows users to sign in with email and password.
  * Integrates with Redux auth slice for state management.
- * 
+ *
  * Features:
  * - Email/password form validation
  * - Loading states
  * - Error handling
  * - Navigation to register and forgot password
- * 
+ *
  * @screen
  */
 
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import {
-  View,
-  StyleSheet,
+  Alert,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
-  Alert,
+  StyleSheet,
+  View,
 } from 'react-native';
-import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import {
-  signIn,
-  selectAuthLoading,
-  selectAuthError,
-  clearError,
-} from '../../redux/slices/auth.slice';
-import {
-  ThemedView,
-  ThemedText,
   Button,
   TextInput,
+  ThemedText,
+  ThemedView,
 } from '../../components/common';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import {
+  clearError,
+  selectAuthError,
+  selectAuthLoading,
+  signIn,
+} from '../../redux/slices/auth.slice';
 
 interface LoginScreenProps {
   navigation: any; // TODO: Type with NavigationProp when navigation is set up
@@ -130,7 +130,11 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
             <ThemedText variant="h1" style={styles.title}>
               Smart Inspector Pro
             </ThemedText>
-            <ThemedText variant="body" color="secondary" style={styles.subtitle}>
+            <ThemedText
+              variant="body"
+              color="secondary"
+              style={styles.subtitle}
+            >
               Sign in to continue
             </ThemedText>
           </View>
@@ -140,10 +144,10 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
             <TextInput
               label="Username"
               value={username}
-              onChangeText={(text) => {
+              onChangeText={text => {
                 setUsername(text);
                 if (errors.username) {
-                  setErrors((prev) => ({ ...prev, username: undefined }));
+                  setErrors(prev => ({ ...prev, username: undefined }));
                 }
               }}
               error={errors.username}
@@ -157,10 +161,10 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
             <TextInput
               label="Password"
               value={password}
-              onChangeText={(text) => {
+              onChangeText={text => {
                 setPassword(text);
                 if (errors.password) {
-                  setErrors((prev) => ({ ...prev, password: undefined }));
+                  setErrors(prev => ({ ...prev, password: undefined }));
                 }
               }}
               error={errors.password}

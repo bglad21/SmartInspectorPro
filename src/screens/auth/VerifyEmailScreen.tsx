@@ -1,8 +1,8 @@
 /**
  * VerifyEmailScreen Component
- * 
+ *
  * Allows users to verify their email address after registration.
- * 
+ *
  * Features:
  * - Verification code input
  * - Code confirmation
@@ -10,33 +10,33 @@
  * - Loading states
  * - Error handling
  * - Auto-navigation on success
- * 
+ *
  * @screen
  */
 
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import {
-  View,
-  StyleSheet,
+  Alert,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
-  Alert,
+  StyleSheet,
+  View,
 } from 'react-native';
-import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import {
-  confirmSignUp,
-  resendConfirmationCode,
-  selectAuthLoading,
-  selectAuthError,
-  clearError,
-} from '../../redux/slices/auth.slice';
-import {
-  ThemedView,
-  ThemedText,
   Button,
   TextInput,
+  ThemedText,
+  ThemedView,
 } from '../../components/common';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import {
+  clearError,
+  confirmSignUp,
+  resendConfirmationCode,
+  selectAuthError,
+  selectAuthLoading,
+} from '../../redux/slices/auth.slice';
 
 interface VerifyEmailScreenProps {
   route: {
@@ -109,7 +109,7 @@ export const VerifyEmailScreen: React.FC<VerifyEmailScreenProps> = ({
         confirmSignUp({
           username,
           confirmationCode: code,
-        })
+        }),
       ).unwrap();
 
       Alert.alert(
@@ -120,7 +120,7 @@ export const VerifyEmailScreen: React.FC<VerifyEmailScreenProps> = ({
             text: 'OK',
             onPress: () => navigation.navigate('Login'),
           },
-        ]
+        ],
       );
     } catch (err) {
       // Error handled by Redux state and useEffect
@@ -139,7 +139,7 @@ export const VerifyEmailScreen: React.FC<VerifyEmailScreenProps> = ({
       Alert.alert(
         'Code Sent',
         'A new verification code has been sent to your email address.',
-        [{ text: 'OK' }]
+        [{ text: 'OK' }],
       );
     } catch (err) {
       // Error handled by Redux state and useEffect
@@ -163,7 +163,7 @@ export const VerifyEmailScreen: React.FC<VerifyEmailScreenProps> = ({
           style: 'destructive',
           onPress: () => navigation.goBack(),
         },
-      ]
+      ],
     );
   };
 
@@ -182,7 +182,11 @@ export const VerifyEmailScreen: React.FC<VerifyEmailScreenProps> = ({
             <ThemedText variant="h1" style={styles.title}>
               Verify Your Email
             </ThemedText>
-            <ThemedText variant="body" color="secondary" style={styles.subtitle}>
+            <ThemedText
+              variant="body"
+              color="secondary"
+              style={styles.subtitle}
+            >
               We sent a verification code to
             </ThemedText>
             <ThemedText variant="body" color="primary" style={styles.email}>
@@ -198,7 +202,7 @@ export const VerifyEmailScreen: React.FC<VerifyEmailScreenProps> = ({
             <TextInput
               label="Verification Code"
               value={code}
-              onChangeText={(text) => {
+              onChangeText={text => {
                 setCode(text);
                 if (codeError) {
                   setCodeError(undefined);
@@ -241,9 +245,13 @@ export const VerifyEmailScreen: React.FC<VerifyEmailScreenProps> = ({
 
           {/* Instructions */}
           <View style={styles.instructions}>
-            <ThemedText variant="caption" color="secondary" style={styles.instructionText}>
-              Didn't receive the code? Check your spam folder or use the "Resend Code"
-              button above.
+            <ThemedText
+              variant="caption"
+              color="secondary"
+              style={styles.instructionText}
+            >
+              Didn't receive the code? Check your spam folder or use the "Resend
+              Code" button above.
             </ThemedText>
           </View>
         </ScrollView>

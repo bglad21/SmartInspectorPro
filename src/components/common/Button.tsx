@@ -1,10 +1,10 @@
 /**
  * Button Component
- * 
+ *
  * A themed button component with loading states and variants.
  * This is a minimal implementation to unblock P4-T03.
  * Full button system will be enhanced in P6-T02.
- * 
+ *
  * @component
  * @example
  * ```tsx
@@ -15,10 +15,10 @@
 
 import type React from 'react';
 import {
+  ActivityIndicator,
+  StyleSheet,
   TouchableOpacity,
   type TouchableOpacityProps,
-  StyleSheet,
-  ActivityIndicator,
   useColorScheme,
 } from 'react-native';
 import ThemedText from './ThemedText';
@@ -30,17 +30,17 @@ export interface ButtonProps extends Omit<TouchableOpacityProps, 'children'> {
    * Button text
    */
   title: string;
-  
+
   /**
    * Button variant
    */
   variant?: ButtonVariant;
-  
+
   /**
    * Show loading indicator
    */
   loading?: boolean;
-  
+
   /**
    * Full width button
    */
@@ -85,16 +85,19 @@ export const Button: React.FC<ButtonProps> = ({
   const colorScheme = useColorScheme();
   const isDark = colorScheme === 'dark';
   const theme = isDark ? COLORS.dark : COLORS.light;
-  
+
   const isDisabled = disabled || loading;
-  
+
   // Determine button colors
   let backgroundColor: string;
   let textColor: string;
   let borderColor: string | undefined;
-  
+
   if (isDisabled) {
-    backgroundColor = variant === 'outline' || variant === 'text' ? 'transparent' : theme.disabled;
+    backgroundColor =
+      variant === 'outline' || variant === 'text'
+        ? 'transparent'
+        : theme.disabled;
     textColor = theme.disabledText;
     borderColor = variant === 'outline' ? theme.disabled : undefined;
   } else {

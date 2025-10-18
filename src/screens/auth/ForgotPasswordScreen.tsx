@@ -1,44 +1,44 @@
 /**
  * ForgotPasswordScreen Component
- * 
+ *
  * Allows users to reset their password via email verification.
  * Two-step process:
  * 1. Request reset code (send to email)
  * 2. Confirm with code and new password
- * 
+ *
  * Features:
  * - Email/username input
  * - Verification code input
  * - New password input
  * - Loading states
  * - Error handling
- * 
+ *
  * @screen
  */
 
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import {
-  View,
-  StyleSheet,
+  Alert,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
-  Alert,
+  StyleSheet,
+  View,
 } from 'react-native';
-import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import {
-  forgotPassword,
-  confirmForgotPassword,
-  selectAuthLoading,
-  selectAuthError,
-  clearError,
-} from '../../redux/slices/auth.slice';
-import {
-  ThemedView,
-  ThemedText,
   Button,
   TextInput,
+  ThemedText,
+  ThemedView,
 } from '../../components/common';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import {
+  clearError,
+  confirmForgotPassword,
+  forgotPassword,
+  selectAuthError,
+  selectAuthLoading,
+} from '../../redux/slices/auth.slice';
 
 interface ForgotPasswordScreenProps {
   navigation: {
@@ -54,7 +54,9 @@ export const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
 }) => {
   const dispatch = useAppDispatch();
   const forgotLoading = useAppSelector(selectAuthLoading('forgotPassword'));
-  const confirmLoading = useAppSelector(selectAuthLoading('confirmForgotPassword'));
+  const confirmLoading = useAppSelector(
+    selectAuthLoading('confirmForgotPassword'),
+  );
   const error = useAppSelector(selectAuthError);
 
   const [step, setStep] = useState<Step>('request');
@@ -145,13 +147,13 @@ export const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
 
     try {
       await dispatch(forgotPassword({ username })).unwrap();
-      
+
       Alert.alert(
         'Code Sent',
         'A verification code has been sent to your email address.',
-        [{ text: 'OK' }]
+        [{ text: 'OK' }],
       );
-      
+
       setStep('confirm');
     } catch (err) {
       // Error handled by Redux state and useEffect
@@ -173,7 +175,7 @@ export const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
           username,
           confirmationCode: code,
           newPassword,
-        })
+        }),
       ).unwrap();
 
       Alert.alert(
@@ -184,7 +186,7 @@ export const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
             text: 'OK',
             onPress: () => navigation.navigate('Login'),
           },
-        ]
+        ],
       );
     } catch (err) {
       // Error handled by Redux state and useEffect
@@ -217,10 +219,10 @@ export const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
         <TextInput
           label="Username"
           value={username}
-          onChangeText={(text) => {
+          onChangeText={text => {
             setUsername(text);
             if (errors.username) {
-              setErrors((prev) => ({ ...prev, username: undefined }));
+              setErrors(prev => ({ ...prev, username: undefined }));
             }
           }}
           error={errors.username}
@@ -268,10 +270,10 @@ export const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
         <TextInput
           label="Verification Code"
           value={code}
-          onChangeText={(text) => {
+          onChangeText={text => {
             setCode(text);
             if (errors.code) {
-              setErrors((prev) => ({ ...prev, code: undefined }));
+              setErrors(prev => ({ ...prev, code: undefined }));
             }
           }}
           error={errors.code}
@@ -284,10 +286,10 @@ export const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
         <TextInput
           label="New Password"
           value={newPassword}
-          onChangeText={(text) => {
+          onChangeText={text => {
             setNewPassword(text);
             if (errors.newPassword) {
-              setErrors((prev) => ({ ...prev, newPassword: undefined }));
+              setErrors(prev => ({ ...prev, newPassword: undefined }));
             }
           }}
           error={errors.newPassword}
@@ -301,10 +303,10 @@ export const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
         <TextInput
           label="Confirm New Password"
           value={confirmPassword}
-          onChangeText={(text) => {
+          onChangeText={text => {
             setConfirmPassword(text);
             if (errors.confirmPassword) {
-              setErrors((prev) => ({ ...prev, confirmPassword: undefined }));
+              setErrors(prev => ({ ...prev, confirmPassword: undefined }));
             }
           }}
           error={errors.confirmPassword}
