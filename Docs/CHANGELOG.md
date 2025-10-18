@@ -11,6 +11,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Development Environment & Project Setup (October 2025)
 
+#### Added - October 18, 2025
+- **Core Dependencies (P2-T02)**: Installed 20+ npm packages across 7 categories
+  - State Management: Redux Toolkit 2.9.1, React Redux 9.2.0
+  - Navigation: React Navigation 7.1.18 with native-stack 7.3.28
+  - UI Components: React Native Elements 3.4.3, Paper 5.14.5, Vector Icons 10.3.0
+  - Local Storage: SQLite 6.0.1 (with Gradle 9.0 patch)
+  - File Handling: Papa Parse 5.5.3 for CSV processing
+  - AWS Integration: Amplify 6.15.7, Auth 6.16.0, Storage 6.10.0
+  - Image Handling: Image Picker 8.2.1, Resizer 1.4.5, FS 2.20.0
+  - iOS: 83 CocoaPods installed, 8 native modules auto-linked
+  - Android: Permissions added for camera/storage, vector icons configured
+  - patch-package setup for dependency fixes (react-native-sqlite-storage jcenter fix)
+
 #### Updated - October 18, 2025
 
 - **iOS Configuration**: Updated bundle identifiers and product names
