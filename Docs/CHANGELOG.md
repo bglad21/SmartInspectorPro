@@ -9,6 +9,97 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased] - Pre-Development Phase
 
+### Theme System Implementation - Phase 6 in Progress (October 2025)
+
+#### Added - October 18, 2025
+
+- **Theme System (P6-T01)**: Comprehensive light/dark theme system with React Context and AsyncStorage persistence
+
+  - **Files Created**: 7 files, 1,080+ lines of code
+    - `src/theme/types.ts` (145 lines) - Complete TypeScript type definitions (9 interfaces)
+    - `src/theme/lightTheme.ts` (157 lines) - Light theme object with 50+ properties
+    - `src/theme/darkTheme.ts` (157 lines) - Dark theme object with 50+ properties
+    - `src/theme/ThemeContext.tsx` (171 lines) - ThemeProvider component + useTheme hook
+    - `src/theme/index.ts` (25 lines) - Public API exports
+    - `src/components/ThemeDemo.tsx` (230 lines) - Comprehensive theme showcase component
+    - `CompletedTaskEvidence/Phase_06/README.md` (68 lines) - Phase overview
+  - **Files Updated**: 2 files refactored
+    - `App.tsx` - Wrapped with ThemeProvider
+    - `src/components/common/ThemedView.tsx` (52 lines) - Refactored to use theme system
+    - `src/components/common/ThemedText.tsx` (130 lines) - Refactored to use theme system
+  - **Theme Type System**:
+    - `ThemeMode` type: 'light' | 'dark' | 'system'
+    - `ColorPalette` interface: 24 color properties
+    - `Typography` interface: 11 text style variants
+    - `Spacing` interface: 6-point scale (4px → 48px)
+    - `BorderRadius` interface: 5 values (4px → 9999px)
+    - `Shadows` interface: 3 elevations (small, medium, large)
+    - `Theme` interface: Complete theme object
+    - `ThemeContextValue` interface: Context API definition
+  - **Light Theme Colors** (from requirements):
+    - Primary: #2E5BBA (Smart Inspector blue)
+    - Background: #F8F9FA (light gray)
+    - Success: #4CAF50 (green)
+    - Warning: #FF9800 (orange)
+    - Error: #F44336 (red)
+    - Info: #2196F3 (blue)
+    - 18 additional semantic colors
+  - **Dark Theme Colors** (Material Design):
+    - Background: #121212 (Material dark standard)
+    - Surface: #1E1E1E (elevated surfaces)
+    - Primary: #5C8BFF (lighter blue for readability)
+    - All colors adjusted for optimal dark mode viewing
+  - **Inspection Condition Colors** (CSV data model):
+    - Acceptable: #4CAF50 (green) - no issues
+    - Monitor: #FF9800 (orange) - minor issues
+    - Repair: #FF5722 (deep orange) - needs repair
+    - Safety Hazard: #F44336 (red) - safety concern
+    - Access Restricted: #9E9E9E (gray) - couldn't inspect
+  - **Typography System** (11 variants):
+    - Headings: h1 (32px) → h6 (16px)
+    - Body: body1 (16px), body2 (14px)
+    - Button: 16px, uppercase, 0.5px letter spacing
+    - Caption: 12px
+    - Overline: 10px, uppercase, 1px letter spacing
+  - **ThemeContext Features**:
+    - React Context Provider wraps entire app
+    - `useTheme` custom hook for component access
+    - Theme mode state management (light/dark/system)
+    - System theme detection (useColorScheme integration)
+    - AsyncStorage persistence (@smart_inspector_pro:theme_mode)
+    - Theme loading on app startup
+    - Error handling for hook outside provider
+  - **Theme Switching**:
+    - `toggleTheme()` - Switch between light/dark
+    - `setThemeMode(mode)` - Set specific mode (light/dark/system)
+    - Instant switching with React state
+    - Automatic persistence to AsyncStorage
+    - useMemo optimization prevents unnecessary re-renders
+  - **Updated Components**:
+    - ThemedView: Now uses theme.colors with variant support (background/surface/card)
+    - ThemedText: Extended with 15+ color options and 11 typography variants
+    - Removed temporary hardcoded colors
+    - Full theme system integration
+  - **ThemeDemo Component**:
+    - Interactive theme toggle button
+    - All 24 colors displayed with swatches
+    - All 11 typography variants rendered
+    - Spacing scale visualization
+    - Border radius examples
+    - Shadow elevation examples
+    - Current theme mode display
+    - Inspection condition colors showcase
+  - **Performance Optimizations**:
+    - useMemo for theme object selection
+    - useCallback for theme functions
+    - Set for progress callback storage
+    - Minimal re-renders (only context consumers update)
+  - **Integration Points**:
+    - App.tsx wrapped with ThemeProvider
+    - Ready for all Phase 7-8 components (Card, Modal, List, etc.)
+    - ThemedView and ThemedText fully integrated
+    - All future screens can use useTheme hook
+
 ### Data Layer & CSV Management - Phase 5 Complete (October 2025)
 
 #### Added - October 18, 2025

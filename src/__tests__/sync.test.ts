@@ -9,8 +9,8 @@
  */
 
 import DB from '../services/database.service';
+import type { SyncProgress } from '../services/sync.service';
 import SyncService from '../services/sync.service';
-import type {SyncProgress} from '../services/sync.service';
 
 /**
  * Main test function for sync service
@@ -113,7 +113,9 @@ async function testSyncService() {
 
     const unsubscribe = SyncService.onProgress(progress => {
       progressUpdates.push(progress);
-      console.log(`Progress: ${progress.phase} - ${progress.percentage}% - ${progress.message}`);
+      console.log(
+        `Progress: ${progress.phase} - ${progress.percentage}% - ${progress.message}`,
+      );
     });
 
     console.log('✅ Registered progress callback\n');
@@ -137,16 +139,27 @@ async function testSyncService() {
       if (result.errors.length > 0) {
         console.log('\nSync Errors:');
         result.errors.forEach((err, index) => {
-          console.log(`  ${index + 1}. ${err.item.tableName}:${err.item.recordId} - ${err.error}`);
+          console.log(
+            `  ${index + 1}. ${err.item.tableName}:${err.item.recordId} - ${
+              err.error
+            }`,
+          );
         });
       }
 
       console.log(`\nProgress Updates Received: ${progressUpdates.length}`);
-      console.log('Progress Phases:', progressUpdates.map(p => p.phase).join(' → '));
+      console.log(
+        'Progress Phases:',
+        progressUpdates.map(p => p.phase).join(' → '),
+      );
 
       console.log('✅ Manual sync completed\n');
     } catch (error) {
-      console.log(`❌ Sync failed: ${error instanceof Error ? error.message : 'Unknown error'}\n`);
+      console.log(
+        `❌ Sync failed: ${
+          error instanceof Error ? error.message : 'Unknown error'
+        }\n`,
+      );
     }
 
     // Unsubscribe from progress
@@ -200,7 +213,11 @@ async function testSyncService() {
       });
       console.log('✅ Delta sync completed\n');
     } catch (error) {
-      console.log(`❌ Delta sync failed: ${error instanceof Error ? error.message : 'Unknown error'}\n`);
+      console.log(
+        `❌ Delta sync failed: ${
+          error instanceof Error ? error.message : 'Unknown error'
+        }\n`,
+      );
     }
 
     // Test 11: Test conflict resolution
@@ -210,7 +227,10 @@ async function testSyncService() {
     if (testItem) {
       // Test local wins (newer timestamp)
       const futureTime = new Date(Date.now() + 1000).toISOString();
-      const resolution1 = await SyncService.resolveConflict(testItem, futureTime);
+      const resolution1 = await SyncService.resolveConflict(
+        testItem,
+        futureTime,
+      );
       console.log(`Conflict (remote newer): Winner = ${resolution1}`);
 
       // Test remote wins (older timestamp)

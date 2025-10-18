@@ -2,20 +2,21 @@
  * ThemedText Component
  *
  * A Text component with theme-aware colors and typography variants.
- * This is a minimal implementation to unblock P4-T03.
- * Full theme system with complete typography will be implemented in P6-T01.
+ * Uses the comprehensive theme system implemented in P6-T01.
  *
  * @component
  * @example
  * ```tsx
  * <ThemedText variant="h1">Heading</ThemedText>
- * <ThemedText variant="body">Body text</ThemedText>
+ * <ThemedText variant="body1">Body text</ThemedText>
  * <ThemedText color="error">Error message</ThemedText>
+ * <ThemedText color="primary" variant="h3">Primary Heading</ThemedText>
  * ```
  */
 
 import type React from 'react';
-import { StyleSheet, Text, type TextProps, useColorScheme } from 'react-native';
+import { StyleSheet, Text, type TextProps } from 'react-native';
+import { useTheme } from '@/theme';
 
 export type TextVariant =
   | 'h1'
@@ -24,118 +25,115 @@ export type TextVariant =
   | 'h4'
   | 'h5'
   | 'h6'
-  | 'body'
+  | 'body1'
+  | 'body2'
   | 'caption'
-  | 'button';
+  | 'button'
+  | 'overline'
+  | 'body'; // Alias for body1 (backward compatibility)
+
 export type TextColor =
   | 'primary'
   | 'secondary'
   | 'error'
   | 'success'
   | 'warning'
-  | 'default';
+  | 'info'
+  | 'text'
+  | 'textSecondary'
+  | 'textDisabled'
+  | 'default'
+  | 'acceptable'
+  | 'monitor'
+  | 'repair'
+  | 'safetyHazard'
+  | 'accessRestricted';
 
 export interface ThemedTextProps extends TextProps {
   /**
    * Typography variant
+   * @default 'body1'
    */
   variant?: TextVariant;
 
   /**
    * Text color variant
+   * @default 'text'
    */
   color?: TextColor;
-
-  /**
-   * Use dark text even in light mode
-   */
-  darkMode?: boolean;
-
-  /**
-   * Use light text even in dark mode
-   */
-  lightMode?: boolean;
 }
-
-/**
- * Temporary theme colors until P6-T01 theme system is implemented
- */
-const COLORS = {
-  light: {
-    text: '#000000',
-    textSecondary: '#666666',
-    primary: '#2E5BBA',
-    error: '#F44336',
-    success: '#4CAF50',
-    warning: '#FF9800',
-  },
-  dark: {
-    text: '#FFFFFF',
-    textSecondary: '#AAAAAA',
-    primary: '#5C8BFF',
-    error: '#FF6B6B',
-    success: '#6BCF73',
-    warning: '#FFB84D',
-  },
-};
-
-/**
- * Typography variants
- */
-const TYPOGRAPHY = {
-  h1: { fontSize: 32, fontWeight: '700' as const, lineHeight: 40 },
-  h2: { fontSize: 28, fontWeight: '700' as const, lineHeight: 36 },
-  h3: { fontSize: 24, fontWeight: '600' as const, lineHeight: 32 },
-  h4: { fontSize: 20, fontWeight: '600' as const, lineHeight: 28 },
-  h5: { fontSize: 18, fontWeight: '600' as const, lineHeight: 24 },
-  h6: { fontSize: 16, fontWeight: '600' as const, lineHeight: 22 },
-  body: { fontSize: 16, fontWeight: '400' as const, lineHeight: 24 },
-  caption: { fontSize: 14, fontWeight: '400' as const, lineHeight: 20 },
-  button: { fontSize: 16, fontWeight: '600' as const, lineHeight: 24 },
-};
 
 export const ThemedText: React.FC<ThemedTextProps> = ({
   style,
-  variant = 'body',
-  color = 'default',
-  darkMode,
-  lightMode,
+  variant = 'body1',
+  color = 'text',
   ...props
 }) => {
-  const colorScheme = useColorScheme();
-  const isDark = darkMode || (colorScheme === 'dark' && !lightMode);
+  const { theme } = useTheme();
 
-  const theme = isDark ? COLORS.dark : COLORS.light;
+  // Map 'body' to 'body1' for backward compatibility
+  const mappedVariant = variant === 'body' ? 'body1' : variant;
+
+  // Get typography style
+  const typography = theme.typography[mappedVariant];
 
   // Determine text color
   let textColor: string;
   switch (color) {
     case 'primary':
-      textColor = theme.primary;
+      textColor = theme.colors.primary;
       break;
     case 'secondary':
-      textColor = theme.textSecondary;
+      textColor = theme.colors.textSecondary;
       break;
     case 'error':
-      textColor = theme.error;
+      textColor = theme.colors.error;
       break;
     case 'success':
-      textColor = theme.success;
+      textColor = theme.colors.success;
       break;
     case 'warning':
-      textColor = theme.warning;
+      textColor = theme.colors.warning;
+      break;
+    case 'info':
+      textColor = theme.colors.info;
+      break;
+    case 'textSecondary':
+      textColor = theme.colors.textSecondary;
+      break;
+    case 'textDisabled':
+      textColor = theme.colors.textDisabled;
+      break;
+    case 'acceptable':
+      textColor = theme.colors.acceptable;
+      break;
+    case 'monitor':
+      textColor = theme.colors.monitor;
+      break;
+    case 'repair':
+      textColor = theme.colors.repair;
+      break;
+    case 'safetyHazard':
+      textColor = theme.colors.safetyHazard;
+      break;
+    case 'accessRestricted':
+      textColor = theme.colors.accessRestricted;
+      break;
+    case 'text':
+      textColor = theme.colors.text;
       break;
     default:
-      textColor = theme.text;
+      textColor = theme.colors.text;
   }
 
-  const typography = TYPOGRAPHY[variant];
+  // Override typography color with selected color
+  const finalTypography = {
+    ...typography,
+    color: textColor,
+  };
 
   return (
-    <Text
-      style={[styles.base, typography, { color: textColor }, style]}
-      {...props}
-    />
+    <Text style={[styles.base, finalTypography, style]} {...props} />
   );
 };
 

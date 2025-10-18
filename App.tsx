@@ -16,6 +16,9 @@ import {
 // Import AWS Amplify initialization
 import { initializeAmplify } from '@/services/amplify.service';
 
+// Import Theme Provider
+import { ThemeProvider } from '@/theme';
+
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
 
@@ -26,8 +29,10 @@ function App() {
 
   return (
     <SafeAreaProvider>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <AppContent />
+      <ThemeProvider>
+        <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
+        <AppContent />
+      </ThemeProvider>
     </SafeAreaProvider>
   );
 }

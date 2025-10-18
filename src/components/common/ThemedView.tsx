@@ -2,8 +2,7 @@
  * ThemedView Component
  *
  * A View component that automatically applies theme-aware background colors.
- * This is a minimal implementation to unblock P4-T03.
- * Full theme system will be implemented in P6-T01.
+ * Uses the comprehensive theme system implemented in P6-T01.
  *
  * @component
  * @example
@@ -11,50 +10,34 @@
  * <ThemedView style={styles.container}>
  *   <Text>Content</Text>
  * </ThemedView>
+ * 
+ * <ThemedView variant="surface">
+ *   <Text>Card content</Text>
+ * </ThemedView>
  * ```
  */
 
 import type React from 'react';
-import { StyleSheet, useColorScheme, View, type ViewProps } from 'react-native';
+import { StyleSheet, View, type ViewProps } from 'react-native';
+import { useTheme } from '@/theme';
 
 export interface ThemedViewProps extends ViewProps {
   /**
-   * Use dark background even in light mode
+   * Background color variant
+   * @default 'background'
    */
-  darkMode?: boolean;
-
-  /**
-   * Use light background even in dark mode
-   */
-  lightMode?: boolean;
+  variant?: 'background' | 'surface' | 'card';
 }
-
-/**
- * Temporary theme colors until P6-T01 theme system is implemented
- */
-const COLORS = {
-  light: {
-    background: '#F8F9FA',
-    surface: '#FFFFFF',
-  },
-  dark: {
-    background: '#121212',
-    surface: '#1E1E1E',
-  },
-};
 
 export const ThemedView: React.FC<ThemedViewProps> = ({
   style,
-  darkMode,
-  lightMode,
+  variant = 'background',
   ...props
 }) => {
-  const colorScheme = useColorScheme();
-  const isDark = darkMode || (colorScheme === 'dark' && !lightMode);
+  const { theme } = useTheme();
 
-  const backgroundColor = isDark
-    ? COLORS.dark.background
-    : COLORS.light.background;
+  // Select background color based on variant
+  const backgroundColor = theme.colors[variant];
 
   return (
     <View style={[styles.container, { backgroundColor }, style]} {...props} />

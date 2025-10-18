@@ -23,7 +23,7 @@ import NetInfo, {
   type NetInfoState,
   type NetInfoSubscription,
 } from '@react-native-community/netinfo';
-import DB, {type SyncQueueItem} from './database.service';
+import DB, { type SyncQueueItem } from './database.service';
 
 // ============================================================================
 // TYPE DEFINITIONS
@@ -136,7 +136,7 @@ class SyncService {
 
       // Merge custom config
       if (customConfig) {
-        this.config = {...this.config, ...customConfig};
+        this.config = { ...this.config, ...customConfig };
       }
 
       // Start network monitoring
@@ -205,16 +205,19 @@ class SyncService {
         };
 
         console.log(
-          `[SyncService] Network state changed: ${JSON.stringify(this.networkState)}`,
+          `[SyncService] Network state changed: ${JSON.stringify(
+            this.networkState,
+          )}`,
         );
 
         // Trigger sync when connection is restored
         if (!wasConnected && this.networkState.isConnected) {
-          console.log(
-            '[SyncService] Connection restored, triggering sync...',
-          );
+          console.log('[SyncService] Connection restored, triggering sync...');
           this.syncAll().catch(error => {
-            console.error('[SyncService] Connection restore sync failed:', error);
+            console.error(
+              '[SyncService] Connection restore sync failed:',
+              error,
+            );
           });
         }
       },
@@ -376,7 +379,9 @@ class SyncService {
         successCount: result.successCount,
         failedCount: result.failedCount,
         percentage: 100,
-        message: `Sync completed: ${result.successCount} succeeded, ${result.failedCount} failed (${Math.round(duration / 1000)}s)`,
+        message: `Sync completed: ${result.successCount} succeeded, ${
+          result.failedCount
+        } failed (${Math.round(duration / 1000)}s)`,
       });
 
       console.log(
@@ -394,7 +399,9 @@ class SyncService {
         successCount: 0,
         failedCount: 0,
         percentage: 0,
-        message: `Sync failed: ${error instanceof Error ? error.message : 'Unknown error'}`,
+        message: `Sync failed: ${
+          error instanceof Error ? error.message : 'Unknown error'
+        }`,
       });
 
       throw error;
@@ -411,13 +418,11 @@ class SyncService {
   /**
    * Process a batch of sync items
    */
-  private async processSyncBatch(
-    items: SyncQueueItem[],
-  ): Promise<SyncResult> {
+  private async processSyncBatch(items: SyncQueueItem[]): Promise<SyncResult> {
     const totalItems = items.length;
     let successCount = 0;
     let failedCount = 0;
-    const errors: Array<{item: SyncQueueItem; error: string}> = [];
+    const errors: Array<{ item: SyncQueueItem; error: string }> = [];
 
     for (let i = 0; i < items.length; i++) {
       const item = items[i];
@@ -452,7 +457,7 @@ class SyncService {
         failedCount++;
         const errorMessage =
           error instanceof Error ? error.message : 'Unknown error';
-        errors.push({item, error: errorMessage});
+        errors.push({ item, error: errorMessage });
 
         // Apply retry logic
         const shouldRetry = await this.handleSyncError(item, errorMessage);
@@ -598,9 +603,9 @@ class SyncService {
 
   /**
    * Update local record's syncedAt timestamp after successful sync
-   * 
+   *
    * TODO: Implement when integrating with backend API:
-   * 
+   *
    * ```typescript
    * const now = new Date().toISOString();
    * switch (tableName) {
@@ -668,10 +673,10 @@ class SyncService {
     sinceTimestamp: string,
   ): Promise<SyncQueueItem[]> {
     const results = await DB.executeSql(
-      `SELECT * FROM syncQueue 
-       WHERE status = 'pending' 
-       AND createdAt > ? 
-       ORDER BY createdAt ASC 
+      `SELECT * FROM syncQueue
+       WHERE status = 'pending'
+       AND createdAt > ?
+       ORDER BY createdAt ASC
        LIMIT ?`,
       [sinceTimestamp, this.config.batchSize],
     );
@@ -753,7 +758,7 @@ class SyncService {
     totalPending: number;
     totalFailed: number;
     totalCompleted: number;
-    byTable: Record<string, {pending: number; failed: number}>;
+    byTable: Record<string, { pending: number; failed: number }>;
   }> {
     const [pendingResult] = await DB.executeSql(
       "SELECT COUNT(*) as count FROM syncQueue WHERE status = 'pending'",
@@ -767,17 +772,17 @@ class SyncService {
 
     // Get counts by table
     const [byTableResult] = await DB.executeSql(
-      `SELECT tableName, status, COUNT(*) as count 
-       FROM syncQueue 
-       WHERE status IN ('pending', 'failed') 
+      `SELECT tableName, status, COUNT(*) as count
+       FROM syncQueue
+       WHERE status IN ('pending', 'failed')
        GROUP BY tableName, status`,
     );
 
-    const byTable: Record<string, {pending: number; failed: number}> = {};
+    const byTable: Record<string, { pending: number; failed: number }> = {};
     for (let i = 0; i < byTableResult.rows.length; i++) {
       const row = byTableResult.rows.item(i);
       if (!byTable[row.tableName]) {
-        byTable[row.tableName] = {pending: 0, failed: 0};
+        byTable[row.tableName] = { pending: 0, failed: 0 };
       }
       if (row.status === 'pending') {
         byTable[row.tableName].pending = row.count;
