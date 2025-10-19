@@ -1575,14 +1575,14 @@ Before starting Phase 1, ensure you have:
 
 - **Steps:**
 
-  1. [ ] Create `InspectionCard.tsx` with status, date, address
-  2. [ ] Create `PhotoThumbnail.tsx` with image optimization
-  3. [ ] Create `HierarchySelector.tsx` with dropdown list
-  4. [ ] Create `ConditionBadge.tsx` with 5 condition colors
-  5. [ ] Create `CommentsList.tsx` with selectable items
-  6. [ ] Create `InspectionProgress.tsx` with circular progress
-  7. [ ] Write unit tests for each component
-  8. [ ] Create demo screen showing all components
+  1. [x] Create `InspectionCard.tsx` with status, date, address (218 lines)
+  2. [x] Create `PhotoThumbnail.tsx` with image optimization (184 lines)
+  3. [x] Create `HierarchySelector.tsx` with dropdown list (313 lines)
+  4. [x] Create `ConditionBadge.tsx` with 5 condition colors (92 lines)
+  5. [x] Create `CommentsList.tsx` with selectable items (322 lines)
+  6. [x] Create `InspectionProgress.tsx` with circular progress (243 lines)
+  7. [ ] Write unit tests for each component (scheduled for Phase 17)
+  8. [ ] Create demo screen showing all components (scheduled for Phase 8)
 
 - **Acceptance Criteria:**
 

@@ -1898,6 +1898,321 @@ const styles = StyleSheet.create({
 
 ---
 
+### InspectionCard Component (P7-T01)
+
+**Purpose**: Display inspection summary in lists and overview screens
+
+**Features**:
+- Property address and type display
+- Status badge with color coding (completed/in-progress/cancelled/scheduled)
+- Client name and contact info
+- Scheduled/completed dates with formatting
+- Notes preview (2 lines max)
+- Touch interaction for navigation
+- Theme-aware styling
+
+**Props**:
+```typescript
+interface InspectionCardProps {
+  inspection: Inspection;
+  onPress?: (inspection: Inspection) => void;
+  style?: StyleProp<ViewStyle>;
+  accessibilityLabel?: string;
+  testID?: string;
+}
+```
+
+**Status Badge Mapping**:
+- `completed` → success (green)
+- `in-progress` → warning (orange)
+- `cancelled` → error (red)
+- `scheduled` → info (blue)
+
+**Usage**:
+```typescript
+import { InspectionCard } from '@/components/inspection';
+
+<InspectionCard
+  inspection={inspectionData}
+  onPress={(inspection) => navigate('InspectionDetail', { id: inspection.id })}
+/>
+```
+
+**File**: `src/components/inspection/InspectionCard.tsx` (218 lines)
+
+---
+
+### PhotoThumbnail Component (P7-T01)
+
+**Purpose**: Display photo thumbnails with loading and error states
+
+**Features**:
+- Image loading with placeholder
+- Loading spinner overlay
+- Error state display ("Failed to load" message)
+- Touch interaction for full view
+- Configurable size and border radius
+- Theme-aware styling
+
+**Props**:
+```typescript
+interface PhotoThumbnailProps {
+  uri: string;
+  onPress?: (uri: string) => void;
+  size?: number; // default: 100
+  borderRadius?: number; // default: 8
+  style?: StyleProp<ViewStyle>;
+  imageStyle?: StyleProp<ImageStyle>;
+  accessibilityLabel?: string;
+  testID?: string;
+}
+```
+
+**States**:
+- **Loading**: Semi-transparent overlay with spinner
+- **Loaded**: Full image display
+- **Error**: "Failed to load" message
+
+**Usage**:
+```typescript
+import { PhotoThumbnail } from '@/components/inspection';
+
+<PhotoThumbnail
+  uri="file:///path/to/photo.jpg"
+  size={120}
+  onPress={(uri) => openFullScreen(uri)}
+/>
+```
+
+**File**: `src/components/inspection/PhotoThumbnail.tsx` (184 lines)
+
+---
+
+### HierarchySelector Component (P7-T01)
+
+**Purpose**: Dropdown selector for navigating CSV hierarchy (Section → System → Component → Material)
+
+**Features**:
+- Modal dropdown list with search
+- Selected option display with Card wrapper
+- Search/filter capability
+- Empty state handling ("No options found")
+- Touch-friendly design (44x44 minimum)
+- Theme-aware styling
+- Disabled state support
+
+**Props**:
+```typescript
+interface HierarchySelectorProps {
+  label: string;
+  placeholder?: string;
+  options: HierarchyOption[];
+  selectedId?: string;
+  onSelect: (option: HierarchyOption) => void;
+  disabled?: boolean;
+  searchEnabled?: boolean; // default: true
+  style?: StyleProp<ViewStyle>;
+  accessibilityLabel?: string;
+  testID?: string;
+}
+
+interface HierarchyOption {
+  id: string;
+  label: string;
+  value?: string;
+}
+```
+
+**Usage**:
+```typescript
+import { HierarchySelector } from '@/components/inspection';
+
+<HierarchySelector
+  label="Section"
+  placeholder="Select a section"
+  options={sectionOptions}
+  selectedId={selectedSectionId}
+  onSelect={(option) => setSelectedSection(option)}
+/>
+```
+
+**File**: `src/components/inspection/HierarchySelector.tsx` (313 lines)
+
+---
+
+### ConditionBadge Component (P7-T01)
+
+**Purpose**: Color-coded badges for the 5 inspection condition types
+
+**Features**:
+- 5 condition types with specific colors
+- Wrapper around Badge component from P6-T02
+- Consistent sizing (small, medium, large)
+- Theme-aware colors
+- Accessibility support
+
+**Props**:
+```typescript
+interface ConditionBadgeProps {
+  condition: ConditionType;
+  size?: BadgeSize; // default: 'medium'
+  dot?: boolean; // default: false
+  accessibilityLabel?: string;
+  testID?: string;
+}
+
+type ConditionType =
+  | 'Acceptable'
+  | 'Monitor'
+  | 'Repair/Replace'
+  | 'Safety Hazard'
+  | 'Access Restricted';
+```
+
+**Condition Mapping**:
+- `Acceptable` → acceptable (green #4CAF50) - No issues
+- `Monitor` → monitor (orange #FF9800) - Minor issues to watch
+- `Repair/Replace` → repair (deep orange #FF5722) - Needs repair
+- `Safety Hazard` → safetyHazard (red #F44336) - Safety concern
+- `Access Restricted` → accessRestricted (gray #9E9E9E) - Couldn't inspect
+
+**Usage**:
+```typescript
+import { ConditionBadge } from '@/components/inspection';
+
+<ConditionBadge condition="Monitor" size="small" />
+<ConditionBadge condition="Safety Hazard" size="large" />
+```
+
+**File**: `src/components/inspection/ConditionBadge.tsx` (92 lines)
+
+---
+
+### CommentsList Component (P7-T01)
+
+**Purpose**: Display and select from pre-written comments with custom comment option
+
+**Features**:
+- Selectable comment list (single or multiple selection)
+- Search/filter capability
+- Add custom comment inline
+- Category support for comments
+- Selected highlighting with primary color and checkmark
+- Theme-aware styling
+- Empty state handling
+
+**Props**:
+```typescript
+interface CommentsListProps {
+  comments: Comment[];
+  selectedIds: string[];
+  onSelectionChange: (selectedIds: string[]) => void;
+  multiSelect?: boolean; // default: false
+  searchEnabled?: boolean; // default: true
+  allowCustom?: boolean; // default: true
+  onCustomCommentAdd?: (text: string) => void;
+  style?: StyleProp<ViewStyle>;
+  accessibilityLabel?: string;
+  testID?: string;
+}
+
+interface Comment {
+  id: string;
+  text: string;
+  category?: string;
+}
+```
+
+**Usage**:
+```typescript
+import { CommentsList } from '@/components/inspection';
+
+<CommentsList
+  comments={prewrittenComments}
+  selectedIds={selectedCommentIds}
+  onSelectionChange={setSelectedCommentIds}
+  multiSelect={true}
+  onCustomCommentAdd={(text) => addComment(text)}
+/>
+```
+
+**File**: `src/components/inspection/CommentsList.tsx` (322 lines)
+
+---
+
+### InspectionProgress Component (P7-T01)
+
+**Purpose**: Display inspection completion progress
+
+**Features**:
+- Linear or circular progress display
+- Percentage calculation and display
+- Item count display ("X of Y items")
+- Color coding based on progress (0-49%: primary, 50-99%: warning, 100%: success)
+- Theme-aware styling
+
+**Props**:
+```typescript
+interface InspectionProgressProps {
+  progress: number; // 0-100
+  total: number;
+  completed: number;
+  type?: 'linear' | 'circular'; // default: 'linear'
+  showPercentage?: boolean; // default: true
+  showCount?: boolean; // default: true
+  style?: StyleProp<ViewStyle>;
+  accessibilityLabel?: string;
+  testID?: string;
+}
+```
+
+**Display Types**:
+- **Linear**: Progress bar with percentage and count text
+- **Circular**: Circular display with center text (simplified, no SVG)
+
+**Usage**:
+```typescript
+import { InspectionProgress } from '@/components/inspection';
+
+<InspectionProgress
+  progress={75}
+  total={100}
+  completed={75}
+  type="linear"
+/>
+```
+
+**File**: `src/components/inspection/InspectionProgress.tsx` (243 lines)
+
+---
+
+### Inspection Components Summary (P7-T01)
+
+**Total Components**: 6  
+**Total Lines**: 1,425  
+**Completed**: October 18, 2025  
+**Phase**: 7 - Core UI Components
+
+**All Components**:
+1. InspectionCard (218 lines) - Inspection summary card
+2. PhotoThumbnail (184 lines) - Photo display with states
+3. HierarchySelector (313 lines) - CSV hierarchy dropdown
+4. ConditionBadge (92 lines) - Condition type badges
+5. CommentsList (322 lines) - Comments selection
+6. InspectionProgress (243 lines) - Progress indicator
+7. index.ts (33 lines) - Component exports
+
+**Integration**:
+- All components use themed components from P6-T02 (Card, Badge, ThemedText, ThemedView, LoadingSpinner, TextInput)
+- Full theme integration with `useTheme()` hook
+- TypeScript type safety with 9 interfaces
+- Accessibility support with ARIA labels
+- Cross-platform compatible (iOS + Android)
+
+**Documentation**: See `CompletedTaskEvidence/Phase_07/P7-T01_COMPLETION_SUMMARY.md` for detailed API reference and usage examples.
+
+---
+
 ## Accessibility Guidelines
 
 ### Touch Target Sizes
