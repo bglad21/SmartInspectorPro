@@ -13,6 +13,7 @@
  * ```
  */
 
+import { useTheme } from '@/theme';
 import type React from 'react';
 import {
   ActivityIndicator,
@@ -20,7 +21,6 @@ import {
   View,
   type ViewProps,
 } from 'react-native';
-import { useTheme } from '@/theme';
 import ThemedText from './ThemedText';
 
 export type LoadingSpinnerSize = 'small' | 'large';

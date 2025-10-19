@@ -14,19 +14,19 @@
  * @component
  */
 
+import { LoadingSpinner, ThemedText, ThemedView } from '@/components/common';
+import { useTheme } from '@/theme';
 import type React from 'react';
+import { useState } from 'react';
 import {
   Image,
+  type ImageStyle,
+  type StyleProp,
   StyleSheet,
   TouchableOpacity,
   View,
-  type StyleProp,
   type ViewStyle,
-  type ImageStyle,
 } from 'react-native';
-import { LoadingSpinner, ThemedText, ThemedView } from '@/components/common';
-import { useTheme } from '@/theme';
-import { useState } from 'react';
 
 export interface PhotoThumbnailProps {
   /**
@@ -122,7 +122,8 @@ export const PhotoThumbnail: React.FC<PhotoThumbnailProps> = ({
       disabled={error}
       style={[containerStyle, style]}
       accessibilityLabel={
-        accessibilityLabel || (error ? 'Failed to load photo' : 'Photo thumbnail')
+        accessibilityLabel ||
+        (error ? 'Failed to load photo' : 'Photo thumbnail')
       }
       accessibilityRole="image"
       testID={testID}

@@ -17,11 +17,11 @@
  * ```
  */
 
+import { useTheme } from '@/theme';
 import type React from 'react';
 import { StyleSheet, View, type ViewProps } from 'react-native';
-import { useTheme } from '@/theme';
-import ThemedText from './ThemedText';
 import Button from './Button';
+import ThemedText from './ThemedText';
 
 export interface EmptyStateProps extends ViewProps {
   /**

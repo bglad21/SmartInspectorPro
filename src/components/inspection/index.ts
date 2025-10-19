@@ -5,30 +5,24 @@
  * Created in P7-T01 for inspection workflow
  */
 
-// InspectionCard
-export { InspectionCard } from './InspectionCard';
-export type { InspectionCardProps } from './InspectionCard';
-
-// PhotoThumbnail
-export { PhotoThumbnail } from './PhotoThumbnail';
-export type { PhotoThumbnailProps } from './PhotoThumbnail';
-
-// HierarchySelector
-export { HierarchySelector } from './HierarchySelector';
-export type {
-  HierarchySelectorProps,
-  HierarchyOption,
-} from './HierarchySelector';
-
-// ConditionBadge
-export { ConditionBadge } from './ConditionBadge';
-export type { ConditionBadgeProps, ConditionType } from './ConditionBadge';
-
+export type { Comment, CommentsListProps } from './CommentsList';
 // CommentsList
 export { CommentsList } from './CommentsList';
-export type { CommentsListProps, Comment } from './CommentsList';
-
+export type { ConditionBadgeProps, ConditionType } from './ConditionBadge';
+// ConditionBadge
+export { ConditionBadge } from './ConditionBadge';
+export type {
+  HierarchyOption,
+  HierarchySelectorProps,
+} from './HierarchySelector';
+// HierarchySelector
+export { HierarchySelector } from './HierarchySelector';
+export type { InspectionCardProps } from './InspectionCard';
+// InspectionCard
+export { InspectionCard } from './InspectionCard';
+export type { InspectionProgressProps } from './InspectionProgress';
 // InspectionProgress
 export { InspectionProgress } from './InspectionProgress';
-export type { InspectionProgressProps } from './InspectionProgress';
-
+export type { PhotoThumbnailProps } from './PhotoThumbnail';
+// PhotoThumbnail
+export { PhotoThumbnail } from './PhotoThumbnail';

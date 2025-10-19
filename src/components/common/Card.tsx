@@ -18,15 +18,15 @@
  * ```
  */
 
+import { useTheme } from '@/theme';
 import type React from 'react';
 import {
   StyleSheet,
   TouchableOpacity,
+  type TouchableOpacityProps,
   View,
   type ViewProps,
-  type TouchableOpacityProps,
 } from 'react-native';
-import { useTheme } from '@/theme';
 
 export type CardElevation = 'none' | 'small' | 'medium' | 'large';
 export type CardPadding = 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl';

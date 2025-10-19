@@ -14,18 +14,18 @@
  * @component
  */
 
+import { Card, TextInput, ThemedText } from '@/components/common';
+import { useTheme } from '@/theme';
 import type React from 'react';
+import { useState } from 'react';
 import {
   FlatList,
+  type StyleProp,
   StyleSheet,
   TouchableOpacity,
   View,
-  type StyleProp,
   type ViewStyle,
 } from 'react-native';
-import { Card, ThemedText, TextInput } from '@/components/common';
-import { useTheme } from '@/theme';
-import { useState } from 'react';
 
 export interface Comment {
   /**
@@ -163,7 +163,9 @@ export const CommentsList: React.FC<CommentsListProps> = ({
             <TouchableOpacity
               onPress={() => handleSelect(item.id)}
               accessibilityRole="button"
-              accessibilityLabel={`${isSelected ? 'Deselect' : 'Select'} comment: ${item.text}`}
+              accessibilityLabel={`${
+                isSelected ? 'Deselect' : 'Select'
+              } comment: ${item.text}`}
               accessibilityState={{ selected: isSelected }}
             >
               <Card
@@ -262,7 +264,9 @@ export const CommentsList: React.FC<CommentsListProps> = ({
                     >
                       <ThemedText
                         variant="body2"
-                        color={customComment.trim() ? 'primary' : 'textSecondary'}
+                        color={
+                          customComment.trim() ? 'primary' : 'textSecondary'
+                        }
                       >
                         Add
                       </ThemedText>

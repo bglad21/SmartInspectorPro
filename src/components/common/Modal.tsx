@@ -19,16 +19,16 @@
  * ```
  */
 
+import { useTheme } from '@/theme';
 import type React from 'react';
 import {
   Modal as RNModal,
+  type ModalProps as RNModalProps,
+  ScrollView,
   StyleSheet,
   TouchableOpacity,
   View,
-  ScrollView,
-  type ModalProps as RNModalProps,
 } from 'react-native';
-import { useTheme } from '@/theme';
 import ThemedText from './ThemedText';
 
 export type ModalSize = 'small' | 'medium' | 'large' | 'fullscreen';
@@ -145,7 +145,11 @@ export const Modal: React.FC<ModalProps> = ({
         style={[
           styles.overlay,
           isFullscreen && styles.fullscreenOverlay,
-          { backgroundColor: isFullscreen ? theme.colors.background : theme.colors.overlay },
+          {
+            backgroundColor: isFullscreen
+              ? theme.colors.background
+              : theme.colors.overlay,
+          },
         ]}
       >
         {closeOnOverlayTap && !isFullscreen && (
@@ -199,7 +203,10 @@ export const Modal: React.FC<ModalProps> = ({
                   testID={`${testID}-close`}
                 >
                   <ThemedText
-                    style={[styles.closeText, { color: theme.colors.textSecondary }]}
+                    style={[
+                      styles.closeText,
+                      { color: theme.colors.textSecondary },
+                    ]}
                   >
                     ×
                   </ThemedText>

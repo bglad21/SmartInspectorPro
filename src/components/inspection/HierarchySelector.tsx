@@ -14,19 +14,19 @@
  * @component
  */
 
+import { Card, TextInput, ThemedText, ThemedView } from '@/components/common';
+import { useTheme } from '@/theme';
 import type React from 'react';
+import { useState } from 'react';
 import {
   FlatList,
   Modal,
+  type StyleProp,
   StyleSheet,
   TouchableOpacity,
   View,
-  type StyleProp,
   type ViewStyle,
 } from 'react-native';
-import { Card, ThemedText, TextInput, ThemedView } from '@/components/common';
-import { useTheme } from '@/theme';
-import { useState } from 'react';
 
 export interface HierarchyOption {
   /**

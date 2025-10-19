@@ -13,15 +13,10 @@
  * @component
  */
 
-import type React from 'react';
-import {
-  StyleSheet,
-  View,
-  type StyleProp,
-  type ViewStyle,
-} from 'react-native';
 import { ThemedText } from '@/components/common';
 import { useTheme } from '@/theme';
+import type React from 'react';
+import { type StyleProp, StyleSheet, View, type ViewStyle } from 'react-native';
 
 export interface InspectionProgressProps {
   /**
@@ -126,10 +121,7 @@ export const InspectionProgress: React.FC<InspectionProgressProps> = ({
         <View style={styles.circularProgress}>
           {/* Placeholder for circular SVG - using text for now */}
           <View
-            style={[
-              styles.circularOuter,
-              { borderColor: theme.colors.border },
-            ]}
+            style={[styles.circularOuter, { borderColor: theme.colors.border }]}
           >
             <View style={styles.circularInner}>
               {showPercentage && (
@@ -176,7 +168,10 @@ export const InspectionProgress: React.FC<InspectionProgressProps> = ({
 
       {/* Progress Bar */}
       <View
-        style={[styles.progressBarContainer, { backgroundColor: theme.colors.surface }]}
+        style={[
+          styles.progressBarContainer,
+          { backgroundColor: theme.colors.surface },
+        ]}
       >
         <View
           style={[

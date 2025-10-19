@@ -14,15 +14,10 @@
  * @component
  */
 
-import type React from 'react';
-import {
-  StyleSheet,
-  View,
-  type StyleProp,
-  type ViewStyle,
-} from 'react-native';
-import { Card, Badge, ThemedText } from '@/components/common';
+import { Badge, Card, ThemedText } from '@/components/common';
 import type { Inspection } from '@/services/database.service';
+import type React from 'react';
+import { type StyleProp, StyleSheet, View, type ViewStyle } from 'react-native';
 
 export interface InspectionCardProps {
   /**

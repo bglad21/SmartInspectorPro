@@ -7,21 +7,21 @@
  * @screen
  */
 
+import {
+  Badge,
+  Button,
+  Card,
+  EmptyState,
+  LoadingSpinner,
+  Modal,
+  ThemedText,
+  ThemedView,
+} from '@/components/common';
+import { useTheme } from '@/theme';
 import type React from 'react';
 import { useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useTheme } from '@/theme';
-import {
-  ThemedView,
-  ThemedText,
-  Button,
-  Card,
-  Badge,
-  Modal,
-  LoadingSpinner,
-  EmptyState,
-} from '@/components/common';
 
 export const ComponentsDemo: React.FC = () => {
   const { theme, toggleTheme, themeMode } = useTheme();
@@ -34,7 +34,9 @@ export const ComponentsDemo: React.FC = () => {
   };
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]}>
+    <SafeAreaView
+      style={[styles.container, { backgroundColor: theme.colors.background }]}
+    >
       <ScrollView contentContainerStyle={styles.scrollContent}>
         {/* Header */}
         <ThemedView variant="surface" style={styles.header}>
@@ -86,7 +88,12 @@ export const ComponentsDemo: React.FC = () => {
             fullWidth
           />
 
-          <Button title="Disabled" disabled fullWidth style={styles.marginTop} />
+          <Button
+            title="Disabled"
+            disabled
+            fullWidth
+            style={styles.marginTop}
+          />
         </Card>
 
         {/* Badge Showcase */}
@@ -125,7 +132,11 @@ export const ComponentsDemo: React.FC = () => {
 
           <View style={styles.badgeRow}>
             <Badge label="Safety Hazard" variant="safetyHazard" size="medium" />
-            <Badge label="Access Restricted" variant="accessRestricted" size="medium" />
+            <Badge
+              label="Access Restricted"
+              variant="accessRestricted"
+              size="medium"
+            />
           </View>
         </Card>
 
@@ -189,7 +200,8 @@ export const ComponentsDemo: React.FC = () => {
             showCloseButton
           >
             <ThemedText variant="body1" style={styles.modalText}>
-              This is a sample modal dialog. It can contain any content you need.
+              This is a sample modal dialog. It can contain any content you
+              need.
             </ThemedText>
 
             <View style={styles.modalButtons}>

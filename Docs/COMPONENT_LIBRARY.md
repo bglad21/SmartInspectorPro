@@ -1,8 +1,8 @@
 # Smart Inspector Pro - Component Library
 
-**Version**: 1.0.0  
-**Last Updated**: October 17, 2025  
-**Design System**: Smart Inspector Pro Design Language  
+**Version**: 1.0.0
+**Last Updated**: October 17, 2025
+**Design System**: Smart Inspector Pro Design Language
 **Target Platforms**: iOS 15+, Android 10+
 
 ---
@@ -65,43 +65,43 @@ export interface Theme {
 export interface ColorPalette {
   // Background colors
   background: {
-    primary: string;    // Main background
-    secondary: string;  // Cards, modals
-    tertiary: string;   // Input fields, disabled
-    overlay: string;    // Modal backdrop
+    primary: string; // Main background
+    secondary: string; // Cards, modals
+    tertiary: string; // Input fields, disabled
+    overlay: string; // Modal backdrop
   };
-  
+
   // Text colors
   text: {
-    primary: string;    // Main text
-    secondary: string;  // Subtitles, captions
-    tertiary: string;   // Disabled text
-    inverse: string;    // Text on colored backgrounds
-    link: string;       // Links, interactive text
+    primary: string; // Main text
+    secondary: string; // Subtitles, captions
+    tertiary: string; // Disabled text
+    inverse: string; // Text on colored backgrounds
+    link: string; // Links, interactive text
   };
-  
+
   // Border colors
   border: {
-    default: string;    // Default borders
-    focus: string;      // Focused inputs
-    error: string;      // Error states
+    default: string; // Default borders
+    focus: string; // Focused inputs
+    error: string; // Error states
   };
-  
+
   // Brand colors (consistent across themes)
   primary: {
     main: string;
     light: string;
     dark: string;
-    contrast: string;   // Text on primary color
+    contrast: string; // Text on primary color
   };
-  
+
   secondary: {
     main: string;
     light: string;
     dark: string;
     contrast: string;
   };
-  
+
   // Semantic colors (theme-aware)
   success: {
     main: string;
@@ -109,28 +109,28 @@ export interface ColorPalette {
     dark: string;
     contrast: string;
   };
-  
+
   warning: {
     main: string;
     light: string;
     dark: string;
     contrast: string;
   };
-  
+
   error: {
     main: string;
     light: string;
     dark: string;
     contrast: string;
   };
-  
+
   info: {
     main: string;
     light: string;
     dark: string;
     contrast: string;
   };
-  
+
   // Condition-specific colors (theme-aware)
   condition: {
     acceptable: {
@@ -181,23 +181,28 @@ interface ThemeContextValue {
 
 const ThemeContext = createContext<ThemeContextValue | undefined>(undefined);
 
-export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const systemColorScheme = useColorScheme();
   const [themeMode, setThemeModeState] = useState<ThemeMode>('auto');
-  
+
   // Determine actual theme based on mode and system preference
-  const actualTheme = themeMode === 'auto' 
-    ? systemColorScheme === 'dark' ? 'dark' : 'light'
-    : themeMode;
-  
+  const actualTheme =
+    themeMode === 'auto'
+      ? systemColorScheme === 'dark'
+        ? 'dark'
+        : 'light'
+      : themeMode;
+
   const theme = actualTheme === 'dark' ? darkTheme : lightTheme;
   const isDark = actualTheme === 'dark';
-  
+
   // Load saved theme preference on mount
   useEffect(() => {
     loadThemePreference();
   }, []);
-  
+
   const loadThemePreference = async () => {
     try {
       const saved = await AsyncStorage.getItem('@theme_mode');
@@ -208,7 +213,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       console.error('Failed to load theme preference:', error);
     }
   };
-  
+
   const setThemeMode = async (mode: ThemeMode) => {
     try {
       await AsyncStorage.setItem('@theme_mode', mode);
@@ -217,7 +222,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       console.error('Failed to save theme preference:', error);
     }
   };
-  
+
   return (
     <ThemeContext.Provider value={{ theme, themeMode, setThemeMode, isDark }}>
       {children}
@@ -438,13 +443,13 @@ interface ButtonProps {
   variant?: 'primary' | 'secondary' | 'outline';
 }
 
-export const Button: React.FC<ButtonProps> = ({ 
-  title, 
-  onPress, 
-  variant = 'primary' 
+export const Button: React.FC<ButtonProps> = ({
+  title,
+  onPress,
+  variant = 'primary',
 }) => {
   const { theme } = useTheme();
-  
+
   const styles = StyleSheet.create({
     button: {
       height: 44,
@@ -452,23 +457,25 @@ export const Button: React.FC<ButtonProps> = ({
       justifyContent: 'center',
       alignItems: 'center',
       paddingHorizontal: 16,
-      backgroundColor: variant === 'primary' 
-        ? theme.colors.primary.main 
-        : variant === 'secondary'
-        ? theme.colors.secondary.main
-        : 'transparent',
+      backgroundColor:
+        variant === 'primary'
+          ? theme.colors.primary.main
+          : variant === 'secondary'
+          ? theme.colors.secondary.main
+          : 'transparent',
       borderWidth: variant === 'outline' ? 1 : 0,
       borderColor: theme.colors.border.default,
     },
     text: {
       fontSize: 16,
       fontWeight: '600',
-      color: variant === 'outline' 
-        ? theme.colors.text.primary 
-        : theme.colors.primary.contrast,
+      color:
+        variant === 'outline'
+          ? theme.colors.text.primary
+          : theme.colors.primary.contrast,
     },
   });
-  
+
   return (
     <TouchableOpacity style={styles.button} onPress={onPress}>
       <Text style={styles.text}>{title}</Text>
@@ -488,13 +495,13 @@ import type { ThemeMode } from '../theme/types';
 
 export const ThemeSwitcher: React.FC = () => {
   const { theme, themeMode, setThemeMode } = useTheme();
-  
+
   const modes: { value: ThemeMode; label: string; icon: string }[] = [
     { value: 'light', label: 'Light', icon: '☀️' },
     { value: 'dark', label: 'Dark', icon: '🌙' },
     { value: 'auto', label: 'Auto', icon: '⚙️' },
   ];
-  
+
   const styles = StyleSheet.create({
     container: {
       flexDirection: 'row',
@@ -525,10 +532,10 @@ export const ThemeSwitcher: React.FC = () => {
       marginBottom: 4,
     },
   });
-  
+
   return (
     <View style={styles.container}>
-      {modes.map((mode) => (
+      {modes.map(mode => (
         <TouchableOpacity
           key={mode.value}
           style={[
@@ -539,10 +546,7 @@ export const ThemeSwitcher: React.FC = () => {
         >
           <Text style={styles.icon}>{mode.icon}</Text>
           <Text
-            style={[
-              styles.text,
-              themeMode === mode.value && styles.activeText,
-            ]}
+            style={[styles.text, themeMode === mode.value && styles.activeText]}
           >
             {mode.label}
           </Text>
@@ -556,6 +560,7 @@ export const ThemeSwitcher: React.FC = () => {
 ### Setup Instructions
 
 1. **Wrap your app with ThemeProvider**:
+
 ```typescript
 // App.tsx
 import React from 'react';
@@ -572,12 +577,13 @@ export default function App() {
 ```
 
 2. **Use theme in any component**:
+
 ```typescript
 import { useTheme } from '../theme/ThemeProvider';
 
 const MyComponent = () => {
   const { theme, isDark } = useTheme();
-  
+
   return (
     <View style={{ backgroundColor: theme.colors.background.primary }}>
       <Text style={{ color: theme.colors.text.primary }}>Hello</Text>
@@ -587,6 +593,7 @@ const MyComponent = () => {
 ```
 
 3. **Add theme switcher to Settings screen**:
+
 ```typescript
 import { ThemeSwitcher } from '../components/ThemeSwitcher';
 
@@ -649,11 +656,11 @@ export const FONT_FAMILY = {
 
 ```typescript
 export const FONT_SIZE = {
-  xs: 12,    // Captions, helper text
-  sm: 14,    // Secondary text, labels
-  base: 16,  // Body text, default
-  lg: 18,    // Card titles, emphasized text
-  xl: 20,    // Screen titles
+  xs: 12, // Captions, helper text
+  sm: 14, // Secondary text, labels
+  base: 16, // Body text, default
+  lg: 18, // Card titles, emphasized text
+  xl: 20, // Screen titles
   '2xl': 24, // Section headers
   '3xl': 30, // Hero text
   '4xl': 36, // Large displays
@@ -664,8 +671,8 @@ export const FONT_SIZE = {
 
 ```typescript
 export const LINE_HEIGHT = {
-  tight: 1.2,   // Headlines
-  normal: 1.5,  // Body text
+  tight: 1.2, // Headlines
+  normal: 1.5, // Body text
   relaxed: 1.75, // Long-form text
 };
 ```
@@ -735,7 +742,7 @@ export const COLORS = {
     800: '#1565C0',
     900: '#0D47A1',
   },
-  
+
   // Secondary/Accent
   secondary: {
     50: '#FFF3E0',
@@ -749,7 +756,7 @@ export const COLORS = {
     800: '#EF6C00',
     900: '#E65100',
   },
-  
+
   // Neutrals (Grayscale)
   neutral: {
     0: '#FFFFFF',
@@ -765,7 +772,7 @@ export const COLORS = {
     900: '#212121',
     1000: '#000000',
   },
-  
+
   // Semantic colors
   success: {
     light: '#81C784',
@@ -795,10 +802,10 @@ export const COLORS = {
 ```typescript
 // Colors for inspection conditions
 export const CONDITION_COLORS = {
-  Acceptable: COLORS.success.main,        // Green
-  Monitor: COLORS.warning.main,           // Orange
-  'Repair/Replace': COLORS.error.main,    // Red
-  'Safety Hazard': '#D32F2F',             // Dark Red
+  Acceptable: COLORS.success.main, // Green
+  Monitor: COLORS.warning.main, // Orange
+  'Repair/Replace': COLORS.error.main, // Red
+  'Safety Hazard': '#D32F2F', // Dark Red
   'Access Restricted': COLORS.neutral[500], // Gray
 };
 ```
@@ -807,10 +814,10 @@ export const CONDITION_COLORS = {
 
 ```typescript
 export const BACKGROUNDS = {
-  primary: COLORS.neutral[0],      // White
-  secondary: COLORS.neutral[50],   // Light gray
-  tertiary: COLORS.neutral[100],   // Lighter gray
-  dark: COLORS.neutral[900],       // Dark mode background
+  primary: COLORS.neutral[0], // White
+  secondary: COLORS.neutral[50], // Light gray
+  tertiary: COLORS.neutral[100], // Lighter gray
+  dark: COLORS.neutral[900], // Dark mode background
 };
 ```
 
@@ -875,7 +882,7 @@ export const SHADOWS = {
   lg: {
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.30,
+    shadowOpacity: 0.3,
     shadowRadius: 4.65,
     elevation: 8,
   },
@@ -893,10 +900,10 @@ export const SHADOWS = {
 
 ```typescript
 export const LAYOUT = {
-  maxWidth: 1200,           // Max content width for tablets
+  maxWidth: 1200, // Max content width for tablets
   screenPadding: SPACING.md, // Default screen edge padding
-  cardGap: SPACING.md,      // Gap between cards in lists
-  sectionGap: SPACING.lg,   // Gap between major sections
+  cardGap: SPACING.md, // Gap between cards in lists
+  sectionGap: SPACING.lg, // Gap between major sections
 };
 ```
 
@@ -910,7 +917,12 @@ export const LAYOUT = {
 
 ```typescript
 import React from 'react';
-import { TouchableOpacity, Text, ActivityIndicator, StyleSheet } from 'react-native';
+import {
+  TouchableOpacity,
+  Text,
+  ActivityIndicator,
+  StyleSheet,
+} from 'react-native';
 import type { ButtonProps } from './Button.types';
 
 export const Button: React.FC<ButtonProps> = ({
@@ -945,7 +957,9 @@ export const Button: React.FC<ButtonProps> = ({
       accessibilityState={{ disabled: disabled || loading }}
     >
       {loading ? (
-        <ActivityIndicator color={variant === 'primary' ? '#fff' : COLORS.primary[500]} />
+        <ActivityIndicator
+          color={variant === 'primary' ? '#fff' : COLORS.primary[500]}
+        />
       ) : (
         <>
           {leftIcon}
@@ -1053,8 +1067,8 @@ export interface ButtonProps {
 <Button title="Create Inspection" onPress={handleCreate} />
 
 // Secondary with icon
-<Button 
-  title="Upload Photo" 
+<Button
+  title="Upload Photo"
   onPress={handleUpload}
   variant="secondary"
   leftIcon={<Icon name="camera" />}
@@ -1169,7 +1183,9 @@ export const Modal: React.FC<ModalProps> = ({
       onRequestClose={onClose}
       testID={testID}
     >
-      <View style={[styles.overlay, size === 'fullscreen' && styles.fullscreen]}>
+      <View
+        style={[styles.overlay, size === 'fullscreen' && styles.fullscreen]}
+      >
         <View style={[styles.content, styles[size]]}>
           {/* Header */}
           {(title || showCloseButton) && (
@@ -1182,7 +1198,7 @@ export const Modal: React.FC<ModalProps> = ({
               )}
             </View>
           )}
-          
+
           {/* Body */}
           <View style={styles.body}>{children}</View>
         </View>
@@ -1275,10 +1291,16 @@ export const TextInput: React.FC<TextInputProps> = ({
   return (
     <View style={styles.container}>
       {label && <Text style={styles.label}>{label}</Text>}
-      
-      <View style={[styles.inputWrapper, error && styles.inputError, disabled && styles.disabled]}>
+
+      <View
+        style={[
+          styles.inputWrapper,
+          error && styles.inputError,
+          disabled && styles.disabled,
+        ]}
+      >
         {leftIcon && <View style={styles.leftIcon}>{leftIcon}</View>}
-        
+
         <RNTextInput
           style={[styles.input, leftIcon && styles.inputWithLeftIcon]}
           value={value}
@@ -1290,12 +1312,14 @@ export const TextInput: React.FC<TextInputProps> = ({
           accessibilityLabel={label || placeholder}
           {...props}
         />
-        
+
         {rightIcon && <View style={styles.rightIcon}>{rightIcon}</View>}
       </View>
-      
+
       {error && <Text style={styles.errorText}>{error}</Text>}
-      {helperText && !error && <Text style={styles.helperText}>{helperText}</Text>}
+      {helperText && !error && (
+        <Text style={styles.helperText}>{helperText}</Text>
+      )}
     </View>
   );
 };
@@ -1385,19 +1409,25 @@ export const Select: React.FC<SelectProps> = ({
   return (
     <View style={styles.container}>
       {label && <Text style={styles.label}>{label}</Text>}
-      
+
       <TouchableOpacity
-        style={[styles.trigger, error && styles.triggerError, disabled && styles.disabled]}
+        style={[
+          styles.trigger,
+          error && styles.triggerError,
+          disabled && styles.disabled,
+        ]}
         onPress={() => !disabled && setModalVisible(true)}
         disabled={disabled}
         testID={testID}
       >
-        <Text style={[styles.triggerText, !selectedOption && styles.placeholder]}>
+        <Text
+          style={[styles.triggerText, !selectedOption && styles.placeholder]}
+        >
           {selectedOption?.label || placeholder}
         </Text>
         <Icon name="chevron-down" size={20} color={COLORS.neutral[600]} />
       </TouchableOpacity>
-      
+
       {error && <Text style={styles.errorText}>{error}</Text>}
 
       <Modal
@@ -1406,20 +1436,30 @@ export const Select: React.FC<SelectProps> = ({
         title={label || placeholder}
         size="small"
       >
-        {options.map((option) => (
+        {options.map(option => (
           <TouchableOpacity
             key={option.value}
-            style={[styles.option, option.value === value && styles.optionSelected]}
+            style={[
+              styles.option,
+              option.value === value && styles.optionSelected,
+            ]}
             onPress={() => {
               onValueChange(option.value);
               setModalVisible(false);
             }}
             testID={`${testID}-option-${option.value}`}
           >
-            <Text style={[styles.optionText, option.value === value && styles.optionTextSelected]}>
+            <Text
+              style={[
+                styles.optionText,
+                option.value === value && styles.optionTextSelected,
+              ]}
+            >
               {option.label}
             </Text>
-            {option.value === value && <Icon name="check" size={20} color={COLORS.primary[500]} />}
+            {option.value === value && (
+              <Icon name="check" size={20} color={COLORS.primary[500]} />
+            )}
           </TouchableOpacity>
         ))}
       </Modal>
@@ -1540,6 +1580,300 @@ const styles = StyleSheet.create({
 
 ## Data Display Components
 
+**Phase 7 - Task P7-T02** (October 18, 2025)
+
+High-performance data display components for CSV data with FlatList virtualization, supporting 2,504+ rows smoothly. All components integrate with the theme system and use themed components from P6-T02.
+
+### SearchBar Component
+
+**Purpose**: Search input with 300ms debouncing for efficient filtering
+
+**Features**:
+- Configurable debounce delay (default: 300ms)
+- Clear button when text is present
+- Immediate UI feedback with local state
+- Cleanup on unmount (prevents memory leaks)
+- Theme-aware styling
+- Touch-friendly sizing (44px minimum height)
+
+**Props**:
+```typescript
+interface SearchBarProps {
+  value: string;
+  onChangeText: (text: string) => void;
+  debounceMs?: number; // default: 300
+  placeholder?: string; // default: "Search..."
+  showClearButton?: boolean; // default: true
+  containerStyle?: StyleProp<ViewStyle>;
+  testID?: string;
+}
+```
+
+**Usage**:
+```tsx
+import { SearchBar } from '@/components/data';
+
+<SearchBar
+  value={searchQuery}
+  onChangeText={setSearchQuery}
+  placeholder="Search inspections..."
+  debounceMs={300}
+/>
+```
+
+**File**: `src/components/data/SearchBar.tsx` (217 lines)
+
+---
+
+### FilterChips Component
+
+**Purpose**: Multi-select chip component for hierarchy filtering
+
+**Features**:
+- Single or multiple selection modes
+- Toggle functionality (select/deselect)
+- Count display per chip (optional)
+- Checkmark on selected chips (✓)
+- Disabled state support
+- Horizontal scrolling for many filters
+- Theme-aware colors
+
+**Props**:
+```typescript
+interface FilterChipsProps {
+  filters: FilterChip[];
+  selectedIds: string[];
+  onSelectionChange: (selectedIds: string[]) => void;
+  multiSelect?: boolean; // default: true
+  label?: string;
+  containerStyle?: StyleProp<ViewStyle>;
+  testID?: string;
+}
+
+interface FilterChip {
+  id: string;
+  label: string;
+  count?: number;
+  disabled?: boolean;
+}
+```
+
+**Usage**:
+```tsx
+import { FilterChips } from '@/components/data';
+
+<FilterChips
+  filters={[
+    { id: '1', label: 'Exterior', count: 120 },
+    { id: '2', label: 'Interior', count: 85 },
+    { id: '3', label: 'Mechanical', count: 45 },
+  ]}
+  selectedIds={['1', '3']}
+  onSelectionChange={setSelected}
+  multiSelect={true}
+  label="Filter by Section"
+/>
+```
+
+**File**: `src/components/data/FilterChips.tsx` (233 lines)
+
+---
+
+### HierarchyNavigator Component
+
+**Purpose**: Breadcrumb navigation for CSV hierarchy (Section → System → Component → Material)
+
+**Features**:
+- Displays current path as breadcrumbs
+- Click to navigate to parent levels
+- Last item (current level) is disabled and styled differently
+- Customizable separator (default: '›')
+- Horizontal scrolling for long paths
+- Theme-aware styling
+
+**Props**:
+```typescript
+interface HierarchyNavigatorProps {
+  path: BreadcrumbItem[];
+  onNavigate: (index: number) => void;
+  separator?: string; // default: '›'
+  containerStyle?: StyleProp<ViewStyle>;
+  testID?: string;
+}
+
+interface BreadcrumbItem {
+  id: string;
+  label: string;
+}
+```
+
+**Usage**:
+```tsx
+import { HierarchyNavigator } from '@/components/data';
+
+<HierarchyNavigator
+  path={[
+    { id: '1', label: 'Exterior Grounds' },
+    { id: '2', label: 'Drainage' },
+    { id: '3', label: 'Area Drain' },
+  ]}
+  onNavigate={(index) => navigateToLevel(index)}
+/>
+```
+
+**File**: `src/components/data/HierarchyNavigator.tsx` (181 lines)
+
+---
+
+### SortableHeader Component
+
+**Purpose**: Table header with sort indicators and column management
+
+**Features**:
+- Three-state sorting (asc → desc → null)
+- Visual indicators (▲ ascending, ▼ descending, ⇅ sortable)
+- Column-specific sortable configuration
+- Active column highlighting with primary color
+- Text alignment per column (left/center/right)
+- Custom column widths (flex values)
+- Touch-friendly header cells (44px minimum height)
+
+**Props**:
+```typescript
+interface SortableHeaderProps {
+  columns: TableColumn[];
+  sortColumn?: string | null;
+  sortDirection?: SortDirection;
+  onSort: (columnId: string, direction: SortDirection) => void;
+  containerStyle?: StyleProp<ViewStyle>;
+  testID?: string;
+}
+
+type SortDirection = 'asc' | 'desc' | null;
+
+interface TableColumn {
+  id: string;
+  label: string;
+  sortable?: boolean; // default: true
+  width?: number; // flex value
+  align?: 'left' | 'center' | 'right'; // default: 'left'
+}
+```
+
+**Usage**:
+```tsx
+import { SortableHeader } from '@/components/data';
+
+<SortableHeader
+  columns={[
+    { id: 'section', label: 'Section', width: 2 },
+    { id: 'system', label: 'System', width: 2 },
+    { id: 'condition', label: 'Condition', width: 1, align: 'center' },
+    { id: 'count', label: 'Count', width: 1, align: 'right' },
+  ]}
+  sortColumn="section"
+  sortDirection="asc"
+  onSort={(column, direction) => handleSort(column, direction)}
+/>
+```
+
+**File**: `src/components/data/SortableHeader.tsx` (243 lines)
+
+---
+
+### CSVDataTable Component
+
+**Purpose**: High-performance virtualized table for CSV data
+
+**Features**:
+- FlatList virtualization (handles 2,504+ rows smoothly)
+- Sortable headers (via SortableHeader integration)
+- Row selection (via onRowPress callback)
+- Alternating row colors for readability
+- Empty state display (via EmptyState from P6-T02)
+- Customizable columns
+- Performance optimizations (getItemLayout, removeClippedSubviews)
+
+**Performance Optimizations**:
+- `initialNumToRender={20}` - Render first 20 items
+- `maxToRenderPerBatch={20}` - Render 20 items per batch
+- `windowSize={10}` - Render 10 screens worth of items
+- `removeClippedSubviews={true}` - Remove off-screen views
+- `getItemLayout` - Fixed 56px row height optimization
+
+**Props**:
+```typescript
+interface CSVDataTableProps {
+  columns: TableColumn[];
+  data: TableRow[];
+  onRowPress?: (row: TableRow) => void;
+  sortColumn?: string | null;
+  sortDirection?: SortDirection;
+  onSort?: (columnId: string, direction: SortDirection) => void;
+  emptyState?: {
+    title: string;
+    description?: string;
+    icon?: string;
+    actionLabel?: string;
+    onAction?: () => void;
+  };
+  containerStyle?: StyleProp<ViewStyle>;
+  testID?: string;
+}
+
+interface TableRow {
+  id: string;
+  [key: string]: string | number | boolean | null | undefined;
+}
+```
+
+**Usage**:
+```tsx
+import { CSVDataTable } from '@/components/data';
+
+<CSVDataTable
+  columns={[
+    { id: 'section', label: 'Section', width: 2 },
+    { id: 'system', label: 'System', width: 2 },
+    { id: 'component', label: 'Component', width: 2 },
+    { id: 'condition', label: 'Condition', width: 1 },
+  ]}
+  data={csvData}
+  onRowPress={(row) => navigate('Details', { id: row.id })}
+  sortColumn="section"
+  sortDirection="asc"
+  onSort={handleSort}
+  emptyState={{
+    title: "No Data Available",
+    description: "Load CSV data to view inspection items",
+    icon: "📊",
+    actionLabel: "Load Data",
+    onAction: loadCSVData,
+  }}
+/>
+```
+
+**File**: `src/components/data/CSVDataTable.tsx` (256 lines)
+
+---
+
+### EmptyState Component
+
+**Purpose**: Display when no data is available
+
+**Status**: Created in P6-T02, reused in data components
+
+**Features**:
+- Icon or emoji display
+- Title and description
+- Optional action button
+- Theme-aware styling
+- Centered layout
+
+**File**: `src/components/common/EmptyState.tsx` (162 lines, from P6-T02)
+
+---
+
 ### InspectionCard Component
 
 ```typescript
@@ -1560,7 +1894,8 @@ export const InspectionCard: React.FC<InspectionCardProps> = ({
   showActions = true,
   testID = 'inspection-card',
 }) => {
-  const statusColor = CONDITION_COLORS[inspection.status] || COLORS.neutral[500];
+  const statusColor =
+    CONDITION_COLORS[inspection.status] || COLORS.neutral[500];
 
   return (
     <Card onPress={onPress} testID={testID}>
@@ -1589,7 +1924,9 @@ export const InspectionCard: React.FC<InspectionCardProps> = ({
             ]}
           />
         </View>
-        <Text style={styles.progressText}>{inspection.completionPercentage}%</Text>
+        <Text style={styles.progressText}>
+          {inspection.completionPercentage}%
+        </Text>
       </View>
 
       {/* Actions */}
@@ -1770,7 +2107,10 @@ export const Toast: React.FC<ToastProps> = ({
   }[type];
 
   return (
-    <Animated.View style={[styles.container, { backgroundColor }]} testID={testID}>
+    <Animated.View
+      style={[styles.container, { backgroundColor }]}
+      testID={testID}
+    >
       <Text style={styles.message}>{message}</Text>
       {action && (
         <TouchableOpacity onPress={action.onPress} testID={`${testID}-action`}>
@@ -1864,7 +2204,7 @@ export const PhotoCapture: React.FC<PhotoCaptureProps> = ({
         disabled={disabled || reachedLimit}
         testID={`${testID}-camera`}
       />
-      
+
       <Button
         title="Choose from Gallery"
         onPress={handleGalleryPress}
@@ -1903,6 +2243,7 @@ const styles = StyleSheet.create({
 **Purpose**: Display inspection summary in lists and overview screens
 
 **Features**:
+
 - Property address and type display
 - Status badge with color coding (completed/in-progress/cancelled/scheduled)
 - Client name and contact info
@@ -1912,6 +2253,7 @@ const styles = StyleSheet.create({
 - Theme-aware styling
 
 **Props**:
+
 ```typescript
 interface InspectionCardProps {
   inspection: Inspection;
@@ -1923,19 +2265,21 @@ interface InspectionCardProps {
 ```
 
 **Status Badge Mapping**:
+
 - `completed` → success (green)
 - `in-progress` → warning (orange)
 - `cancelled` → error (red)
 - `scheduled` → info (blue)
 
 **Usage**:
+
 ```typescript
 import { InspectionCard } from '@/components/inspection';
 
 <InspectionCard
   inspection={inspectionData}
-  onPress={(inspection) => navigate('InspectionDetail', { id: inspection.id })}
-/>
+  onPress={inspection => navigate('InspectionDetail', { id: inspection.id })}
+/>;
 ```
 
 **File**: `src/components/inspection/InspectionCard.tsx` (218 lines)
@@ -1947,6 +2291,7 @@ import { InspectionCard } from '@/components/inspection';
 **Purpose**: Display photo thumbnails with loading and error states
 
 **Features**:
+
 - Image loading with placeholder
 - Loading spinner overlay
 - Error state display ("Failed to load" message)
@@ -1955,6 +2300,7 @@ import { InspectionCard } from '@/components/inspection';
 - Theme-aware styling
 
 **Props**:
+
 ```typescript
 interface PhotoThumbnailProps {
   uri: string;
@@ -1969,19 +2315,21 @@ interface PhotoThumbnailProps {
 ```
 
 **States**:
+
 - **Loading**: Semi-transparent overlay with spinner
 - **Loaded**: Full image display
 - **Error**: "Failed to load" message
 
 **Usage**:
+
 ```typescript
 import { PhotoThumbnail } from '@/components/inspection';
 
 <PhotoThumbnail
   uri="file:///path/to/photo.jpg"
   size={120}
-  onPress={(uri) => openFullScreen(uri)}
-/>
+  onPress={uri => openFullScreen(uri)}
+/>;
 ```
 
 **File**: `src/components/inspection/PhotoThumbnail.tsx` (184 lines)
@@ -1993,6 +2341,7 @@ import { PhotoThumbnail } from '@/components/inspection';
 **Purpose**: Dropdown selector for navigating CSV hierarchy (Section → System → Component → Material)
 
 **Features**:
+
 - Modal dropdown list with search
 - Selected option display with Card wrapper
 - Search/filter capability
@@ -2002,6 +2351,7 @@ import { PhotoThumbnail } from '@/components/inspection';
 - Disabled state support
 
 **Props**:
+
 ```typescript
 interface HierarchySelectorProps {
   label: string;
@@ -2024,6 +2374,7 @@ interface HierarchyOption {
 ```
 
 **Usage**:
+
 ```typescript
 import { HierarchySelector } from '@/components/inspection';
 
@@ -2032,8 +2383,8 @@ import { HierarchySelector } from '@/components/inspection';
   placeholder="Select a section"
   options={sectionOptions}
   selectedId={selectedSectionId}
-  onSelect={(option) => setSelectedSection(option)}
-/>
+  onSelect={option => setSelectedSection(option)}
+/>;
 ```
 
 **File**: `src/components/inspection/HierarchySelector.tsx` (313 lines)
@@ -2045,6 +2396,7 @@ import { HierarchySelector } from '@/components/inspection';
 **Purpose**: Color-coded badges for the 5 inspection condition types
 
 **Features**:
+
 - 5 condition types with specific colors
 - Wrapper around Badge component from P6-T02
 - Consistent sizing (small, medium, large)
@@ -2052,6 +2404,7 @@ import { HierarchySelector } from '@/components/inspection';
 - Accessibility support
 
 **Props**:
+
 ```typescript
 interface ConditionBadgeProps {
   condition: ConditionType;
@@ -2070,6 +2423,7 @@ type ConditionType =
 ```
 
 **Condition Mapping**:
+
 - `Acceptable` → acceptable (green #4CAF50) - No issues
 - `Monitor` → monitor (orange #FF9800) - Minor issues to watch
 - `Repair/Replace` → repair (deep orange #FF5722) - Needs repair
@@ -2077,6 +2431,7 @@ type ConditionType =
 - `Access Restricted` → accessRestricted (gray #9E9E9E) - Couldn't inspect
 
 **Usage**:
+
 ```typescript
 import { ConditionBadge } from '@/components/inspection';
 
@@ -2093,6 +2448,7 @@ import { ConditionBadge } from '@/components/inspection';
 **Purpose**: Display and select from pre-written comments with custom comment option
 
 **Features**:
+
 - Selectable comment list (single or multiple selection)
 - Search/filter capability
 - Add custom comment inline
@@ -2102,6 +2458,7 @@ import { ConditionBadge } from '@/components/inspection';
 - Empty state handling
 
 **Props**:
+
 ```typescript
 interface CommentsListProps {
   comments: Comment[];
@@ -2124,6 +2481,7 @@ interface Comment {
 ```
 
 **Usage**:
+
 ```typescript
 import { CommentsList } from '@/components/inspection';
 
@@ -2132,8 +2490,8 @@ import { CommentsList } from '@/components/inspection';
   selectedIds={selectedCommentIds}
   onSelectionChange={setSelectedCommentIds}
   multiSelect={true}
-  onCustomCommentAdd={(text) => addComment(text)}
-/>
+  onCustomCommentAdd={text => addComment(text)}
+/>;
 ```
 
 **File**: `src/components/inspection/CommentsList.tsx` (322 lines)
@@ -2145,6 +2503,7 @@ import { CommentsList } from '@/components/inspection';
 **Purpose**: Display inspection completion progress
 
 **Features**:
+
 - Linear or circular progress display
 - Percentage calculation and display
 - Item count display ("X of Y items")
@@ -2152,6 +2511,7 @@ import { CommentsList } from '@/components/inspection';
 - Theme-aware styling
 
 **Props**:
+
 ```typescript
 interface InspectionProgressProps {
   progress: number; // 0-100
@@ -2167,19 +2527,16 @@ interface InspectionProgressProps {
 ```
 
 **Display Types**:
+
 - **Linear**: Progress bar with percentage and count text
 - **Circular**: Circular display with center text (simplified, no SVG)
 
 **Usage**:
+
 ```typescript
 import { InspectionProgress } from '@/components/inspection';
 
-<InspectionProgress
-  progress={75}
-  total={100}
-  completed={75}
-  type="linear"
-/>
+<InspectionProgress progress={75} total={100} completed={75} type="linear" />;
 ```
 
 **File**: `src/components/inspection/InspectionProgress.tsx` (243 lines)
@@ -2188,12 +2545,13 @@ import { InspectionProgress } from '@/components/inspection';
 
 ### Inspection Components Summary (P7-T01)
 
-**Total Components**: 6  
-**Total Lines**: 1,425  
-**Completed**: October 18, 2025  
+**Total Components**: 6
+**Total Lines**: 1,425
+**Completed**: October 18, 2025
 **Phase**: 7 - Core UI Components
 
 **All Components**:
+
 1. InspectionCard (218 lines) - Inspection summary card
 2. PhotoThumbnail (184 lines) - Photo display with states
 3. HierarchySelector (313 lines) - CSV hierarchy dropdown
@@ -2203,6 +2561,7 @@ import { InspectionProgress } from '@/components/inspection';
 7. index.ts (33 lines) - Component exports
 
 **Integration**:
+
 - All components use themed components from P6-T02 (Card, Badge, ThemedText, ThemedView, LoadingSpinner, TextInput)
 - Full theme integration with `useTheme()` hook
 - TypeScript type safety with 9 interfaces
@@ -2230,12 +2589,14 @@ import { InspectionProgress } from '@/components/inspection';
 ### Screen Reader Support
 
 Every interactive component must have:
+
 - `accessibilityLabel`: Describes the element
 - `accessibilityHint`: Describes what happens when activated
 - `accessibilityRole`: Defines the element type (button, link, etc.)
 - `accessibilityState`: Indicates state (selected, disabled, etc.)
 
 **Example**:
+
 ```typescript
 <TouchableOpacity
   accessibilityLabel="Delete inspection"
@@ -2328,6 +2689,7 @@ const InspectionForm: React.FC = () => {
 ## Version History
 
 ### v1.0.0 (October 17, 2025)
+
 - Initial component library specification
 - Design system foundations
 - Core, form, navigation, and data display components
@@ -2339,6 +2701,7 @@ const InspectionForm: React.FC = () => {
 ## Contributing
 
 When adding new components:
+
 1. Follow existing patterns and conventions
 2. Include TypeScript interfaces for props
 3. Add accessibility properties
@@ -2346,5 +2709,5 @@ When adding new components:
 5. Document with usage examples
 6. Add to this document
 
-**Maintainer**: Design & Engineering Team  
+**Maintainer**: Design & Engineering Team
 **Last Review**: October 17, 2025

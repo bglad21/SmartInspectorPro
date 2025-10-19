@@ -12,9 +12,9 @@
  * @component
  */
 
-import type React from 'react';
 import { Badge, type BadgeSize } from '@/components/common';
 import type { InspectionRecord } from '@/services/database.service';
+import type React from 'react';
 
 export type ConditionType = InspectionRecord['condition'];
 
@@ -52,7 +52,12 @@ export interface ConditionBadgeProps {
  */
 const getConditionVariant = (
   condition: ConditionType,
-): 'acceptable' | 'monitor' | 'repair' | 'safetyHazard' | 'accessRestricted' => {
+):
+  | 'acceptable'
+  | 'monitor'
+  | 'repair'
+  | 'safetyHazard'
+  | 'accessRestricted' => {
   switch (condition) {
     case 'Acceptable':
       return 'acceptable';
