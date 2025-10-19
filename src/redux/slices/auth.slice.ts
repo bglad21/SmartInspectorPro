@@ -1,32 +1,36 @@
 /**
  * Redux Auth Slice for Smart Inspector Pro
- * 
+ *
  * Manages global authentication state using Redux Toolkit.
  * Integrates with auth.service.ts for all authentication operations.
- * 
+ *
  * Features:
  * - Async thunks for all auth operations
  * - Automatic token refresh on app startup
  * - Token expiration checking
  * - Error handling with user-friendly messages
  * - Persistent state (integrated with AsyncStorage via auth service)
- * 
+ *
  * @module redux/slices/auth.slice
  */
 
-import { createSlice, createAsyncThunk, type PayloadAction } from '@reduxjs/toolkit';
 import AuthService, {
   type AuthCredentials,
-  type SignUpParams,
-  type SignUpResult,
+  type AuthError,
+  type AuthTokens,
+  type ChangePasswordParams,
+  type ConfirmForgotPasswordParams,
   type ConfirmSignUpParams,
   type ForgotPasswordParams,
-  type ConfirmForgotPasswordParams,
-  type ChangePasswordParams,
+  type SignUpParams,
+  type SignUpResult,
   type UserProfile,
-  type AuthTokens,
-  type AuthError,
 } from '@/services/auth.service';
+import {
+  createAsyncThunk,
+  createSlice,
+  type PayloadAction,
+} from '@reduxjs/toolkit';
 
 // ==================== TypeScript Interfaces ====================
 
@@ -37,11 +41,12 @@ export interface AuthState {
   // User data
   user: UserProfile | null;
   tokens: AuthTokens | null;
-  
+
   // Authentication status
   isAuthenticated: boolean;
   isInitialized: boolean; // True after attempting to restore session
-  
+  hasCompletedOnboarding: boolean; // True after user completes onboarding flow
+
   // Loading states for different operations
   loading: {
     signIn: boolean;
@@ -54,10 +59,10 @@ export interface AuthState {
     refreshTokens: boolean;
     initialize: boolean;
   };
-  
+
   // Error state
   error: AuthError | null;
-  
+
   // Last activity timestamp (for token expiration checking)
   lastActivity: number | null;
 }
@@ -84,6 +89,7 @@ const initialState: AuthState = {
   tokens: null,
   isAuthenticated: false,
   isInitialized: false,
+  hasCompletedOnboarding: false,
   loading: {
     signIn: false,
     signUp: false,
@@ -105,94 +111,108 @@ const initialState: AuthState = {
  * Initialize auth state on app startup
  * Attempts to restore session from AsyncStorage
  */
-export const initializeAuth = createAsyncThunk<SignInPayload | null, void, { rejectValue: AuthError }>(
-  'auth/initialize',
-  async (_, { rejectWithValue }) => {
-    try {
-      // Check if user is authenticated
-      const isAuthenticated = await AuthService.isAuthenticated();
-      
-      if (!isAuthenticated) {
-        return null;
-      }
+export const initializeAuth = createAsyncThunk<
+  (SignInPayload & { hasCompletedOnboarding: boolean }) | null,
+  void,
+  { rejectValue: AuthError }
+>('auth/initialize', async (_, { rejectWithValue }) => {
+  try {
+    const AsyncStorage = (
+      await import('@react-native-async-storage/async-storage')
+    ).default;
 
-      // Restore user and tokens from storage
-      const [user, tokens] = await Promise.all([
-        AuthService.getCurrentUser(),
-        AuthService.getTokens(),
-      ]);
+    // Check if user is authenticated
+    const isAuthenticated = await AuthService.isAuthenticated();
 
-      // Start automatic token refresh timer
-      AuthService.startTokenRefreshTimer();
-
-      return { user, tokens };
-    } catch (error) {
-      return rejectWithValue(AuthService.handleAuthError(error));
+    if (!isAuthenticated) {
+      return null;
     }
+
+    // Restore user, tokens, and onboarding status from storage
+    const [user, tokens, onboardingStatus] = await Promise.all([
+      AuthService.getCurrentUser(),
+      AuthService.getTokens(),
+      AsyncStorage.getItem('@onboarding_complete'),
+    ]);
+
+    // Start automatic token refresh timer
+    AuthService.startTokenRefreshTimer();
+
+    return {
+      user,
+      tokens,
+      hasCompletedOnboarding: onboardingStatus === 'true',
+    };
+  } catch (error) {
+    return rejectWithValue(AuthService.handleAuthError(error));
   }
-);
+});
 
 /**
  * Sign in user with username and password
  */
-export const signIn = createAsyncThunk<SignInPayload, AuthCredentials, { rejectValue: AuthError }>(
-  'auth/signIn',
-  async (credentials, { rejectWithValue }) => {
-    try {
-      const user = await AuthService.signIn(credentials);
-      const tokens = await AuthService.getTokens();
-      
-      return { user, tokens };
-    } catch (error) {
-      return rejectWithValue(AuthService.handleAuthError(error));
-    }
+export const signIn = createAsyncThunk<
+  SignInPayload,
+  AuthCredentials,
+  { rejectValue: AuthError }
+>('auth/signIn', async (credentials, { rejectWithValue }) => {
+  try {
+    const user = await AuthService.signIn(credentials);
+    const tokens = await AuthService.getTokens();
+
+    return { user, tokens };
+  } catch (error) {
+    return rejectWithValue(AuthService.handleAuthError(error));
   }
-);
+});
 
 /**
  * Sign up new user with email verification
  */
-export const signUp = createAsyncThunk<SignUpResult, SignUpParams, { rejectValue: AuthError }>(
-  'auth/signUp',
-  async (params, { rejectWithValue }) => {
-    try {
-      const result = await AuthService.signUp(params);
-      return result;
-    } catch (error) {
-      return rejectWithValue(AuthService.handleAuthError(error));
-    }
+export const signUp = createAsyncThunk<
+  SignUpResult,
+  SignUpParams,
+  { rejectValue: AuthError }
+>('auth/signUp', async (params, { rejectWithValue }) => {
+  try {
+    const result = await AuthService.signUp(params);
+    return result;
+  } catch (error) {
+    return rejectWithValue(AuthService.handleAuthError(error));
   }
-);
+});
 
 /**
  * Confirm sign up with email verification code
  */
-export const confirmSignUp = createAsyncThunk<boolean, ConfirmSignUpParams, { rejectValue: AuthError }>(
-  'auth/confirmSignUp',
-  async (params, { rejectWithValue }) => {
-    try {
-      const result = await AuthService.confirmSignUp(params);
-      return result;
-    } catch (error) {
-      return rejectWithValue(AuthService.handleAuthError(error));
-    }
+export const confirmSignUp = createAsyncThunk<
+  boolean,
+  ConfirmSignUpParams,
+  { rejectValue: AuthError }
+>('auth/confirmSignUp', async (params, { rejectWithValue }) => {
+  try {
+    const result = await AuthService.confirmSignUp(params);
+    return result;
+  } catch (error) {
+    return rejectWithValue(AuthService.handleAuthError(error));
   }
-);
+});
 
 /**
  * Resend confirmation code
  */
-export const resendConfirmationCode = createAsyncThunk<boolean, string, { rejectValue: AuthError }>(
-  'auth/resendConfirmationCode',
-  async (username, { rejectWithValue }) => {
-    try {
-      const result = await AuthService.resendConfirmationCode(username);
-      return result;
-    } catch (error) {
-      return rejectWithValue(AuthService.handleAuthError(error));
-    }
+export const resendConfirmationCode = createAsyncThunk<
+  boolean,
+  string,
+  { rejectValue: AuthError }
+>('auth/resendConfirmationCode', async (username, { rejectWithValue }) => {
+  try {
+    const result = await AuthService.resendConfirmationCode(username);
+    return result;
+  } catch (error) {
+    return rejectWithValue(AuthService.handleAuthError(error));
   }
-);
+});
 
 /**
  * Sign out current user
@@ -205,89 +225,114 @@ export const signOut = createAsyncThunk<void, void, { rejectValue: AuthError }>(
     } catch (error) {
       return rejectWithValue(AuthService.handleAuthError(error));
     }
-  }
+  },
 );
 
 /**
  * Request password reset (forgot password)
  */
-export const forgotPassword = createAsyncThunk<boolean, ForgotPasswordParams, { rejectValue: AuthError }>(
-  'auth/forgotPassword',
-  async (params, { rejectWithValue }) => {
-    try {
-      await AuthService.forgotPassword(params);
-      return true;
-    } catch (error) {
-      return rejectWithValue(AuthService.handleAuthError(error));
-    }
+export const forgotPassword = createAsyncThunk<
+  boolean,
+  ForgotPasswordParams,
+  { rejectValue: AuthError }
+>('auth/forgotPassword', async (params, { rejectWithValue }) => {
+  try {
+    await AuthService.forgotPassword(params);
+    return true;
+  } catch (error) {
+    return rejectWithValue(AuthService.handleAuthError(error));
   }
-);
+});
 
 /**
  * Confirm password reset with code
  */
-export const confirmForgotPassword = createAsyncThunk<boolean, ConfirmForgotPasswordParams, { rejectValue: AuthError }>(
-  'auth/confirmForgotPassword',
-  async (params, { rejectWithValue }) => {
-    try {
-      const result = await AuthService.confirmForgotPassword(params);
-      return result;
-    } catch (error) {
-      return rejectWithValue(AuthService.handleAuthError(error));
-    }
+export const confirmForgotPassword = createAsyncThunk<
+  boolean,
+  ConfirmForgotPasswordParams,
+  { rejectValue: AuthError }
+>('auth/confirmForgotPassword', async (params, { rejectWithValue }) => {
+  try {
+    const result = await AuthService.confirmForgotPassword(params);
+    return result;
+  } catch (error) {
+    return rejectWithValue(AuthService.handleAuthError(error));
   }
-);
+});
 
 /**
  * Change password for authenticated user
  */
-export const changePassword = createAsyncThunk<boolean, ChangePasswordParams, { rejectValue: AuthError }>(
-  'auth/changePassword',
-  async (params, { rejectWithValue }) => {
-    try {
-      const result = await AuthService.changePassword(params);
-      return result;
-    } catch (error) {
-      return rejectWithValue(AuthService.handleAuthError(error));
-    }
+export const changePassword = createAsyncThunk<
+  boolean,
+  ChangePasswordParams,
+  { rejectValue: AuthError }
+>('auth/changePassword', async (params, { rejectWithValue }) => {
+  try {
+    const result = await AuthService.changePassword(params);
+    return result;
+  } catch (error) {
+    return rejectWithValue(AuthService.handleAuthError(error));
   }
-);
+});
 
 /**
  * Refresh JWT tokens
  */
-export const refreshTokens = createAsyncThunk<TokenRefreshPayload, void, { rejectValue: AuthError }>(
-  'auth/refreshTokens',
-  async (_, { rejectWithValue }) => {
-    try {
-      const tokens = await AuthService.refreshTokens();
-      return { tokens };
-    } catch (error) {
-      return rejectWithValue(AuthService.handleAuthError(error));
-    }
+export const refreshTokens = createAsyncThunk<
+  TokenRefreshPayload,
+  void,
+  { rejectValue: AuthError }
+>('auth/refreshTokens', async (_, { rejectWithValue }) => {
+  try {
+    const tokens = await AuthService.refreshTokens();
+    return { tokens };
+  } catch (error) {
+    return rejectWithValue(AuthService.handleAuthError(error));
   }
-);
+});
 
 /**
  * Check token expiration and refresh if needed
  */
-export const checkTokenExpiration = createAsyncThunk<TokenRefreshPayload | null, void, { rejectValue: AuthError }>(
-  'auth/checkTokenExpiration',
-  async (_, { rejectWithValue }) => {
-    try {
-      const validation = await AuthService.validateToken();
-      
-      if (validation.needsRefresh) {
-        const tokens = await AuthService.refreshTokens();
-        return { tokens };
-      }
-      
-      return null;
-    } catch (error) {
-      return rejectWithValue(AuthService.handleAuthError(error));
+export const checkTokenExpiration = createAsyncThunk<
+  TokenRefreshPayload | null,
+  void,
+  { rejectValue: AuthError }
+>('auth/checkTokenExpiration', async (_, { rejectWithValue }) => {
+  try {
+    const validation = await AuthService.validateToken();
+
+    if (validation.needsRefresh) {
+      const tokens = await AuthService.refreshTokens();
+      return { tokens };
     }
+
+    return null;
+  } catch (error) {
+    return rejectWithValue(AuthService.handleAuthError(error));
   }
-);
+});
+
+/**
+ * Mark onboarding as complete
+ * Persists to AsyncStorage for future sessions
+ */
+export const completeOnboarding = createAsyncThunk<
+  boolean,
+  void,
+  { rejectValue: AuthError }
+>('auth/completeOnboarding', async (_, { rejectWithValue }) => {
+  try {
+    const AsyncStorage = (
+      await import('@react-native-async-storage/async-storage')
+    ).default;
+    await AsyncStorage.setItem('@onboarding_complete', 'true');
+    return true;
+  } catch (error) {
+    return rejectWithValue(AuthService.handleAuthError(error));
+  }
+});
 
 // ==================== Auth Slice ====================
 
@@ -298,55 +343,65 @@ const authSlice = createSlice({
     /**
      * Clear error state
      */
-    clearError: (state) => {
+    clearError: state => {
       state.error = null;
     },
-    
+
     /**
      * Update last activity timestamp
      * Used for tracking user activity and token expiration
      */
-    updateLastActivity: (state) => {
+    updateLastActivity: state => {
       state.lastActivity = Date.now();
     },
-    
+
     /**
      * Manually set user (for edge cases)
      */
     setUser: (state, action: PayloadAction<UserProfile>) => {
       state.user = action.payload;
     },
-    
+
     /**
      * Manually clear auth state (force logout)
      */
-    clearAuthState: (state) => {
+    clearAuthState: state => {
       state.user = null;
       state.tokens = null;
       state.isAuthenticated = false;
+      state.hasCompletedOnboarding = false;
       state.error = null;
       state.lastActivity = null;
       AuthService.stopTokenRefreshTimer();
     },
+
+    /**
+     * Manually set onboarding completion status
+     */
+    setOnboardingComplete: state => {
+      state.hasCompletedOnboarding = true;
+    },
   },
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     // ==================== Initialize Auth ====================
     builder
-      .addCase(initializeAuth.pending, (state) => {
+      .addCase(initializeAuth.pending, state => {
         state.loading.initialize = true;
         state.error = null;
       })
       .addCase(initializeAuth.fulfilled, (state, action) => {
         state.loading.initialize = false;
         state.isInitialized = true;
-        
+
         if (action.payload) {
           state.user = action.payload.user;
           state.tokens = action.payload.tokens;
           state.isAuthenticated = true;
+          state.hasCompletedOnboarding = action.payload.hasCompletedOnboarding;
           state.lastActivity = Date.now();
         } else {
           state.isAuthenticated = false;
+          state.hasCompletedOnboarding = false;
         }
       })
       .addCase(initializeAuth.rejected, (state, action) => {
@@ -358,7 +413,7 @@ const authSlice = createSlice({
 
     // ==================== Sign In ====================
     builder
-      .addCase(signIn.pending, (state) => {
+      .addCase(signIn.pending, state => {
         state.loading.signIn = true;
         state.error = null;
       })
@@ -377,11 +432,11 @@ const authSlice = createSlice({
 
     // ==================== Sign Up ====================
     builder
-      .addCase(signUp.pending, (state) => {
+      .addCase(signUp.pending, state => {
         state.loading.signUp = true;
         state.error = null;
       })
-      .addCase(signUp.fulfilled, (state) => {
+      .addCase(signUp.fulfilled, state => {
         state.loading.signUp = false;
         // Don't set authenticated - user needs to confirm email first
       })
@@ -392,11 +447,11 @@ const authSlice = createSlice({
 
     // ==================== Confirm Sign Up ====================
     builder
-      .addCase(confirmSignUp.pending, (state) => {
+      .addCase(confirmSignUp.pending, state => {
         state.loading.confirmSignUp = true;
         state.error = null;
       })
-      .addCase(confirmSignUp.fulfilled, (state) => {
+      .addCase(confirmSignUp.fulfilled, state => {
         state.loading.confirmSignUp = false;
         // User can now sign in
       })
@@ -407,7 +462,7 @@ const authSlice = createSlice({
 
     // ==================== Resend Confirmation Code ====================
     builder
-      .addCase(resendConfirmationCode.pending, (state) => {
+      .addCase(resendConfirmationCode.pending, state => {
         state.error = null;
       })
       .addCase(resendConfirmationCode.fulfilled, () => {
@@ -419,15 +474,16 @@ const authSlice = createSlice({
 
     // ==================== Sign Out ====================
     builder
-      .addCase(signOut.pending, (state) => {
+      .addCase(signOut.pending, state => {
         state.loading.signOut = true;
         state.error = null;
       })
-      .addCase(signOut.fulfilled, (state) => {
+      .addCase(signOut.fulfilled, state => {
         state.loading.signOut = false;
         state.user = null;
         state.tokens = null;
         state.isAuthenticated = false;
+        state.hasCompletedOnboarding = false;
         state.lastActivity = null;
       })
       .addCase(signOut.rejected, (state, action) => {
@@ -437,15 +493,16 @@ const authSlice = createSlice({
         state.user = null;
         state.tokens = null;
         state.isAuthenticated = false;
+        state.hasCompletedOnboarding = false;
       });
 
     // ==================== Forgot Password ====================
     builder
-      .addCase(forgotPassword.pending, (state) => {
+      .addCase(forgotPassword.pending, state => {
         state.loading.forgotPassword = true;
         state.error = null;
       })
-      .addCase(forgotPassword.fulfilled, (state) => {
+      .addCase(forgotPassword.fulfilled, state => {
         state.loading.forgotPassword = false;
       })
       .addCase(forgotPassword.rejected, (state, action) => {
@@ -455,11 +512,11 @@ const authSlice = createSlice({
 
     // ==================== Confirm Forgot Password ====================
     builder
-      .addCase(confirmForgotPassword.pending, (state) => {
+      .addCase(confirmForgotPassword.pending, state => {
         state.loading.confirmForgotPassword = true;
         state.error = null;
       })
-      .addCase(confirmForgotPassword.fulfilled, (state) => {
+      .addCase(confirmForgotPassword.fulfilled, state => {
         state.loading.confirmForgotPassword = false;
       })
       .addCase(confirmForgotPassword.rejected, (state, action) => {
@@ -469,11 +526,11 @@ const authSlice = createSlice({
 
     // ==================== Change Password ====================
     builder
-      .addCase(changePassword.pending, (state) => {
+      .addCase(changePassword.pending, state => {
         state.loading.changePassword = true;
         state.error = null;
       })
-      .addCase(changePassword.fulfilled, (state) => {
+      .addCase(changePassword.fulfilled, state => {
         state.loading.changePassword = false;
       })
       .addCase(changePassword.rejected, (state, action) => {
@@ -483,7 +540,7 @@ const authSlice = createSlice({
 
     // ==================== Refresh Tokens ====================
     builder
-      .addCase(refreshTokens.pending, (state) => {
+      .addCase(refreshTokens.pending, state => {
         state.loading.refreshTokens = true;
         state.error = null;
       })
@@ -515,6 +572,18 @@ const authSlice = createSlice({
         // If token check fails, user needs to re-authenticate
         state.isAuthenticated = false;
       });
+
+    // ==================== Complete Onboarding ====================
+    builder
+      .addCase(completeOnboarding.pending, () => {
+        // Silent operation, don't show loading
+      })
+      .addCase(completeOnboarding.fulfilled, state => {
+        state.hasCompletedOnboarding = true;
+      })
+      .addCase(completeOnboarding.rejected, (state, action) => {
+        state.error = action.payload || null;
+      });
   },
 });
 
@@ -525,6 +594,7 @@ export const {
   updateLastActivity,
   setUser,
   clearAuthState,
+  setOnboardingComplete,
 } = authSlice.actions;
 
 // ==================== Selectors ====================
@@ -542,24 +612,27 @@ export const selectUser = (state: { auth: AuthState }) => state.auth.user;
 /**
  * Select authentication status
  */
-export const selectIsAuthenticated = (state: { auth: AuthState }) => state.auth.isAuthenticated;
+export const selectIsAuthenticated = (state: { auth: AuthState }) =>
+  state.auth.isAuthenticated;
 
 /**
  * Select initialization status
  */
-export const selectIsInitialized = (state: { auth: AuthState }) => state.auth.isInitialized;
+export const selectIsInitialized = (state: { auth: AuthState }) =>
+  state.auth.isInitialized;
 
 /**
  * Select loading state for specific operation
  */
-export const selectAuthLoading = (operation: keyof AuthState['loading']) => (state: { auth: AuthState }) =>
-  state.auth.loading[operation];
+export const selectAuthLoading =
+  (operation: keyof AuthState['loading']) => (state: { auth: AuthState }) =>
+    state.auth.loading[operation];
 
 /**
  * Select any loading state (true if any operation is loading)
  */
 export const selectIsAnyLoading = (state: { auth: AuthState }) =>
-  Object.values(state.auth.loading).some((loading) => loading);
+  Object.values(state.auth.loading).some(loading => loading);
 
 /**
  * Select error state
@@ -574,38 +647,53 @@ export const selectTokens = (state: { auth: AuthState }) => state.auth.tokens;
 /**
  * Select access token
  */
-export const selectAccessToken = (state: { auth: AuthState }) => state.auth.tokens?.accessToken || null;
+export const selectAccessToken = (state: { auth: AuthState }) =>
+  state.auth.tokens?.accessToken || null;
 
 /**
  * Select user email
  */
-export const selectUserEmail = (state: { auth: AuthState }) => state.auth.user?.email || null;
+export const selectUserEmail = (state: { auth: AuthState }) =>
+  state.auth.user?.email || null;
 
 /**
  * Select user business name
  */
-export const selectUserBusinessName = (state: { auth: AuthState }) => state.auth.user?.businessName || null;
+export const selectUserBusinessName = (state: { auth: AuthState }) => {
+  const firstName = state.auth.user?.firstName || '';
+  const lastName = state.auth.user?.lastName || '';
+  return firstName && lastName ? `${firstName} ${lastName}` : null;
+};
 
 /**
  * Select user membership tier
  */
-export const selectUserMembershipTier = (state: { auth: AuthState }) => state.auth.user?.membershipTier || null;
+export const selectUserMembershipTier = (state: { auth: AuthState }) =>
+  state.auth.user?.membershipTier || null;
 
 /**
  * Select user groups (roles)
  */
-export const selectUserGroups = (state: { auth: AuthState }) => state.auth.user?.groups || [];
+export const selectUserGroups = (state: { auth: AuthState }) =>
+  state.auth.user?.groups || [];
 
 /**
  * Select if user has specific role
  */
 export const selectHasRole = (role: string) => (state: { auth: AuthState }) =>
-  state.auth.user?.groups.some((group) => group === role) || false;
+  state.auth.user?.groups.some(group => group === role) || false;
 
 /**
  * Select last activity timestamp
  */
-export const selectLastActivity = (state: { auth: AuthState }) => state.auth.lastActivity;
+export const selectLastActivity = (state: { auth: AuthState }) =>
+  state.auth.lastActivity;
+
+/**
+ * Select onboarding completion status
+ */
+export const selectHasCompletedOnboarding = (state: { auth: AuthState }) =>
+  state.auth.hasCompletedOnboarding;
 
 // ==================== Export ====================
 

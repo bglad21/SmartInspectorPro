@@ -534,6 +534,48 @@ await Storage.put(key, file, {
 console.log('Storage config:', Storage.configure());
 ```
 
+#### Error: "NotAuthorizedException: Token is not from a supported provider of this identity pool"
+
+**Symptoms**: iOS/Android authentication fails with "Token not from supported provider" error
+
+**Root Cause**: Identity Pool is configured with wrong App Client ID (common after project renaming or using legacy configurations)
+
+**Solutions**:
+```bash
+# 1. Verify current App Client ID in aws-config.ts
+cat src/config/aws-config.ts | grep userPoolWebClientId
+
+# 2. Check Identity Pool configuration
+aws cognito-identity describe-identity-pool \
+  --identity-pool-id YOUR_IDENTITY_POOL_ID \
+  --query 'CognitoIdentityProviders[0]' \
+  --output json
+
+# 3. If ClientId doesn't match, update Identity Pool
+aws cognito-identity update-identity-pool \
+  --identity-pool-id YOUR_IDENTITY_POOL_ID \
+  --identity-pool-name YOUR_POOL_NAME \
+  --allow-unauthenticated-identities \
+  --cognito-identity-providers \
+    ProviderName=cognito-idp.REGION.amazonaws.com/USER_POOL_ID,\
+ClientId=CORRECT_APP_CLIENT_ID,\
+ServerSideTokenCheck=true
+
+# 4. Verify the fix
+aws cognito-identity describe-identity-pool \
+  --identity-pool-id YOUR_IDENTITY_POOL_ID \
+  --query 'CognitoIdentityProviders[0].ClientId'
+
+# 5. Clear cached tokens on devices
+# iOS: xcrun simctl uninstall booted com.your.bundleid
+# Android: adb uninstall com.your.packagename
+
+# 6. Rebuild and reinstall app
+npm run ios  # or npm run android
+```
+
+**Reference**: See `CompletedTaskEvidence/Phase_08/IDENTITY_POOL_FIX.md` for complete documentation of this issue and fix (October 19, 2025).
+
 ### Lambda Function Errors
 
 #### Error: "Task timed out after 3.00 seconds"
@@ -895,6 +937,11 @@ npm install
 ---
 
 ## Version History
+
+### v1.0.1 (October 19, 2025)
+- Added troubleshooting section for Identity Pool misconfiguration
+- Documented "Token not from supported provider" error and fix
+- Added reference to IDENTITY_POOL_FIX.md
 
 ### v1.0.0 (October 17, 2025)
 - Initial troubleshooting guide

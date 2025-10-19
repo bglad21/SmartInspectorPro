@@ -36,6 +36,7 @@ import {
   resendConfirmationCode,
   selectAuthError,
   selectAuthLoading,
+  signIn,
 } from '../../redux/slices/auth.slice';
 
 interface VerifyEmailScreenProps {
@@ -43,6 +44,7 @@ interface VerifyEmailScreenProps {
     params: {
       username: string;
       email: string;
+      password?: string; // Add password to auto-sign in after verification
     };
   };
   navigation: {
@@ -59,13 +61,14 @@ export const VerifyEmailScreen: React.FC<VerifyEmailScreenProps> = ({
   const confirmLoading = useAppSelector(selectAuthLoading('confirmSignUp'));
   const error = useAppSelector(selectAuthError);
 
-  const { username, email } = route.params;
+  const { username, email, password } = route.params;
 
   const [code, setCode] = useState('');
   const [codeError, setCodeError] = useState<string>();
   const [resendLoading, setResendLoading] = useState(false);
+  const [autoSigningIn, setAutoSigningIn] = useState(false);
 
-  const loading = confirmLoading || resendLoading;
+  const loading = confirmLoading || resendLoading || autoSigningIn;
 
   // Show error alert when Redux error changes
   useEffect(() => {
@@ -112,19 +115,63 @@ export const VerifyEmailScreen: React.FC<VerifyEmailScreenProps> = ({
         }),
       ).unwrap();
 
-      Alert.alert(
-        'Email Verified',
-        'Your email has been successfully verified. You can now sign in.',
-        [
-          {
-            text: 'OK',
-            onPress: () => navigation.navigate('Login'),
-          },
-        ],
-      );
+      console.log('✅ Email verified successfully');
+
+      // If password was provided, automatically sign in the user
+      if (password) {
+        console.log('🔵 Auto-signing in user after email verification...');
+        setAutoSigningIn(true);
+
+        try {
+          await dispatch(
+            signIn({
+              username: email, // Use email as username
+              password,
+            }),
+          ).unwrap();
+
+          console.log(
+            '✅ User automatically signed in after email verification',
+          );
+
+          // Navigation to Home will happen automatically via MainStack when isAuthenticated becomes true
+          Alert.alert(
+            'Welcome!',
+            'Your email has been verified and you are now signed in.',
+            [{ text: 'OK' }],
+          );
+        } catch (signInErr) {
+          console.error('❌ Auto sign-in failed:', signInErr);
+          // If auto sign-in fails, navigate to login screen
+          Alert.alert(
+            'Email Verified',
+            'Your email has been verified. Please sign in with your credentials.',
+            [
+              {
+                text: 'OK',
+                onPress: () => navigation.navigate('Login'),
+              },
+            ],
+          );
+        } finally {
+          setAutoSigningIn(false);
+        }
+      } else {
+        // No password provided, navigate to login
+        Alert.alert(
+          'Email Verified',
+          'Your email has been successfully verified. You can now sign in.',
+          [
+            {
+              text: 'OK',
+              onPress: () => navigation.navigate('Login'),
+            },
+          ],
+        );
+      }
     } catch (err) {
       // Error handled by Redux state and useEffect
-      console.error('Email verification failed:', err);
+      console.error('❌ Email verification failed:', err);
     }
   };
 

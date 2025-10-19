@@ -25,7 +25,9 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import type React from 'react';
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
-import { useAppSelector } from '../redux/hooks';
+import { useAppDispatch, useAppSelector } from '../redux/hooks';
+import { initializeAuth } from '../redux/slices/auth.slice';
+import { OnboardingScreen } from '../screens/onboarding/OnboardingScreen';
 import { useTheme } from '../theme';
 import AuthStack from './AuthStack';
 import MainStack from './MainStack';
@@ -41,10 +43,33 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
  */
 export const RootNavigator: React.FC = () => {
   const { theme } = useTheme();
-  const { isAuthenticated, isInitialized } = useAppSelector(
-    state => state.auth,
-  );
+  const dispatch = useAppDispatch();
+  const { isAuthenticated, isInitialized, hasCompletedOnboarding } =
+    useAppSelector(state => state.auth);
   const [isLoadingData, setIsLoadingData] = useState(false);
+
+  // Debug logging for auth state
+  useEffect(() => {
+    console.log('📊 Auth State:', {
+      isAuthenticated,
+      isInitialized,
+      hasCompletedOnboarding,
+      isLoadingData,
+    });
+  }, [isAuthenticated, isInitialized, hasCompletedOnboarding, isLoadingData]);
+
+  // Initialize authentication state on app startup
+  useEffect(() => {
+    console.log('🔄 Initializing auth state...');
+    dispatch(initializeAuth())
+      .unwrap()
+      .then(() => {
+        console.log('✅ Auth initialization complete');
+      })
+      .catch(error => {
+        console.error('❌ Auth initialization failed:', error);
+      });
+  }, [dispatch]);
 
   // TODO: Implement CSV data loading on first authenticated session
   // This will be added in Phase 5 when data layer is implemented
@@ -136,10 +161,15 @@ export const RootNavigator: React.FC = () => {
       // }}
     >
       <Stack.Navigator screenOptions={{ headerShown: false }}>
-        {isAuthenticated ? (
-          <Stack.Screen name="Main" component={MainStack} />
-        ) : (
+        {!isAuthenticated ? (
+          // User is not authenticated - show auth flow
           <Stack.Screen name="Auth" component={AuthStack} />
+        ) : !hasCompletedOnboarding ? (
+          // User is authenticated but hasn't completed onboarding
+          <Stack.Screen name="Onboarding" component={OnboardingScreen} />
+        ) : (
+          // User is authenticated and has completed onboarding - show main app
+          <Stack.Screen name="Main" component={MainStack} />
         )}
       </Stack.Navigator>
     </NavigationContainer>

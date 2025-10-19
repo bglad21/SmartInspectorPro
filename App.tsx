@@ -27,7 +27,24 @@ function App() {
 
   // Initialize AWS Amplify on app startup
   useEffect(() => {
-    initializeAmplify();
+    const initializeApp = async () => {
+      try {
+        initializeAmplify();
+        console.log('✅ Amplify initialized');
+      } catch (error) {
+        console.error('❌ Auth initialization failed:', error);
+        // Clear any corrupted auth state
+        try {
+          const { signOut } = await import('@aws-amplify/auth');
+          await signOut();
+          console.log('✅ Cleared corrupted auth state');
+        } catch (cleanupError) {
+          console.error('⚠️ Could not clear auth state:', cleanupError);
+        }
+      }
+    };
+
+    initializeApp();
   }, []);
 
   return (

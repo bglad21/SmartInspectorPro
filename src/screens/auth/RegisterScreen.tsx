@@ -1,12 +1,12 @@
 /**
  * RegisterScreen Component
  *
- * Allows new users to create an account with business name, email, and password.
+ * Allows new users to create an account with first name, last name, email, and password.
  * Integrates with Redux auth slice for state management.
  *
  * Features:
  * - Complete registration form with validation
- * - Business name, email, password fields
+ * - First name, last name, email, password fields
  * - Loading states
  * - Error handling
  * - Navigation to email verification on success
@@ -52,17 +52,17 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({
   const error = useAppSelector(selectAuthError);
 
   const [formData, setFormData] = useState({
-    businessName: '',
+    firstName: '',
+    lastName: '',
     email: '',
-    username: '',
     password: '',
     confirmPassword: '',
   });
 
   const [errors, setErrors] = useState<{
-    businessName?: string;
+    firstName?: string;
+    lastName?: string;
     email?: string;
-    username?: string;
     password?: string;
     confirmPassword?: string;
   }>({});
@@ -112,20 +112,18 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({
   const validateForm = (): boolean => {
     const newErrors: typeof errors = {};
 
-    if (!formData.businessName.trim()) {
-      newErrors.businessName = 'Business name is required';
+    if (!formData.firstName.trim()) {
+      newErrors.firstName = 'First name is required';
+    }
+
+    if (!formData.lastName.trim()) {
+      newErrors.lastName = 'Last name is required';
     }
 
     if (!formData.email.trim()) {
       newErrors.email = 'Email is required';
     } else if (!isValidEmail(formData.email)) {
       newErrors.email = 'Please enter a valid email address';
-    }
-
-    if (!formData.username.trim()) {
-      newErrors.username = 'Username is required';
-    } else if (formData.username.length < 3) {
-      newErrors.username = 'Username must be at least 3 characters';
     }
 
     if (!formData.password) {
@@ -154,26 +152,43 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({
     }
 
     try {
+      console.log('🔵 Starting registration for:', formData.email);
+      console.log('🔵 Registration data:', {
+        username: formData.email, // Using email as username
+        email: formData.email,
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        passwordLength: formData.password.length,
+      });
+
       const result = await dispatch(
         signUp({
-          username: formData.username,
+          username: formData.email, // Use email as username
           password: formData.password,
           email: formData.email,
-          businessName: formData.businessName,
+          firstName: formData.firstName,
+          lastName: formData.lastName,
           membershipTier: 'professional', // Default tier
         }),
       ).unwrap();
 
+      console.log('✅ Registration successful:', result);
+
       if (result.needsEmailVerification) {
         // Navigate to email verification screen
         navigation.navigate('VerifyEmail', {
-          username: formData.username,
+          username: formData.email, // Pass email as username
           email: formData.email,
+          password: formData.password, // Pass password for auto sign-in after verification
         });
       }
     } catch (err) {
       // Error handled by Redux state and useEffect
-      console.error('Registration failed:', err);
+      console.error(
+        '❌ Registration failed - Full error:',
+        JSON.stringify(err, null, 2),
+      );
+      console.error('❌ Registration failed - Error object:', err);
     }
   };
 
@@ -211,12 +226,24 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({
           {/* Form */}
           <View style={styles.form}>
             <TextInput
-              label="Business Name"
-              value={formData.businessName}
-              onChangeText={text => updateField('businessName', text)}
-              error={errors.businessName}
+              label="First Name"
+              value={formData.firstName}
+              onChangeText={text => updateField('firstName', text)}
+              error={errors.firstName}
               autoCapitalize="words"
-              placeholder="Enter your business name"
+              textContentType="givenName"
+              placeholder="Enter your first name"
+              editable={!loading}
+            />
+
+            <TextInput
+              label="Last Name"
+              value={formData.lastName}
+              onChangeText={text => updateField('lastName', text)}
+              error={errors.lastName}
+              autoCapitalize="words"
+              textContentType="familyName"
+              placeholder="Enter your last name"
               editable={!loading}
             />
 
@@ -234,18 +261,6 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({
             />
 
             <TextInput
-              label="Username"
-              value={formData.username}
-              onChangeText={text => updateField('username', text)}
-              error={errors.username}
-              autoCapitalize="none"
-              autoCorrect={false}
-              textContentType="username"
-              placeholder="Choose a username"
-              editable={!loading}
-            />
-
-            <TextInput
               label="Password"
               value={formData.password}
               onChangeText={text => updateField('password', text)}
@@ -256,6 +271,41 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({
               placeholder="Create a password"
               editable={!loading}
             />
+
+            {/* Password Requirements */}
+            <View style={styles.passwordHints}>
+              <ThemedText variant="caption" color="secondary">
+                Password must contain:
+              </ThemedText>
+              <ThemedText
+                variant="caption"
+                color="secondary"
+                style={styles.passwordHint}
+              >
+                • At least 8 characters
+              </ThemedText>
+              <ThemedText
+                variant="caption"
+                color="secondary"
+                style={styles.passwordHint}
+              >
+                • Uppercase and lowercase letters
+              </ThemedText>
+              <ThemedText
+                variant="caption"
+                color="secondary"
+                style={styles.passwordHint}
+              >
+                • At least one number
+              </ThemedText>
+              <ThemedText
+                variant="caption"
+                color="secondary"
+                style={styles.passwordHint}
+              >
+                • At least one special character (!@#$%^&*)
+              </ThemedText>
+            </View>
 
             <TextInput
               label="Confirm Password"
@@ -321,6 +371,14 @@ const styles = StyleSheet.create({
   },
   form: {
     marginBottom: 24,
+  },
+  passwordHints: {
+    marginTop: 4,
+    marginBottom: 8,
+    paddingLeft: 8,
+  },
+  passwordHint: {
+    marginTop: 2,
   },
   registerButton: {
     marginTop: 16,

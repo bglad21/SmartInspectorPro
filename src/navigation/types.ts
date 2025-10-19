@@ -233,8 +233,8 @@ export type MainStackParamList = {
 /**
  * Root Stack Parameter List
  *
- * Top-level navigator that switches between Auth and Main stacks
- * based on authentication state.
+ * Top-level navigator that switches between Auth, Onboarding, and Main stacks
+ * based on authentication state and onboarding completion.
  */
 export type RootStackParamList = {
   /**
@@ -242,6 +242,15 @@ export type RootStackParamList = {
    * Contains all authentication screens (Login, Register, etc.)
    */
   Auth: NavigatorScreenParams<AuthStackParamList>;
+
+  /**
+   * Onboarding Screen
+   * First-time user onboarding with three options:
+   * - Get a Membership
+   * - Join a Team
+   * - Preview the App
+   */
+  Onboarding: undefined;
 
   /**
    * Main Stack
@@ -285,6 +294,15 @@ export const isAuthRoute = (
   return ['Login', 'Register', 'ForgotPassword', 'VerifyEmail'].includes(
     routeName,
   );
+};
+
+/**
+ * Type guard to check if route is Onboarding
+ */
+export const isOnboardingRoute = (
+  routeName: string,
+): routeName is 'Onboarding' => {
+  return routeName === 'Onboarding';
 };
 
 /**

@@ -45,10 +45,10 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
   const loading = useAppSelector(selectAuthLoading('signIn'));
   const error = useAppSelector(selectAuthError);
 
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState<{
-    username?: string;
+    email?: string;
     password?: string;
   }>({});
 
@@ -70,8 +70,10 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
   const validateForm = (): boolean => {
     const newErrors: typeof errors = {};
 
-    if (!username.trim()) {
-      newErrors.username = 'Username is required';
+    if (!email.trim()) {
+      newErrors.email = 'Email is required';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      newErrors.email = 'Please enter a valid email address';
     }
 
     if (!password) {
@@ -93,11 +95,17 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
     }
 
     try {
-      await dispatch(signIn({ username, password })).unwrap();
+      console.log('🔵 LoginScreen: Starting sign in with email:', email);
+      await dispatch(signIn({ username: email, password })).unwrap();
+      console.log('✅ LoginScreen: Sign in successful');
       // Navigation will be handled by root navigator based on isAuthenticated
     } catch (err) {
       // Error handled by Redux state and useEffect
-      console.error('Sign in failed:', err);
+      console.error('❌ LoginScreen: Sign in failed:', err);
+      console.error(
+        '❌ LoginScreen: Error details:',
+        JSON.stringify(err, null, 2),
+      );
     }
   };
 
@@ -142,19 +150,20 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
           {/* Form */}
           <View style={styles.form}>
             <TextInput
-              label="Username"
-              value={username}
+              label="Email"
+              value={email}
               onChangeText={text => {
-                setUsername(text);
-                if (errors.username) {
-                  setErrors(prev => ({ ...prev, username: undefined }));
+                setEmail(text);
+                if (errors.email) {
+                  setErrors(prev => ({ ...prev, email: undefined }));
                 }
               }}
-              error={errors.username}
+              error={errors.email}
               autoCapitalize="none"
               autoCorrect={false}
-              textContentType="username"
-              placeholder="Enter your username"
+              keyboardType="email-address"
+              textContentType="emailAddress"
+              placeholder="Enter your email"
               editable={!loading}
             />
 
