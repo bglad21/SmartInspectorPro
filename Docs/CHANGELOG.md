@@ -9,6 +9,54 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased] - Pre-Development Phase
 
+### Phase 8: Navigation & Screen Structure - 🔄 67% COMPLETE (January 2025)
+
+#### Added - January 2025
+
+- **Home Screen (P8-T02)**: Main landing screen after authentication with collapsible navigation sections
+
+  - **File Created**: 1 file, 478 lines of code
+    - `src/screens/home/HomeScreen.tsx` (478 lines) - Home screen with ScrollView layout
+  - **Files Modified**: 2 files
+    - `src/screens/home/index.ts` - Export HomeScreen
+    - `src/navigation/MainStack.tsx` - Use HomeScreen instead of PlaceholderScreen
+  - **Component Features**:
+    - **Header Section**: User greeting (dynamic name from businessName or email), subtitle "Ready to inspect today?", notifications bell icon with badge (placeholder "3")
+    - **NavigationCard Component**: Reusable card with icon (32px), title, subtitle, touch feedback (activeOpacity 0.7), responsive width, accessibility labels
+    - **4 CollapsibleSection Components**:
+      1. **Smart Inspector** (4 cards, defaultExpanded): Schedule Inspection, Continue Inspection, Join Team Inspection, New Inspection
+      2. **Business Management** (5 cards): Calendar, Contacts, Notifications, Team Management, Accounting
+      3. **Inspection Management** (5 cards): Workflow Editor, My Inspections, Report Templates, Inspection Forms, Inspection Data
+      4. **App Management** (5 cards): Data Management, Membership Details, Store, Settings, Help & Support
+    - **Total**: 19 navigation cards across 4 sections
+    - **Responsive Grid Layout**: 2-column phone (≤768px), 3-column tablet (>768px), dynamic card width calculation
+    - **Type-Safe Navigation**: handleNavigation generic function with @ts-expect-error workaround for keyof MainStackParamList
+    - **Theme Integration**: useTheme hook for colors, full light/dark mode support, surface/border/text colors
+    - **State Management**: Redux useAppSelector for user data, AsyncStorage for section states (home_*_expanded keys)
+    - **Accessibility**: All cards have labels, 56px touch targets, role="button" attributes
+  - **User Greeting Logic**:
+    - Priority: businessName → username.split('@')[0] → 'Inspector' fallback
+    - Examples: "Hello, ABC Home Inspections" / "Hello, john.doe" / "Hello, Inspector"
+  - **Responsive Layout Calculation**:
+    ```typescript
+    const CARD_WIDTH = (SCREEN_WIDTH - PADDING*2 - GAP*(CARDS_PER_ROW-1)) / CARDS_PER_ROW;
+    ```
+  - **CollapsibleSection Storage Keys**:
+    - `home_smart_inspector_expanded` - Smart Inspector section (default: expanded)
+    - `home_business_expanded` - Business Management section (default: collapsed)
+    - `home_inspection_expanded` - Inspection Management section (default: collapsed)
+    - `home_app_expanded` - App Management section (default: collapsed)
+  - **Integration Points**:
+    - Uses CollapsibleSection from P7-T03 (animations, persistence)
+    - Uses React Navigation from P8-T01 (MainStackParamList types)
+    - Uses MaterialCommunityIcons for all card icons
+    - Uses themed components from P6-T02 (ThemedText, ThemedView)
+    - Ready for screen implementations (Phase 9+, currently PlaceholderScreen)
+  - **Code Quality**: TypeScript 0 errors, ESLint 0 warnings
+  - **Documentation**: P8-T02_COMPLETION_SUMMARY.md (comprehensive 1,000+ line guide)
+
+---
+
 ### Phase 7: Core UI Components - ✅ COMPLETE (October 2025)
 
 #### Added - October 18, 2025

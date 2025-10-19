@@ -28,7 +28,7 @@ import { useTheme } from '../theme';
 import type { MainStackParamList } from './types';
 
 // Import existing screens
-// TODO: Replace PlaceholderScreen imports with actual screen implementations
+import HomeScreen from '../screens/home/HomeScreen';
 
 // Placeholder for screens not yet implemented
 import PlaceholderScreen from '../screens/PlaceholderScreen';
@@ -59,7 +59,7 @@ export const MainStack: React.FC = () => {
       {/* ===== HOME SCREEN ===== */}
       <Stack.Screen
         name="Home"
-        component={PlaceholderScreen}
+        component={HomeScreen}
         options={{
           title: 'Smart Inspector Pro',
           headerShown: true,

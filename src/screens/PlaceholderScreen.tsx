@@ -14,15 +14,18 @@
  * TODO: Replace with actual screen implementations in subsequent phases
  */
 
-import type React from 'react';
-import { View, StyleSheet } from 'react-native';
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { ThemedText } from '@/components/common/ThemedText';
 import { ThemedView } from '@/components/common/ThemedView';
-import { useTheme } from '@/theme';
 import type { MainStackParamList } from '@/navigation/types';
+import { useTheme } from '@/theme';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type React from 'react';
+import { StyleSheet, View } from 'react-native';
 
-type Props = NativeStackScreenProps<MainStackParamList, keyof MainStackParamList>;
+type Props = NativeStackScreenProps<
+  MainStackParamList,
+  keyof MainStackParamList
+>;
 
 interface PlaceholderScreenProps extends Partial<Props> {
   /**
@@ -40,7 +43,10 @@ interface PlaceholderScreenProps extends Partial<Props> {
  * @param route - Navigation route object (optional)
  * @returns Placeholder screen component
  */
-export const PlaceholderScreen: React.FC<PlaceholderScreenProps> = ({ screenName, route }) => {
+export const PlaceholderScreen: React.FC<PlaceholderScreenProps> = ({
+  screenName,
+  route,
+}) => {
   const { theme } = useTheme();
   const displayName = screenName || route?.name || 'Screen';
 
@@ -52,19 +58,13 @@ export const PlaceholderScreen: React.FC<PlaceholderScreenProps> = ({ screenName
         </ThemedText>
         <ThemedText
           variant="body1"
-          style={[
-            styles.message,
-            { color: theme.colors.textSecondary },
-          ]}
+          style={[styles.message, { color: theme.colors.textSecondary }]}
         >
           This screen is under construction
         </ThemedText>
         <ThemedText
           variant="caption"
-          style={[
-            styles.phase,
-            { color: theme.colors.textSecondary },
-          ]}
+          style={[styles.phase, { color: theme.colors.textSecondary }]}
         >
           Will be implemented in Phase 9+
         </ThemedText>

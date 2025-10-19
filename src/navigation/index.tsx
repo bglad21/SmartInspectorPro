@@ -19,18 +19,17 @@
  * 3. If authenticated → Load CSV data → Show MainStack (Home, etc.)
  */
 
-import type React from 'react';
-import { useEffect, useState } from 'react';
-import { ActivityIndicator, View, StyleSheet } from 'react-native';
+import { ThemedText } from '@/components/common/ThemedText';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-
-import { useTheme } from '../theme';
+import type React from 'react';
+import { useEffect, useState } from 'react';
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import { useAppSelector } from '../redux/hooks';
-import { ThemedText } from '@/components/common/ThemedText';
-import type { RootStackParamList } from './types';
+import { useTheme } from '../theme';
 import AuthStack from './AuthStack';
 import MainStack from './MainStack';
+import type { RootStackParamList } from './types';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -42,7 +41,9 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
  */
 export const RootNavigator: React.FC = () => {
   const { theme } = useTheme();
-  const { isAuthenticated, isInitialized } = useAppSelector((state) => state.auth);
+  const { isAuthenticated, isInitialized } = useAppSelector(
+    state => state.auth,
+  );
   const [isLoadingData, setIsLoadingData] = useState(false);
 
   // TODO: Implement CSV data loading on first authenticated session
@@ -68,7 +69,12 @@ export const RootNavigator: React.FC = () => {
   // Show loading spinner while checking authentication or loading data
   if (!isInitialized || isLoadingData) {
     return (
-      <View style={[styles.loadingContainer, { backgroundColor: theme.colors.background }]}>
+      <View
+        style={[
+          styles.loadingContainer,
+          { backgroundColor: theme.colors.background },
+        ]}
+      >
         <ActivityIndicator size="large" color={theme.colors.primary} />
         <ThemedText variant="body1" style={styles.loadingText}>
           {isLoadingData ? 'Loading inspection data...' : 'Loading...'}

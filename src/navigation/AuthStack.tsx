@@ -13,21 +13,23 @@
  * - Back navigation on other screens
  */
 
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import type React from 'react';
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { useTheme } from '../theme';
-import type { AuthStackParamList } from './types';
-
+import ForgotPasswordScreen from '../screens/auth/ForgotPasswordScreen';
 // Import auth screens
 import LoginScreen from '../screens/auth/LoginScreen';
 import RegisterScreen from '../screens/auth/RegisterScreen';
-import ForgotPasswordScreen from '../screens/auth/ForgotPasswordScreen';
 import VerifyEmailScreen from '../screens/auth/VerifyEmailScreen';
+import { useTheme } from '../theme';
+import type { AuthStackParamList } from './types';
 
 // Wrapper for VerifyEmailScreen to bridge legacy props to new navigation props
 // TODO: Remove this wrapper once VerifyEmailScreen is updated to use NativeStackScreenProps
-const VerifyEmailScreenWrapper = ({ route, navigation }: NativeStackScreenProps<AuthStackParamList, 'VerifyEmail'>) => {
+const VerifyEmailScreenWrapper = ({
+  route,
+  navigation,
+}: NativeStackScreenProps<AuthStackParamList, 'VerifyEmail'>) => {
   // Convert new navigation props to legacy format expected by VerifyEmailScreen
   const legacyProps = {
     route: {
@@ -112,7 +114,7 @@ export const AuthStack: React.FC = () => {
       />
 
       {/* Verify Email Screen */}
-            <Stack.Screen
+      <Stack.Screen
         name="VerifyEmail"
         component={VerifyEmailScreenWrapper}
         options={{

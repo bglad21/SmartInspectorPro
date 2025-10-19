@@ -14,16 +14,13 @@ import { useEffect } from 'react';
 import { StatusBar, useColorScheme } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Provider } from 'react-redux';
-
-// Import services
-import { initializeAmplify } from '@/services/amplify.service';
-
-// Import providers
-import { ThemeProvider } from '@/theme';
-import { store } from '@/redux/store';
-
 // Import navigation
 import RootNavigator from '@/navigation';
+import { store } from '@/redux/store';
+// Import services
+import { initializeAmplify } from '@/services/amplify.service';
+// Import providers
+import { ThemeProvider } from '@/theme';
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
