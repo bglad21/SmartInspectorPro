@@ -1,23 +1,29 @@
 /**
- * Sample React Native App
- * https://github.com/facebook/react-native
+ * Smart Inspector Pro - Main App Component
+ *
+ * Entry point for the application.
+ * Initializes all core services and providers.
+ *
+ * Created: Phase 2
+ * Updated: Phase 8 - Added Navigation
  *
  * @format
  */
 
-import { NewAppScreen } from '@react-native/new-app-screen';
 import { useEffect } from 'react';
-import { StatusBar, StyleSheet, useColorScheme, View } from 'react-native';
-import {
-  SafeAreaProvider,
-  useSafeAreaInsets,
-} from 'react-native-safe-area-context';
+import { StatusBar, useColorScheme } from 'react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { Provider } from 'react-redux';
 
-// Import AWS Amplify initialization
+// Import services
 import { initializeAmplify } from '@/services/amplify.service';
 
-// Import Theme Provider
+// Import providers
 import { ThemeProvider } from '@/theme';
+import { store } from '@/redux/store';
+
+// Import navigation
+import RootNavigator from '@/navigation';
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
@@ -28,32 +34,15 @@ function App() {
   }, []);
 
   return (
-    <SafeAreaProvider>
-      <ThemeProvider>
-        <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-        <AppContent />
-      </ThemeProvider>
-    </SafeAreaProvider>
+    <Provider store={store}>
+      <SafeAreaProvider>
+        <ThemeProvider>
+          <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
+          <RootNavigator />
+        </ThemeProvider>
+      </SafeAreaProvider>
+    </Provider>
   );
 }
-
-function AppContent() {
-  const safeAreaInsets = useSafeAreaInsets();
-
-  return (
-    <View style={styles.container}>
-      <NewAppScreen
-        templateFileName="App.tsx"
-        safeAreaInsets={safeAreaInsets}
-      />
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});
 
 export default App;

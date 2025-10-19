@@ -1479,6 +1479,7 @@ export const Select: React.FC<SelectProps> = ({
 **Purpose**: Expandable/collapsible container for organizing content sections with smooth animations and state persistence
 
 **Features**:
+
 - Smooth expand/collapse animations (300ms spring with damping 0.7)
 - AsyncStorage persistence of expanded state
 - Custom header colors and icons
@@ -1490,18 +1491,19 @@ export const Select: React.FC<SelectProps> = ({
 - Optional disabled state (always expanded)
 
 **Props**:
+
 ```typescript
 export interface CollapsibleSectionProps {
   // Required
   title: string;
   children: React.ReactNode;
-  
+
   // Optional - Behavior
   defaultExpanded?: boolean; // Default: true
   disabled?: boolean; // Default: false
   storageKey?: string; // For AsyncStorage persistence
   onExpandedChange?: (expanded: boolean) => void;
-  
+
   // Optional - Styling
   icon?: string; // Emoji or text icon
   headerColor?: string; // Custom header background
@@ -1509,7 +1511,7 @@ export interface CollapsibleSectionProps {
   containerStyle?: StyleProp<ViewStyle>;
   headerStyle?: StyleProp<ViewStyle>;
   contentStyle?: StyleProp<ViewStyle>;
-  
+
   // Optional - Testing
   testID?: string; // Default: 'collapsible-section'
 }
@@ -1518,15 +1520,17 @@ export interface CollapsibleSectionProps {
 **Usage Examples**:
 
 **Example 1: Basic Usage**
+
 ```tsx
 import { CollapsibleSection } from '@/components/common';
 
 <CollapsibleSection title="My Section">
   <Text>Section content goes here</Text>
-</CollapsibleSection>
+</CollapsibleSection>;
 ```
 
 **Example 2: Home Screen with Persistence**
+
 ```tsx
 <CollapsibleSection
   title="Smart Inspector"
@@ -1541,6 +1545,7 @@ import { CollapsibleSection } from '@/components/common';
 ```
 
 **Example 3: Custom Styling**
+
 ```tsx
 <CollapsibleSection
   title="Business Management"
@@ -1557,6 +1562,7 @@ import { CollapsibleSection } from '@/components/common';
 ```
 
 **Example 4: Always Expanded (Disabled)**
+
 ```tsx
 <CollapsibleSection
   title="Important Section"
@@ -1568,10 +1574,11 @@ import { CollapsibleSection } from '@/components/common';
 ```
 
 **Example 5: With State Callback**
+
 ```tsx
 <CollapsibleSection
   title="Analytics"
-  onExpandedChange={(expanded) => {
+  onExpandedChange={expanded => {
     console.log('Analytics section expanded:', expanded);
     trackEvent('section_toggle', { section: 'analytics', expanded });
   }}
@@ -1581,6 +1588,7 @@ import { CollapsibleSection } from '@/components/common';
 ```
 
 **Animation Details**:
+
 - **LayoutAnimation**: 300ms spring (damping: 0.7) for smooth expansion
   - Create/delete: easeInEaseOut for opacity
   - Update: spring for content expansion
@@ -1590,6 +1598,7 @@ import { CollapsibleSection } from '@/components/common';
   - 300ms duration
 
 **AsyncStorage Persistence**:
+
 - **Storage Key Format**: `"section-{screenName}-{sectionName}"`
   - Example: `"section-home-smart-inspector"`
 - **Load on Mount**: Retrieves saved state from AsyncStorage

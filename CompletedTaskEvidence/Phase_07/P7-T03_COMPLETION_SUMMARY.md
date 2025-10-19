@@ -1,8 +1,8 @@
 # P7-T03: Create Collapsible Section Component - Completion Summary
 
-**Task ID**: P7-T03  
-**Phase**: 7 - Core UI Components  
-**Completion Date**: October 18, 2025  
+**Task ID**: P7-T03
+**Phase**: 7 - Core UI Components
+**Completion Date**: October 18, 2025
 **Status**: ✅ COMPLETE
 
 ---
@@ -10,9 +10,11 @@
 ## 1. Task Overview
 
 ### Objective
+
 Create a critical CollapsibleSection component for the home screen and throughout the app with smooth animations and state persistence.
 
 ### Requirements
+
 - Expandable/collapsible container with header
 - Smooth expand/collapse animations (spring/ease-out)
 - AsyncStorage persistence of expanded state
@@ -23,6 +25,7 @@ Create a critical CollapsibleSection component for the home screen and throughou
 - Accessibility support
 
 ### Prerequisites
+
 - ✅ P7-T01 complete (inspection components available)
 - ✅ P7-T02 complete (data components available)
 - ✅ P6-T02 complete (themed components including ThemedText)
@@ -33,11 +36,13 @@ Create a critical CollapsibleSection component for the home screen and throughou
 ## 2. Acceptance Criteria Verification
 
 ### ✅ Criterion 1: CollapsibleSection component created
+
 **Status**: COMPLETE
 
 **File Created**: `src/components/common/CollapsibleSection.tsx` (389 lines)
 
 **Component Features**:
+
 - Expandable/collapsible container with header and content
 - Icon and title in header
 - Chevron indicator (animated rotation)
@@ -46,9 +51,11 @@ Create a critical CollapsibleSection component for the home screen and throughou
 - Full theme integration
 
 ### ✅ Criterion 2: Smooth animations implemented
+
 **Status**: COMPLETE
 
 **Animation Features**:
+
 - **LayoutAnimation**: Spring animation for expand/collapse (300ms duration)
   - Type: `spring` with damping: 0.7
   - Create/delete: `easeInEaseOut` for opacity
@@ -58,6 +65,7 @@ Create a critical CollapsibleSection component for the home screen and throughou
 - **Platform-specific**: LayoutAnimation enabled on Android via `UIManager`
 
 **Animation Configuration**:
+
 ```typescript
 LayoutAnimation.configureNext({
   duration: 300,
@@ -77,9 +85,11 @@ LayoutAnimation.configureNext({
 ```
 
 ### ✅ Criterion 3: AsyncStorage persistence implemented
+
 **Status**: COMPLETE
 
 **Persistence Features**:
+
 - Optional `storageKey` prop for persistence
 - Loads saved state on mount from AsyncStorage
 - Saves state changes automatically
@@ -88,12 +98,13 @@ LayoutAnimation.configureNext({
 - Format: `storageKey="section-{screenName}-{sectionName}"`
 
 **AsyncStorage Implementation**:
+
 ```typescript
 // Load on mount
 useEffect(() => {
   const loadExpandedState = async () => {
     if (!storageKey) return;
-    
+
     try {
       const storedValue = await AsyncStorage.getItem(storageKey);
       if (storedValue !== null) {
@@ -107,26 +118,31 @@ useEffect(() => {
       setIsLoading(false);
     }
   };
-  
+
   loadExpandedState();
 }, [storageKey, rotateAnimation]);
 
 // Save on change
-const saveExpandedState = useCallback(async (isExpanded: boolean) => {
-  if (!storageKey) return;
-  
-  try {
-    await AsyncStorage.setItem(storageKey, String(isExpanded));
-  } catch (error) {
-    console.warn(`Failed to save state for ${storageKey}:`, error);
-  }
-}, [storageKey]);
+const saveExpandedState = useCallback(
+  async (isExpanded: boolean) => {
+    if (!storageKey) return;
+
+    try {
+      await AsyncStorage.setItem(storageKey, String(isExpanded));
+    } catch (error) {
+      console.warn(`Failed to save state for ${storageKey}:`, error);
+    }
+  },
+  [storageKey],
+);
 ```
 
 ### ✅ Criterion 4: Custom header colors and icons supported
+
 **Status**: COMPLETE
 
 **Customization Props**:
+
 - `icon?: string` - Optional emoji or text icon displayed before title
 - `headerColor?: string` - Custom header background color (defaults to theme surface)
 - `headerTextColor?: string` - Custom header text color (defaults to theme text)
@@ -135,6 +151,7 @@ const saveExpandedState = useCallback(async (isExpanded: boolean) => {
 - `contentStyle?: StyleProp<ViewStyle>` - Additional content styles
 
 **Example Usage**:
+
 ```tsx
 <CollapsibleSection
   title="Smart Inspector"
@@ -149,15 +166,18 @@ const saveExpandedState = useCallback(async (isExpanded: boolean) => {
 ```
 
 ### ✅ Criterion 5: Works with any child content
+
 **Status**: COMPLETE
 
 **Child Content Support**:
+
 - Accepts `children: React.ReactNode` prop
 - No restrictions on child component types
 - Content area has 16px padding (configurable via `contentStyle`)
 - Renders children only when expanded (performance optimization)
 
 **Example with Multiple Child Types**:
+
 ```tsx
 <CollapsibleSection title="Mixed Content">
   <View>
@@ -170,23 +190,25 @@ const saveExpandedState = useCallback(async (isExpanded: boolean) => {
 ```
 
 ### ✅ Criterion 6: Proper TypeScript interfaces
+
 **Status**: COMPLETE
 
 **Interface Created**: `CollapsibleSectionProps`
 
 **Props (15 total)**:
+
 ```typescript
 export interface CollapsibleSectionProps {
   // Required
   title: string;
   children: React.ReactNode;
-  
+
   // Optional - Behavior
   defaultExpanded?: boolean; // Default: true
   disabled?: boolean; // Default: false
   storageKey?: string; // For AsyncStorage persistence
   onExpandedChange?: (expanded: boolean) => void;
-  
+
   // Optional - Styling
   icon?: string;
   headerColor?: string;
@@ -194,22 +216,25 @@ export interface CollapsibleSectionProps {
   containerStyle?: StyleProp<ViewStyle>;
   headerStyle?: StyleProp<ViewStyle>;
   contentStyle?: StyleProp<ViewStyle>;
-  
+
   // Optional - Testing
   testID?: string; // Default: 'collapsible-section'
 }
 ```
 
 **Type Safety**:
+
 - All props properly typed
 - React.FC<CollapsibleSectionProps> for component
 - StyleProp<ViewStyle> for style props
 - Callback prop typed with explicit signature
 
 ### ✅ Criterion 7: Accessibility support
+
 **Status**: COMPLETE
 
 **Accessibility Features**:
+
 - **accessibilityRole**: "button" on both container and header
 - **accessibilityState**: `{ expanded }` to indicate current state
 - **accessibilityLabel**: Dynamic label with section name and state
@@ -218,11 +243,14 @@ export interface CollapsibleSectionProps {
 - **Disabled state**: Properly indicates always-expanded sections
 
 **Accessibility Implementation**:
+
 ```tsx
 <View
   accessibilityRole="button"
   accessibilityState={{ expanded }}
-  accessibilityLabel={`${title} section, ${expanded ? 'expanded' : 'collapsed'}`}
+  accessibilityLabel={`${title} section, ${
+    expanded ? 'expanded' : 'collapsed'
+  }`}
 >
   <TouchableOpacity
     accessibilityRole="button"
@@ -236,9 +264,11 @@ export interface CollapsibleSectionProps {
 ```
 
 ### ✅ Criterion 8: Theme integration
+
 **Status**: COMPLETE
 
 **Theme Features**:
+
 - Uses `useTheme()` hook for dynamic theming
 - Respects theme colors (surface, text, textSecondary, border)
 - Custom colors override theme defaults
@@ -251,10 +281,10 @@ export interface CollapsibleSectionProps {
 
 ### Files Created (2 files, 392 lines)
 
-| File | Lines | Purpose |
-|------|-------|---------|
-| `CollapsibleSection.tsx` | 389 | Collapsible section component |
-| `index.ts` (updated) | 3 | Added CollapsibleSection exports |
+| File                     | Lines | Purpose                          |
+| ------------------------ | ----- | -------------------------------- |
+| `CollapsibleSection.tsx` | 389   | Collapsible section component    |
+| `index.ts` (updated)     | 3     | Added CollapsibleSection exports |
 
 **Total New Code**: 389 lines
 **Total Common Components**: 10 components, 2,027 lines total
@@ -290,6 +320,7 @@ CollapsibleSection Component
 #### 1. **Smooth Animations**
 
 **LayoutAnimation Configuration**:
+
 - **Duration**: 300ms
 - **Spring damping**: 0.7 (smooth bounce effect)
 - **Create/delete**: easeInEaseOut for opacity
@@ -297,6 +328,7 @@ CollapsibleSection Component
 - **Platform support**: Enabled on Android via UIManager
 
 **Chevron Rotation**:
+
 - **Animated.timing**: 300ms duration
 - **Native driver**: Hardware-accelerated animation
 - **Interpolation**: 0° (collapsed) → 180° (expanded)
@@ -305,10 +337,12 @@ CollapsibleSection Component
 #### 2. **AsyncStorage Persistence**
 
 **Storage Key Format**: `"section-{screenName}-{sectionName}"`
+
 - Example: `"section-home-smart-inspector"`
 - Example: `"section-home-business-management"`
 
 **Implementation Details**:
+
 - **Load on mount**: Retrieves saved state from AsyncStorage
 - **Save on toggle**: Persists state changes immediately
 - **Error handling**: Graceful fallback with console warnings
@@ -316,6 +350,7 @@ CollapsibleSection Component
 - **Optional**: Only persists if `storageKey` prop provided
 
 **Benefits**:
+
 - User preferences maintained across app restarts
 - Per-section customization (different keys for different sections)
 - No performance impact (async operations)
@@ -323,18 +358,21 @@ CollapsibleSection Component
 #### 3. **Customization Options**
 
 **Visual Customization**:
+
 - **Icon**: Emoji or text icon before title
 - **Header color**: Custom background color
 - **Header text color**: Custom text color
 - **Styles**: Additional styling via style props
 
 **Behavioral Customization**:
+
 - **defaultExpanded**: Initial state (default: true)
 - **disabled**: Lock section in expanded state
 - **onExpandedChange**: Callback for state changes
 - **storageKey**: Enable persistence
 
 **Example - Custom Styling**:
+
 ```tsx
 <CollapsibleSection
   title="Premium Features"
@@ -352,16 +390,19 @@ CollapsibleSection Component
 #### 4. **Performance Optimizations**
 
 **Conditional Rendering**:
+
 - Content only rendered when `expanded === true`
 - Reduces initial render cost for collapsed sections
 - Prevents unnecessary re-renders of child components
 
 **Native Driver**:
+
 - Chevron rotation uses `useNativeDriver: true`
 - Hardware-accelerated animations (60 FPS)
 - No blocking of JavaScript thread
 
 **Memoization**:
+
 - `useCallback` for toggle and save functions
 - Prevents unnecessary function recreation
 - Optimizes child component re-renders
@@ -377,13 +418,13 @@ interface CollapsibleSectionProps {
   // Required
   title: string;
   children: React.ReactNode;
-  
+
   // Optional - Behavior
   defaultExpanded?: boolean;
   disabled?: boolean;
   storageKey?: string;
   onExpandedChange?: (expanded: boolean) => void;
-  
+
   // Optional - Styling
   icon?: string;
   headerColor?: string;
@@ -391,7 +432,7 @@ interface CollapsibleSectionProps {
   containerStyle?: StyleProp<ViewStyle>;
   headerStyle?: StyleProp<ViewStyle>;
   contentStyle?: StyleProp<ViewStyle>;
-  
+
   // Optional - Testing
   testID?: string;
 }
@@ -406,7 +447,7 @@ import { CollapsibleSection } from '@/components/common';
 
 <CollapsibleSection title="My Section">
   <Text>Section content goes here</Text>
-</CollapsibleSection>
+</CollapsibleSection>;
 ```
 
 #### Example 2: With Icon and Persistence
@@ -457,7 +498,7 @@ import { CollapsibleSection } from '@/components/common';
 ```tsx
 <CollapsibleSection
   title="Analytics"
-  onExpandedChange={(expanded) => {
+  onExpandedChange={expanded => {
     console.log('Analytics section expanded:', expanded);
     trackEvent('section_toggle', { section: 'analytics', expanded });
   }}
@@ -473,14 +514,15 @@ import { CollapsibleSection } from '@/components/common';
 ### 1. Home Screen Integration (Phase 8)
 
 **Home Screen Structure** (from IMPLEMENTATION_ROADMAP.md):
+
 ```tsx
 import { CollapsibleSection } from '@/components/common';
 
 function HomeScreen() {
   return (
     <ScrollView>
-      <CollapsibleSection 
-        title="Smart Inspector" 
+      <CollapsibleSection
+        title="Smart Inspector"
         icon="📸"
         defaultExpanded={true}
         storageKey="section-home-smart-inspector"
@@ -490,7 +532,7 @@ function HomeScreen() {
         <NavigationCard icon="group" label="Join Team Inspection" />
       </CollapsibleSection>
 
-      <CollapsibleSection 
+      <CollapsibleSection
         title="Business Management"
         icon="💼"
         defaultExpanded={true}
@@ -501,7 +543,7 @@ function HomeScreen() {
         <NavigationCard icon="accounting" label="Accounting" />
       </CollapsibleSection>
 
-      <CollapsibleSection 
+      <CollapsibleSection
         title="Inspection Management"
         icon="📋"
         defaultExpanded={true}
@@ -512,7 +554,7 @@ function HomeScreen() {
         <NavigationCard icon="forms" label="Digital Forms" />
       </CollapsibleSection>
 
-      <CollapsibleSection 
+      <CollapsibleSection
         title="App Management"
         icon="⚙️"
         defaultExpanded={false}
@@ -530,6 +572,7 @@ function HomeScreen() {
 ### 2. Theme System Integration
 
 **Uses P6-T01 Theme System**:
+
 - `useTheme()` hook for dynamic theming
 - Automatic light/dark mode support
 - Theme colors: surface, text, textSecondary, border
@@ -538,10 +581,12 @@ function HomeScreen() {
 ### 3. Component Dependencies
 
 **Uses P6-T02 Components**:
+
 - `ThemedText` - For title and chevron text
 - Theme-aware styling
 
 **React Native APIs**:
+
 - `Animated` - Chevron rotation animation
 - `LayoutAnimation` - Expand/collapse animation
 - `AsyncStorage` - State persistence
@@ -559,6 +604,7 @@ npx tsc --noEmit
 ```
 
 **Type Safety Verified**:
+
 - All props properly typed with CollapsibleSectionProps interface
 - React.FC<CollapsibleSectionProps> for component type
 - StyleProp<ViewStyle> for style props
@@ -573,6 +619,7 @@ npx eslint src/components/common/CollapsibleSection.tsx --max-warnings 0
 ```
 
 **Code Quality Verified**:
+
 - No inline styles (all extracted to StyleSheet)
 - Proper React hooks usage
 - No unused variables
@@ -590,6 +637,7 @@ wc -l src/components/common/CollapsibleSection.tsx
 ```
 
 **File Created**:
+
 - ✅ CollapsibleSection.tsx exists
 - ✅ 389 lines of code
 - ✅ 9.0 KB file size
@@ -605,6 +653,7 @@ grep "CollapsibleSection" src/components/common/index.ts
 ```
 
 **Exports Verified**:
+
 - ✅ Component exported
 - ✅ Props interface exported
 - ✅ Documentation comment added
@@ -614,6 +663,7 @@ grep "CollapsibleSection" src/components/common/index.ts
 ## 8. Known Issues & Limitations
 
 ### 1. AsyncStorage Loading Flicker
+
 **Issue**: Component returns `null` while loading persisted state
 **Impact**: Very Low - Loading is typically <50ms
 **Workaround**: Could show loading skeleton if needed
@@ -621,6 +671,7 @@ grep "CollapsibleSection" src/components/common/index.ts
 **Status**: 📝 TODO for Phase 18 (Performance Optimization)
 
 ### 2. Animation on Low-End Devices
+
 **Issue**: Spring animation may be janky on very low-end Android devices
 **Impact**: Low - Most devices handle 300ms animation smoothly
 **Workaround**: Native driver used for performance
@@ -628,6 +679,7 @@ grep "CollapsibleSection" src/components/common/index.ts
 **Status**: ✅ Acceptable for v1.0
 
 ### 3. Content Height Changes
+
 **Issue**: If content height changes while expanded, no re-animation
 **Impact**: Very Low - Content height rarely changes dynamically
 **Workaround**: Content typically static (navigation cards)
@@ -647,11 +699,13 @@ grep "CollapsibleSection" src/components/common/index.ts
 ### Phase 8 Integration Tasks
 
 1. **Create NavigationCard Component**
+
    - Small card component for home screen navigation
    - Will be used inside CollapsibleSection
    - Reference: IMPLEMENTATION_ROADMAP.md Section 8.2
 
 2. **Create Home Screen**
+
    - Use CollapsibleSection for 4 main sections
    - Integrate NavigationCard components
    - Reference: Smart_Inspector_Pro_Build_Layout.md Phase 9.1
@@ -664,12 +718,14 @@ grep "CollapsibleSection" src/components/common/index.ts
 ### Testing & Validation
 
 1. **Animation Testing**
+
    - Test on iOS simulator
    - Test on Android emulator
    - Verify 300ms animation smoothness
    - Verify chevron rotation
 
 2. **Accessibility Testing**
+
    - Verify screen reader announces state correctly
    - Test keyboard navigation (if applicable)
    - Verify touch target size (56px minimum)
@@ -684,12 +740,15 @@ grep "CollapsibleSection" src/components/common/index.ts
 ## 10. Deliverables Summary
 
 ### Created Files (1)
+
 1. ✅ `CollapsibleSection.tsx` (389 lines)
 
 ### Updated Files (1)
+
 2. ✅ `index.ts` (3 lines added for exports)
 
 ### Documentation
+
 - ✅ Comprehensive completion summary (this file, 700+ lines)
 - ✅ Component API reference
 - ✅ Usage examples (5 examples)
@@ -697,6 +756,7 @@ grep "CollapsibleSection" src/components/common/index.ts
 - ✅ Testing evidence
 
 ### Code Quality
+
 - ✅ TypeScript: 0 errors
 - ✅ ESLint: 0 warnings
 - ✅ All props properly typed
@@ -711,11 +771,11 @@ grep "CollapsibleSection" src/components/common/index.ts
 
 **Phase 7: Core UI Components - ✅ COMPLETE**
 
-| Task | Status | Lines | Completion |
-|------|--------|-------|------------|
-| P7-T01: Create Inspection Components | ✅ COMPLETE | 1,425 | October 18, 2025 |
+| Task                                   | Status      | Lines | Completion       |
+| -------------------------------------- | ----------- | ----- | ---------------- |
+| P7-T01: Create Inspection Components   | ✅ COMPLETE | 1,425 | October 18, 2025 |
 | P7-T02: Create Data Display Components | ✅ COMPLETE | 1,235 | October 18, 2025 |
-| P7-T03: Create Collapsible Section | ✅ COMPLETE | 389 | October 18, 2025 |
+| P7-T03: Create Collapsible Section     | ✅ COMPLETE | 389   | October 18, 2025 |
 
 **Total Phase 7 Progress**: 3/3 tasks complete (100%) ✅
 
@@ -741,6 +801,7 @@ Task P7-T03 has been successfully completed with all acceptance criteria met. Th
 **Phase 7 is now complete (100%)** with a total of **3,049 lines of component code** across **12 reusable components** (6 inspection + 5 data + 1 collapsible section).
 
 The component is production-ready and will be used extensively in Phase 8 for the Home Screen implementation with 4 collapsible sections:
+
 1. Smart Inspector (always expanded by default)
 2. Business Management (always expanded by default)
 3. Inspection Management (always expanded by default)
@@ -750,7 +811,7 @@ The component is production-ready and will be used extensively in Phase 8 for th
 
 ---
 
-**Completed by**: GitHub Copilot  
-**Date**: October 18, 2025  
-**Phase 7 Status**: ✅ COMPLETE (3/3 tasks, 100%)  
+**Completed by**: GitHub Copilot
+**Date**: October 18, 2025
+**Phase 7 Status**: ✅ COMPLETE (3/3 tasks, 100%)
 **Total Component Library**: 19 components, 4,373 lines

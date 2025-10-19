@@ -19,6 +19,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import type React from 'react';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import type { StyleProp, ViewStyle } from 'react-native';
 import {
   Animated,
   LayoutAnimation,
@@ -28,7 +29,6 @@ import {
   UIManager,
   View,
 } from 'react-native';
-import type { StyleProp, ViewStyle } from 'react-native';
 import { useTheme } from '../../theme';
 import ThemedText from './ThemedText';
 
@@ -151,8 +151,9 @@ export const CollapsibleSection: React.FC<CollapsibleSectionProps> = ({
   const { theme } = useTheme();
   const [expanded, setExpanded] = useState(defaultExpanded);
   const [isLoading, setIsLoading] = useState(!!storageKey);
-  const rotateAnimation = useRef(new Animated.Value(defaultExpanded ? 1 : 0))
-    .current;
+  const rotateAnimation = useRef(
+    new Animated.Value(defaultExpanded ? 1 : 0),
+  ).current;
 
   // Load persisted state from AsyncStorage
   useEffect(() => {
@@ -266,7 +267,9 @@ export const CollapsibleSection: React.FC<CollapsibleSectionProps> = ({
       testID={testID}
       accessibilityRole="button"
       accessibilityState={{ expanded }}
-      accessibilityLabel={`${title} section, ${expanded ? 'expanded' : 'collapsed'}`}
+      accessibilityLabel={`${title} section, ${
+        expanded ? 'expanded' : 'collapsed'
+      }`}
     >
       {/* Header */}
       <TouchableOpacity
