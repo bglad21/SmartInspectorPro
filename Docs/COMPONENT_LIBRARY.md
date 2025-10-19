@@ -1472,6 +1472,136 @@ export const Select: React.FC<SelectProps> = ({
 
 ## Navigation Components
 
+**Phase 7 - Task P7-T03** (October 18, 2025)
+
+### CollapsibleSection Component
+
+**Purpose**: Expandable/collapsible container for organizing content sections with smooth animations and state persistence
+
+**Features**:
+- Smooth expand/collapse animations (300ms spring with damping 0.7)
+- AsyncStorage persistence of expanded state
+- Custom header colors and icons
+- Works with any child content (React.ReactNode)
+- Chevron rotation animation (0° → 180°) with native driver
+- Touch-friendly design (56px minimum header height)
+- Accessibility support (roles, states, labels, hints)
+- Theme-aware styling
+- Optional disabled state (always expanded)
+
+**Props**:
+```typescript
+export interface CollapsibleSectionProps {
+  // Required
+  title: string;
+  children: React.ReactNode;
+  
+  // Optional - Behavior
+  defaultExpanded?: boolean; // Default: true
+  disabled?: boolean; // Default: false
+  storageKey?: string; // For AsyncStorage persistence
+  onExpandedChange?: (expanded: boolean) => void;
+  
+  // Optional - Styling
+  icon?: string; // Emoji or text icon
+  headerColor?: string; // Custom header background
+  headerTextColor?: string; // Custom header text
+  containerStyle?: StyleProp<ViewStyle>;
+  headerStyle?: StyleProp<ViewStyle>;
+  contentStyle?: StyleProp<ViewStyle>;
+  
+  // Optional - Testing
+  testID?: string; // Default: 'collapsible-section'
+}
+```
+
+**Usage Examples**:
+
+**Example 1: Basic Usage**
+```tsx
+import { CollapsibleSection } from '@/components/common';
+
+<CollapsibleSection title="My Section">
+  <Text>Section content goes here</Text>
+</CollapsibleSection>
+```
+
+**Example 2: Home Screen with Persistence**
+```tsx
+<CollapsibleSection
+  title="Smart Inspector"
+  icon="📸"
+  defaultExpanded={true}
+  storageKey="section-home-smart-inspector"
+>
+  <NavigationCard icon="camera" label="Start Inspection" />
+  <NavigationCard icon="list" label="Continue Inspection" />
+  <NavigationCard icon="group" label="Join Team Inspection" />
+</CollapsibleSection>
+```
+
+**Example 3: Custom Styling**
+```tsx
+<CollapsibleSection
+  title="Business Management"
+  icon="💼"
+  headerColor="#007AFF"
+  headerTextColor="#FFFFFF"
+  containerStyle={{ marginHorizontal: 16 }}
+  contentStyle={{ paddingHorizontal: 24 }}
+  storageKey="section-home-business"
+>
+  <NavigationCard icon="schedule" label="Schedule Inspector" />
+  <NavigationCard icon="contacts" label="Manage Contacts" />
+</CollapsibleSection>
+```
+
+**Example 4: Always Expanded (Disabled)**
+```tsx
+<CollapsibleSection
+  title="Important Section"
+  disabled={true}
+  headerStyle={{ backgroundColor: '#FFF3CD' }}
+>
+  <Text>This section cannot be collapsed</Text>
+</CollapsibleSection>
+```
+
+**Example 5: With State Callback**
+```tsx
+<CollapsibleSection
+  title="Analytics"
+  onExpandedChange={(expanded) => {
+    console.log('Analytics section expanded:', expanded);
+    trackEvent('section_toggle', { section: 'analytics', expanded });
+  }}
+>
+  <AnalyticsWidget />
+</CollapsibleSection>
+```
+
+**Animation Details**:
+- **LayoutAnimation**: 300ms spring (damping: 0.7) for smooth expansion
+  - Create/delete: easeInEaseOut for opacity
+  - Update: spring for content expansion
+- **Chevron Rotation**: Animated.timing with native driver (hardware accelerated)
+  - 0° when collapsed
+  - 180° when expanded
+  - 300ms duration
+
+**AsyncStorage Persistence**:
+- **Storage Key Format**: `"section-{screenName}-{sectionName}"`
+  - Example: `"section-home-smart-inspector"`
+- **Load on Mount**: Retrieves saved state from AsyncStorage
+- **Save on Toggle**: Persists state changes automatically
+- **Error Handling**: Graceful fallback with console warnings
+- **Loading State**: Returns null while loading to prevent flicker
+- **Optional**: Only persists if `storageKey` prop provided
+
+**File**: `src/components/common/CollapsibleSection.tsx` (389 lines)
+
+---
+
 ### Header Component
 
 ```typescript
@@ -1589,6 +1719,7 @@ High-performance data display components for CSV data with FlatList virtualizati
 **Purpose**: Search input with 300ms debouncing for efficient filtering
 
 **Features**:
+
 - Configurable debounce delay (default: 300ms)
 - Clear button when text is present
 - Immediate UI feedback with local state
@@ -1597,6 +1728,7 @@ High-performance data display components for CSV data with FlatList virtualizati
 - Touch-friendly sizing (44px minimum height)
 
 **Props**:
+
 ```typescript
 interface SearchBarProps {
   value: string;
@@ -1610,6 +1742,7 @@ interface SearchBarProps {
 ```
 
 **Usage**:
+
 ```tsx
 import { SearchBar } from '@/components/data';
 
@@ -1618,7 +1751,7 @@ import { SearchBar } from '@/components/data';
   onChangeText={setSearchQuery}
   placeholder="Search inspections..."
   debounceMs={300}
-/>
+/>;
 ```
 
 **File**: `src/components/data/SearchBar.tsx` (217 lines)
@@ -1630,6 +1763,7 @@ import { SearchBar } from '@/components/data';
 **Purpose**: Multi-select chip component for hierarchy filtering
 
 **Features**:
+
 - Single or multiple selection modes
 - Toggle functionality (select/deselect)
 - Count display per chip (optional)
@@ -1639,6 +1773,7 @@ import { SearchBar } from '@/components/data';
 - Theme-aware colors
 
 **Props**:
+
 ```typescript
 interface FilterChipsProps {
   filters: FilterChip[];
@@ -1659,6 +1794,7 @@ interface FilterChip {
 ```
 
 **Usage**:
+
 ```tsx
 import { FilterChips } from '@/components/data';
 
@@ -1672,7 +1808,7 @@ import { FilterChips } from '@/components/data';
   onSelectionChange={setSelected}
   multiSelect={true}
   label="Filter by Section"
-/>
+/>;
 ```
 
 **File**: `src/components/data/FilterChips.tsx` (233 lines)
@@ -1684,6 +1820,7 @@ import { FilterChips } from '@/components/data';
 **Purpose**: Breadcrumb navigation for CSV hierarchy (Section → System → Component → Material)
 
 **Features**:
+
 - Displays current path as breadcrumbs
 - Click to navigate to parent levels
 - Last item (current level) is disabled and styled differently
@@ -1692,6 +1829,7 @@ import { FilterChips } from '@/components/data';
 - Theme-aware styling
 
 **Props**:
+
 ```typescript
 interface HierarchyNavigatorProps {
   path: BreadcrumbItem[];
@@ -1708,6 +1846,7 @@ interface BreadcrumbItem {
 ```
 
 **Usage**:
+
 ```tsx
 import { HierarchyNavigator } from '@/components/data';
 
@@ -1717,8 +1856,8 @@ import { HierarchyNavigator } from '@/components/data';
     { id: '2', label: 'Drainage' },
     { id: '3', label: 'Area Drain' },
   ]}
-  onNavigate={(index) => navigateToLevel(index)}
-/>
+  onNavigate={index => navigateToLevel(index)}
+/>;
 ```
 
 **File**: `src/components/data/HierarchyNavigator.tsx` (181 lines)
@@ -1730,6 +1869,7 @@ import { HierarchyNavigator } from '@/components/data';
 **Purpose**: Table header with sort indicators and column management
 
 **Features**:
+
 - Three-state sorting (asc → desc → null)
 - Visual indicators (▲ ascending, ▼ descending, ⇅ sortable)
 - Column-specific sortable configuration
@@ -1739,6 +1879,7 @@ import { HierarchyNavigator } from '@/components/data';
 - Touch-friendly header cells (44px minimum height)
 
 **Props**:
+
 ```typescript
 interface SortableHeaderProps {
   columns: TableColumn[];
@@ -1761,6 +1902,7 @@ interface TableColumn {
 ```
 
 **Usage**:
+
 ```tsx
 import { SortableHeader } from '@/components/data';
 
@@ -1774,7 +1916,7 @@ import { SortableHeader } from '@/components/data';
   sortColumn="section"
   sortDirection="asc"
   onSort={(column, direction) => handleSort(column, direction)}
-/>
+/>;
 ```
 
 **File**: `src/components/data/SortableHeader.tsx` (243 lines)
@@ -1786,6 +1928,7 @@ import { SortableHeader } from '@/components/data';
 **Purpose**: High-performance virtualized table for CSV data
 
 **Features**:
+
 - FlatList virtualization (handles 2,504+ rows smoothly)
 - Sortable headers (via SortableHeader integration)
 - Row selection (via onRowPress callback)
@@ -1795,6 +1938,7 @@ import { SortableHeader } from '@/components/data';
 - Performance optimizations (getItemLayout, removeClippedSubviews)
 
 **Performance Optimizations**:
+
 - `initialNumToRender={20}` - Render first 20 items
 - `maxToRenderPerBatch={20}` - Render 20 items per batch
 - `windowSize={10}` - Render 10 screens worth of items
@@ -1802,6 +1946,7 @@ import { SortableHeader } from '@/components/data';
 - `getItemLayout` - Fixed 56px row height optimization
 
 **Props**:
+
 ```typescript
 interface CSVDataTableProps {
   columns: TableColumn[];
@@ -1828,6 +1973,7 @@ interface TableRow {
 ```
 
 **Usage**:
+
 ```tsx
 import { CSVDataTable } from '@/components/data';
 
@@ -1839,18 +1985,18 @@ import { CSVDataTable } from '@/components/data';
     { id: 'condition', label: 'Condition', width: 1 },
   ]}
   data={csvData}
-  onRowPress={(row) => navigate('Details', { id: row.id })}
+  onRowPress={row => navigate('Details', { id: row.id })}
   sortColumn="section"
   sortDirection="asc"
   onSort={handleSort}
   emptyState={{
-    title: "No Data Available",
-    description: "Load CSV data to view inspection items",
-    icon: "📊",
-    actionLabel: "Load Data",
+    title: 'No Data Available',
+    description: 'Load CSV data to view inspection items',
+    icon: '📊',
+    actionLabel: 'Load Data',
     onAction: loadCSVData,
   }}
-/>
+/>;
 ```
 
 **File**: `src/components/data/CSVDataTable.tsx` (256 lines)
@@ -1864,6 +2010,7 @@ import { CSVDataTable } from '@/components/data';
 **Status**: Created in P6-T02, reused in data components
 
 **Features**:
+
 - Icon or emoji display
 - Title and description
 - Optional action button

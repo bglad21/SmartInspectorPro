@@ -24,10 +24,10 @@ import { useTheme } from '@/theme';
 import type React from 'react';
 import {
   FlatList,
+  type StyleProp,
   StyleSheet,
   TouchableOpacity,
   View,
-  type StyleProp,
   type ViewStyle,
 } from 'react-native';
 import ThemedText from '../common/ThemedText';
@@ -116,9 +116,7 @@ export const HierarchyNavigator: React.FC<HierarchyNavigatorProps> = ({
             style={[
               styles.breadcrumbText,
               {
-                color: isLast
-                  ? theme.colors.text
-                  : theme.colors.primary,
+                color: isLast ? theme.colors.text : theme.colors.primary,
               },
             ]}
           >

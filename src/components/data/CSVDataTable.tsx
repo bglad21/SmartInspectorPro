@@ -24,11 +24,11 @@ import { useTheme } from '@/theme';
 import type React from 'react';
 import {
   FlatList,
+  type ListRenderItem,
+  type StyleProp,
   StyleSheet,
   TouchableOpacity,
   View,
-  type ListRenderItem,
-  type StyleProp,
   type ViewStyle,
 } from 'react-native';
 import EmptyState from '../common/EmptyState';
@@ -142,8 +142,8 @@ export const CSVDataTable: React.FC<CSVDataTableProps> = ({
             column.align === 'center'
               ? styles.alignCenter
               : column.align === 'right'
-                ? styles.alignRight
-                : styles.alignLeft;
+              ? styles.alignRight
+              : styles.alignLeft;
 
           return (
             <View
@@ -218,7 +218,10 @@ export const CSVDataTable: React.FC<CSVDataTableProps> = ({
   const keyExtractor = (item: TableRow) => item.id;
 
   // Get item layout for optimization (assuming fixed height)
-  const getItemLayout = (_data: ArrayLike<TableRow> | null | undefined, index: number) => ({
+  const getItemLayout = (
+    _data: ArrayLike<TableRow> | null | undefined,
+    index: number,
+  ) => ({
     length: 56, // Approximate row height
     offset: 56 * index,
     index,

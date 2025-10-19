@@ -3,6 +3,7 @@
  *
  * Export all common UI components
  * Enhanced in P6-T02 with full theme system integration
+ * Enhanced in P7-T03 with CollapsibleSection component
  */
 
 export type { BadgeProps, BadgeSize, BadgeVariant } from './Badge';
@@ -19,6 +20,9 @@ export { Button } from './Button';
 export type { CardElevation, CardPadding, CardProps } from './Card';
 // Card
 export { Card } from './Card';
+export type { CollapsibleSectionProps } from './CollapsibleSection';
+// CollapsibleSection
+export { CollapsibleSection } from './CollapsibleSection';
 export type { EmptyStateProps } from './EmptyState';
 // EmptyState
 export { EmptyState } from './EmptyState';

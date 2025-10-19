@@ -23,10 +23,10 @@ import { useTheme } from '@/theme';
 import type React from 'react';
 import {
   FlatList,
+  type StyleProp,
   StyleSheet,
   TouchableOpacity,
   View,
-  type StyleProp,
   type ViewStyle,
 } from 'react-native';
 import ThemedText from '../common/ThemedText';

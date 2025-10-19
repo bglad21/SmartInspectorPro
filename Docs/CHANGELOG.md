@@ -9,9 +9,65 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased] - Pre-Development Phase
 
-### Phase 7: Core UI Components - IN PROGRESS (October 2025)
+### Phase 7: Core UI Components - ✅ COMPLETE (October 2025)
 
 #### Added - October 18, 2025
+
+- **Collapsible Section Component (P7-T03)**: Expandable/collapsible container for home screen with animations and persistence
+
+  - **File Created**: 1 file, 389 lines of code
+    - `src/components/common/CollapsibleSection.tsx` (389 lines) - Expandable section with smooth animations
+  - **Component Features**:
+    - **Smooth Animations**: 300ms spring animation (damping 0.7) for expand/collapse, chevron rotation (0° → 180°) with native driver
+    - **State Persistence**: AsyncStorage integration with optional `storageKey` prop, loads saved state on mount, saves state changes automatically
+    - **Customization**: Icon (emoji/text), custom header colors (headerColor, headerTextColor), custom styles (containerStyle, headerStyle, contentStyle)
+    - **Universal Content**: Accepts any React.ReactNode children, conditional rendering for performance
+    - **Accessibility**: accessibilityRole="button", accessibilityState with expanded state, dynamic labels and hints, 56px minimum touch target
+    - **Theme Integration**: useTheme hook for dynamic theming, automatic light/dark mode support
+  - **TypeScript Interfaces** (1 created):
+    - `CollapsibleSectionProps` (15 properties) - title, children, defaultExpanded, disabled, storageKey, onExpandedChange, icon, headerColor, headerTextColor, containerStyle, headerStyle, contentStyle, testID
+  - **Animation Features**:
+    - **LayoutAnimation**: Spring with damping 0.7, easeInEaseOut for create/delete, 300ms duration
+    - **Animated.View**: Chevron rotation with native driver (hardware accelerated), interpolation from 0° to 180°
+    - **Platform Support**: UIManager.setLayoutAnimationEnabledExperimental for Android
+  - **Persistence Implementation**:
+    - **Storage Key Format**: `"section-{screenName}-{sectionName}"` (e.g., "section-home-smart-inspector")
+    - **Load on Mount**: Retrieves saved state from AsyncStorage, graceful error handling with console warnings
+    - **Save on Toggle**: Persists state changes immediately, optional (only if storageKey provided)
+    - **Loading State**: Returns null while loading to prevent flicker
+  - **Performance Optimizations**:
+    - **Native Driver**: Chevron rotation uses hardware acceleration for 60 FPS
+    - **Conditional Rendering**: Content only rendered when expanded
+    - **Memoization**: useCallback for toggle and save functions
+  - **Integration Points**:
+    - Uses themed components from P6-T02 (ThemedText)
+    - Uses theme system from P6-T01 (useTheme hook)
+    - Ready for Home Screen implementation (Phase 8)
+    - Will contain NavigationCard components (4 sections planned)
+  - **Use Cases**:
+    - Home screen sections (Smart Inspector, Business Management, Inspection Management, App Management)
+    - Settings groups
+    - FAQ sections
+    - Any expandable/collapsible content
+  - **Accessibility**:
+    - All components have accessibility roles and states
+    - Touch-friendly sizing (56px minimum header height)
+    - Screen reader support with dynamic labels
+    - Context-aware accessibility hints
+  - **Cross-Platform**:
+    - React Native APIs only
+    - iOS and Android compatible
+    - Platform-specific animation enablement
+  - **Code Quality**:
+    - TypeScript: 0 errors
+    - ESLint: 0 warnings
+    - All props properly typed
+    - Full theme integration
+  - **Phase 7 Status**: ✅ COMPLETE (3/3 tasks, 100%)
+    - P7-T01: Inspection Components (1,425 lines)
+    - P7-T02: Data Display Components (1,235 lines)
+    - P7-T03: Collapsible Section (389 lines)
+    - **Total**: 3,049 lines across 12 components
 
 - **Data Display Components (P7-T02)**: High-performance data components for CSV data with virtualization
 

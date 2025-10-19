@@ -21,10 +21,10 @@
 import { useTheme } from '@/theme';
 import type React from 'react';
 import {
+  type StyleProp,
   StyleSheet,
   TouchableOpacity,
   View,
-  type StyleProp,
   type ViewStyle,
 } from 'react-native';
 import ThemedText from '../common/ThemedText';
@@ -148,8 +148,8 @@ export const SortableHeader: React.FC<SortableHeaderProps> = ({
           column.align === 'center'
             ? styles.alignCenter
             : column.align === 'right'
-              ? styles.alignRight
-              : styles.alignLeft;
+            ? styles.alignRight
+            : styles.alignLeft;
 
         return (
           <TouchableOpacity
@@ -164,7 +164,13 @@ export const SortableHeader: React.FC<SortableHeaderProps> = ({
               alignStyle,
             ]}
             testID={`${testID}-${column.id}`}
-            accessibilityLabel={`${column.label}${isActive ? `, sorted ${sortDirection === 'asc' ? 'ascending' : 'descending'}` : ''}`}
+            accessibilityLabel={`${column.label}${
+              isActive
+                ? `, sorted ${
+                    sortDirection === 'asc' ? 'ascending' : 'descending'
+                  }`
+                : ''
+            }`}
             accessibilityRole="button"
             accessibilityState={{ disabled: !isSortable }}
           >

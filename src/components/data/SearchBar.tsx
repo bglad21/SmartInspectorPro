@@ -22,12 +22,12 @@ import { useTheme } from '@/theme';
 import type React from 'react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
+  type StyleProp,
   StyleSheet,
   TextInput,
+  type TextInputProps,
   TouchableOpacity,
   View,
-  type StyleProp,
-  type TextInputProps,
   type ViewStyle,
 } from 'react-native';
 import ThemedText from '../common/ThemedText';
@@ -106,7 +106,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
         onChangeText(text);
       }, debounceMs);
     },
-    [onChangeText, debounceMs]
+    [onChangeText, debounceMs],
   );
 
   // Clear search
