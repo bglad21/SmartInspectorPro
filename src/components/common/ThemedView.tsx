@@ -10,16 +10,16 @@
  * <ThemedView style={styles.container}>
  *   <Text>Content</Text>
  * </ThemedView>
- * 
+ *
  * <ThemedView variant="surface">
  *   <Text>Card content</Text>
  * </ThemedView>
  * ```
  */
 
+import { useTheme } from '@/theme';
 import type React from 'react';
 import { StyleSheet, View, type ViewProps } from 'react-native';
-import { useTheme } from '@/theme';
 
 export interface ThemedViewProps extends ViewProps {
   /**

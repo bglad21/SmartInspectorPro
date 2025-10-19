@@ -2,14 +2,14 @@
  * Button Component
  *
  * A themed button component with loading states and variants.
- * This is a minimal implementation to unblock P4-T03.
- * Full button system will be enhanced in P6-T02.
+ * Enhanced in P6-T02 with full theme system integration.
  *
  * @component
  * @example
  * ```tsx
  * <Button title="Sign In" onPress={handleSignIn} loading={isLoading} />
  * <Button title="Cancel" variant="secondary" onPress={handleCancel} />
+ * <Button title="Delete" variant="outline" color="error" />
  * ```
  */
 
@@ -19,11 +19,19 @@ import {
   StyleSheet,
   TouchableOpacity,
   type TouchableOpacityProps,
-  useColorScheme,
 } from 'react-native';
+import { useTheme } from '@/theme';
 import ThemedText from './ThemedText';
 
 export type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'text';
+export type ButtonSize = 'small' | 'medium' | 'large';
+export type ButtonColor =
+  | 'primary'
+  | 'secondary'
+  | 'success'
+  | 'warning'
+  | 'error'
+  | 'info';
 
 export interface ButtonProps extends Omit<TouchableOpacityProps, 'children'> {
   /**
@@ -33,118 +41,208 @@ export interface ButtonProps extends Omit<TouchableOpacityProps, 'children'> {
 
   /**
    * Button variant
+   * @default 'primary'
    */
   variant?: ButtonVariant;
 
   /**
+   * Button size
+   * @default 'medium'
+   */
+  size?: ButtonSize;
+
+  /**
+   * Button color
+   * @default 'primary'
+   */
+  color?: ButtonColor;
+
+  /**
    * Show loading indicator
+   * @default false
    */
   loading?: boolean;
 
   /**
    * Full width button
+   * @default false
    */
   fullWidth?: boolean;
-}
 
-/**
- * Temporary theme colors until P6-T01 theme system is implemented
- */
-const COLORS = {
-  light: {
-    primary: '#2E5BBA',
-    primaryText: '#FFFFFF',
-    secondary: '#E0E0E0',
-    secondaryText: '#000000',
-    outline: '#2E5BBA',
-    outlineText: '#2E5BBA',
-    disabled: '#CCCCCC',
-    disabledText: '#666666',
-  },
-  dark: {
-    primary: '#5C8BFF',
-    primaryText: '#FFFFFF',
-    secondary: '#333333',
-    secondaryText: '#FFFFFF',
-    outline: '#5C8BFF',
-    outlineText: '#5C8BFF',
-    disabled: '#444444',
-    disabledText: '#888888',
-  },
-};
+  /**
+   * Accessibility label
+   */
+  accessibilityLabel?: string;
+
+  /**
+   * Test ID for testing
+   */
+  testID?: string;
+}
 
 export const Button: React.FC<ButtonProps> = ({
   title,
   variant = 'primary',
+  size = 'medium',
+  color = 'primary',
   loading = false,
   fullWidth = false,
   disabled,
   style,
+  accessibilityLabel,
+  testID = 'button',
   ...props
 }) => {
-  const colorScheme = useColorScheme();
-  const isDark = colorScheme === 'dark';
-  const theme = isDark ? COLORS.dark : COLORS.light;
+  const { theme } = useTheme();
 
   const isDisabled = disabled || loading;
 
-  // Determine button colors
-  let backgroundColor: string;
-  let textColor: string;
-  let borderColor: string | undefined;
-
-  if (isDisabled) {
-    backgroundColor =
-      variant === 'outline' || variant === 'text'
+  // Determine button colors based on variant and color
+  const getBackgroundColor = (): string => {
+    if (isDisabled) {
+      return variant === 'outline' || variant === 'text'
         ? 'transparent'
-        : theme.disabled;
-    textColor = theme.disabledText;
-    borderColor = variant === 'outline' ? theme.disabled : undefined;
-  } else {
-    switch (variant) {
-      case 'primary':
-        backgroundColor = theme.primary;
-        textColor = theme.primaryText;
-        break;
-      case 'secondary':
-        backgroundColor = theme.secondary;
-        textColor = theme.secondaryText;
-        break;
-      case 'outline':
-        backgroundColor = 'transparent';
-        textColor = theme.outlineText;
-        borderColor = theme.outline;
-        break;
-      case 'text':
-        backgroundColor = 'transparent';
-        textColor = theme.primary;
-        break;
+        : theme.colors.border;
     }
-  }
+
+    if (variant === 'outline' || variant === 'text') {
+      return 'transparent';
+    }
+
+    // Map color prop to theme colors
+    switch (color) {
+      case 'primary':
+        return theme.colors.primary;
+      case 'secondary':
+        return theme.colors.secondary;
+      case 'success':
+        return theme.colors.success;
+      case 'warning':
+        return theme.colors.warning;
+      case 'error':
+        return theme.colors.error;
+      case 'info':
+        return theme.colors.info;
+      default:
+        return theme.colors.primary;
+    }
+  };
+
+  const getTextColor = (): string => {
+    if (isDisabled) {
+      return theme.colors.textDisabled;
+    }
+
+    if (variant === 'outline' || variant === 'text') {
+      switch (color) {
+        case 'primary':
+          return theme.colors.primary;
+        case 'secondary':
+          return theme.colors.secondary;
+        case 'success':
+          return theme.colors.success;
+        case 'warning':
+          return theme.colors.warning;
+        case 'error':
+          return theme.colors.error;
+        case 'info':
+          return theme.colors.info;
+        default:
+          return theme.colors.primary;
+      }
+    }
+
+    // For solid buttons, use white text on dark backgrounds
+    return '#FFFFFF';
+  };
+
+  const getBorderColor = (): string | undefined => {
+    if (variant !== 'outline') return undefined;
+
+    if (isDisabled) {
+      return theme.colors.border;
+    }
+
+    switch (color) {
+      case 'primary':
+        return theme.colors.primary;
+      case 'secondary':
+        return theme.colors.secondary;
+      case 'success':
+        return theme.colors.success;
+      case 'warning':
+        return theme.colors.warning;
+      case 'error':
+        return theme.colors.error;
+      case 'info':
+        return theme.colors.info;
+      default:
+        return theme.colors.primary;
+    }
+  };
+
+  // Size-based styling
+  const getSizeStyles = () => {
+    switch (size) {
+      case 'small':
+        return {
+          paddingVertical: theme.spacing.xs,
+          paddingHorizontal: theme.spacing.md,
+          minHeight: 36,
+        };
+      case 'large':
+        return {
+          paddingVertical: theme.spacing.md,
+          paddingHorizontal: theme.spacing.xl,
+          minHeight: 56,
+        };
+      case 'medium':
+      default:
+        return {
+          paddingVertical: theme.spacing.sm,
+          paddingHorizontal: theme.spacing.lg,
+          minHeight: 48,
+        };
+    }
+  };
+
+  const backgroundColor = getBackgroundColor();
+  const textColor = getTextColor();
+  const borderColor = getBorderColor();
 
   return (
     <TouchableOpacity
       style={[
         styles.button,
+        getSizeStyles(),
         {
           backgroundColor,
+          borderRadius: theme.borderRadius.md,
           ...(variant === 'outline' && {
             borderColor,
             borderWidth: 2,
           }),
         },
         fullWidth && styles.fullWidth,
+        // Add shadow for primary solid buttons
+        variant === 'primary' && !isDisabled && theme.shadows.small,
         style,
       ]}
       disabled={isDisabled}
+      accessibilityLabel={accessibilityLabel || title}
+      accessibilityRole="button"
+      accessibilityState={{ disabled: isDisabled }}
+      testID={testID}
+      activeOpacity={0.7}
       {...props}
     >
       {loading ? (
-        <ActivityIndicator color={textColor} />
+        <ActivityIndicator color={textColor} testID={`${testID}-spinner`} />
       ) : (
         <ThemedText
           style={[styles.text, { color: textColor }]}
           variant="button"
+          numberOfLines={1}
         >
           {title}
         </ThemedText>

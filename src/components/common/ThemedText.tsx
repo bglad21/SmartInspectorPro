@@ -14,9 +14,9 @@
  * ```
  */
 
+import { useTheme } from '@/theme';
 import type React from 'react';
 import { StyleSheet, Text, type TextProps } from 'react-native';
-import { useTheme } from '@/theme';
 
 export type TextVariant =
   | 'h1'
@@ -132,9 +132,7 @@ export const ThemedText: React.FC<ThemedTextProps> = ({
     color: textColor,
   };
 
-  return (
-    <Text style={[styles.base, finalTypography, style]} {...props} />
-  );
+  return <Text style={[styles.base, finalTypography, style]} {...props} />;
 };
 
 const styles = StyleSheet.create({

@@ -1,17 +1,17 @@
 /**
  * Theme Demo Component
- * 
+ *
  * Demonstrates theme system functionality and all theme features.
  * Shows colors, typography, spacing, and theme switching.
- * 
+ *
  * This is for testing P6-T01 completion.
  */
 
-import type React from 'react';
-import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { ThemedText } from '@/components/common/ThemedText';
 import { ThemedView } from '@/components/common/ThemedView';
 import { useTheme } from '@/theme';
+import type React from 'react';
+import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 export const ThemeDemo: React.FC = () => {
   const { theme, isDark, toggleTheme, themeMode } = useTheme();
@@ -28,14 +28,23 @@ export const ThemeDemo: React.FC = () => {
         </View>
 
         {/* Theme Toggle */}
-        <View style={[styles.section, styles.card, { backgroundColor: theme.colors.card }]}>
+        <View
+          style={[
+            styles.section,
+            styles.card,
+            { backgroundColor: theme.colors.card },
+          ]}
+        >
           <ThemedText variant="h3">Theme Controls</ThemedText>
           <View style={styles.themeInfo}>
             <ThemedText variant="body1">
               Current Mode: <ThemedText color="primary">{themeMode}</ThemedText>
             </ThemedText>
             <ThemedText variant="body1">
-              Active Theme: <ThemedText color="primary">{isDark ? 'Dark' : 'Light'}</ThemedText>
+              Active Theme:{' '}
+              <ThemedText color="primary">
+                {isDark ? 'Dark' : 'Light'}
+              </ThemedText>
             </ThemedText>
           </View>
           <TouchableOpacity
@@ -49,7 +58,13 @@ export const ThemeDemo: React.FC = () => {
         </View>
 
         {/* Typography Showcase */}
-        <View style={[styles.section, styles.card, { backgroundColor: theme.colors.card }]}>
+        <View
+          style={[
+            styles.section,
+            styles.card,
+            { backgroundColor: theme.colors.card },
+          ]}
+        >
           <ThemedText variant="h3">Typography</ThemedText>
           <ThemedText variant="h1">Heading 1</ThemedText>
           <ThemedText variant="h2">Heading 2</ThemedText>
@@ -64,113 +79,246 @@ export const ThemeDemo: React.FC = () => {
         </View>
 
         {/* Color Palette */}
-        <View style={[styles.section, styles.card, { backgroundColor: theme.colors.card }]}>
+        <View
+          style={[
+            styles.section,
+            styles.card,
+            { backgroundColor: theme.colors.card },
+          ]}
+        >
           <ThemedText variant="h3">Colors</ThemedText>
           <View style={styles.colorRow}>
-            <View style={[styles.colorSwatch, { backgroundColor: theme.colors.primary }]} />
+            <View
+              style={[
+                styles.colorSwatch,
+                { backgroundColor: theme.colors.primary },
+              ]}
+            />
             <ThemedText variant="body1">Primary</ThemedText>
           </View>
           <View style={styles.colorRow}>
-            <View style={[styles.colorSwatch, { backgroundColor: theme.colors.secondary }]} />
+            <View
+              style={[
+                styles.colorSwatch,
+                { backgroundColor: theme.colors.secondary },
+              ]}
+            />
             <ThemedText variant="body1">Secondary</ThemedText>
           </View>
           <View style={styles.colorRow}>
-            <View style={[styles.colorSwatch, { backgroundColor: theme.colors.success }]} />
+            <View
+              style={[
+                styles.colorSwatch,
+                { backgroundColor: theme.colors.success },
+              ]}
+            />
             <ThemedText variant="body1">Success</ThemedText>
           </View>
           <View style={styles.colorRow}>
-            <View style={[styles.colorSwatch, { backgroundColor: theme.colors.warning }]} />
+            <View
+              style={[
+                styles.colorSwatch,
+                { backgroundColor: theme.colors.warning },
+              ]}
+            />
             <ThemedText variant="body1">Warning</ThemedText>
           </View>
           <View style={styles.colorRow}>
-            <View style={[styles.colorSwatch, { backgroundColor: theme.colors.error }]} />
+            <View
+              style={[
+                styles.colorSwatch,
+                { backgroundColor: theme.colors.error },
+              ]}
+            />
             <ThemedText variant="body1">Error</ThemedText>
           </View>
           <View style={styles.colorRow}>
-            <View style={[styles.colorSwatch, { backgroundColor: theme.colors.info }]} />
+            <View
+              style={[
+                styles.colorSwatch,
+                { backgroundColor: theme.colors.info },
+              ]}
+            />
             <ThemedText variant="body1">Info</ThemedText>
           </View>
         </View>
 
         {/* Inspection Condition Colors */}
-        <View style={[styles.section, styles.card, { backgroundColor: theme.colors.card }]}>
+        <View
+          style={[
+            styles.section,
+            styles.card,
+            { backgroundColor: theme.colors.card },
+          ]}
+        >
           <ThemedText variant="h3">Inspection Conditions</ThemedText>
           <View style={styles.colorRow}>
-            <View style={[styles.colorSwatch, { backgroundColor: theme.colors.acceptable }]} />
+            <View
+              style={[
+                styles.colorSwatch,
+                { backgroundColor: theme.colors.acceptable },
+              ]}
+            />
             <ThemedText variant="body1">Acceptable</ThemedText>
           </View>
           <View style={styles.colorRow}>
-            <View style={[styles.colorSwatch, { backgroundColor: theme.colors.monitor }]} />
+            <View
+              style={[
+                styles.colorSwatch,
+                { backgroundColor: theme.colors.monitor },
+              ]}
+            />
             <ThemedText variant="body1">Monitor</ThemedText>
           </View>
           <View style={styles.colorRow}>
-            <View style={[styles.colorSwatch, { backgroundColor: theme.colors.repair }]} />
+            <View
+              style={[
+                styles.colorSwatch,
+                { backgroundColor: theme.colors.repair },
+              ]}
+            />
             <ThemedText variant="body1">Repair/Replace</ThemedText>
           </View>
           <View style={styles.colorRow}>
-            <View style={[styles.colorSwatch, { backgroundColor: theme.colors.safetyHazard }]} />
+            <View
+              style={[
+                styles.colorSwatch,
+                { backgroundColor: theme.colors.safetyHazard },
+              ]}
+            />
             <ThemedText variant="body1">Safety Hazard</ThemedText>
           </View>
           <View style={styles.colorRow}>
-            <View style={[styles.colorSwatch, { backgroundColor: theme.colors.accessRestricted }]} />
+            <View
+              style={[
+                styles.colorSwatch,
+                { backgroundColor: theme.colors.accessRestricted },
+              ]}
+            />
             <ThemedText variant="body1">Access Restricted</ThemedText>
           </View>
         </View>
 
         {/* Spacing Demo */}
-        <View style={[styles.section, styles.card, { backgroundColor: theme.colors.card }]}>
+        <View
+          style={[
+            styles.section,
+            styles.card,
+            { backgroundColor: theme.colors.card },
+          ]}
+        >
           <ThemedText variant="h3">Spacing Scale</ThemedText>
           <ThemedText variant="body2" color="textSecondary">
-            xs: {theme.spacing.xs}px, sm: {theme.spacing.sm}px, md: {theme.spacing.md}px
+            xs: {theme.spacing.xs}px, sm: {theme.spacing.sm}px, md:{' '}
+            {theme.spacing.md}px
           </ThemedText>
           <ThemedText variant="body2" color="textSecondary">
-            lg: {theme.spacing.lg}px, xl: {theme.spacing.xl}px, xxl: {theme.spacing.xxl}px
+            lg: {theme.spacing.lg}px, xl: {theme.spacing.xl}px, xxl:{' '}
+            {theme.spacing.xxl}px
           </ThemedText>
         </View>
 
         {/* Border Radius Demo */}
-        <View style={[styles.section, styles.card, { backgroundColor: theme.colors.card }]}>
+        <View
+          style={[
+            styles.section,
+            styles.card,
+            { backgroundColor: theme.colors.card },
+          ]}
+        >
           <ThemedText variant="h3">Border Radius</ThemedText>
           <View style={styles.radiusRow}>
-            <View style={[styles.radiusBox, { 
-              backgroundColor: theme.colors.primary, 
-              borderRadius: theme.borderRadius.sm 
-            }]} />
-            <ThemedText variant="caption">sm ({theme.borderRadius.sm}px)</ThemedText>
+            <View
+              style={[
+                styles.radiusBox,
+                {
+                  backgroundColor: theme.colors.primary,
+                  borderRadius: theme.borderRadius.sm,
+                },
+              ]}
+            />
+            <ThemedText variant="caption">
+              sm ({theme.borderRadius.sm}px)
+            </ThemedText>
           </View>
           <View style={styles.radiusRow}>
-            <View style={[styles.radiusBox, { 
-              backgroundColor: theme.colors.primary, 
-              borderRadius: theme.borderRadius.md 
-            }]} />
-            <ThemedText variant="caption">md ({theme.borderRadius.md}px)</ThemedText>
+            <View
+              style={[
+                styles.radiusBox,
+                {
+                  backgroundColor: theme.colors.primary,
+                  borderRadius: theme.borderRadius.md,
+                },
+              ]}
+            />
+            <ThemedText variant="caption">
+              md ({theme.borderRadius.md}px)
+            </ThemedText>
           </View>
           <View style={styles.radiusRow}>
-            <View style={[styles.radiusBox, { 
-              backgroundColor: theme.colors.primary, 
-              borderRadius: theme.borderRadius.lg 
-            }]} />
-            <ThemedText variant="caption">lg ({theme.borderRadius.lg}px)</ThemedText>
+            <View
+              style={[
+                styles.radiusBox,
+                {
+                  backgroundColor: theme.colors.primary,
+                  borderRadius: theme.borderRadius.lg,
+                },
+              ]}
+            />
+            <ThemedText variant="caption">
+              lg ({theme.borderRadius.lg}px)
+            </ThemedText>
           </View>
           <View style={styles.radiusRow}>
-            <View style={[styles.radiusBox, { 
-              backgroundColor: theme.colors.primary, 
-              borderRadius: theme.borderRadius.xl 
-            }]} />
-            <ThemedText variant="caption">xl ({theme.borderRadius.xl}px)</ThemedText>
+            <View
+              style={[
+                styles.radiusBox,
+                {
+                  backgroundColor: theme.colors.primary,
+                  borderRadius: theme.borderRadius.xl,
+                },
+              ]}
+            />
+            <ThemedText variant="caption">
+              xl ({theme.borderRadius.xl}px)
+            </ThemedText>
           </View>
         </View>
 
         {/* Shadow Demo */}
-        <View style={[styles.section, styles.card, { backgroundColor: theme.colors.card }]}>
+        <View
+          style={[
+            styles.section,
+            styles.card,
+            { backgroundColor: theme.colors.card },
+          ]}
+        >
           <ThemedText variant="h3">Shadows</ThemedText>
-          <View style={[styles.shadowBox, { backgroundColor: theme.colors.surface }, theme.shadows.small]}>
+          <View
+            style={[
+              styles.shadowBox,
+              { backgroundColor: theme.colors.surface },
+              theme.shadows.small,
+            ]}
+          >
             <ThemedText variant="body2">Small Shadow</ThemedText>
           </View>
-          <View style={[styles.shadowBox, { backgroundColor: theme.colors.surface }, theme.shadows.medium]}>
+          <View
+            style={[
+              styles.shadowBox,
+              { backgroundColor: theme.colors.surface },
+              theme.shadows.medium,
+            ]}
+          >
             <ThemedText variant="body2">Medium Shadow</ThemedText>
           </View>
-          <View style={[styles.shadowBox, { backgroundColor: theme.colors.surface }, theme.shadows.large]}>
+          <View
+            style={[
+              styles.shadowBox,
+              { backgroundColor: theme.colors.surface },
+              theme.shadows.large,
+            ]}
+          >
             <ThemedText variant="body2">Large Shadow</ThemedText>
           </View>
         </View>

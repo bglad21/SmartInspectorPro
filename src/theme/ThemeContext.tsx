@@ -1,9 +1,9 @@
 /**
  * Theme Context and Provider
- * 
+ *
  * Provides theme state management with React Context.
  * Supports light/dark/system modes with AsyncStorage persistence.
- * 
+ *
  * @module theme/ThemeContext
  */
 
@@ -41,9 +41,9 @@ interface ThemeProviderProps {
 
 /**
  * Theme Provider Component
- * 
+ *
  * Wraps the app to provide theme context.
- * 
+ *
  * @example
  * ```tsx
  * <ThemeProvider>
@@ -134,7 +134,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
       setThemeMode,
       isDark,
     }),
-    [theme, themeMode, toggleTheme, setThemeMode, isDark]
+    [theme, themeMode, toggleTheme, setThemeMode, isDark],
   );
 
   // Don't render children until theme is loaded from storage
@@ -149,15 +149,15 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
 
 /**
  * useTheme Hook
- * 
+ *
  * Access theme context in components.
- * 
+ *
  * @throws {Error} If used outside ThemeProvider
- * 
+ *
  * @example
  * ```tsx
  * const { theme, isDark, toggleTheme } = useTheme();
- * 
+ *
  * return (
  *   <View style={{ backgroundColor: theme.colors.background }}>
  *     <Text style={theme.typography.h1}>Hello</Text>
@@ -168,10 +168,10 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
  */
 export const useTheme = (): ThemeContextValue => {
   const context = useContext(ThemeContext);
-  
+
   if (context === undefined) {
     throw new Error('useTheme must be used within a ThemeProvider');
   }
-  
+
   return context;
 };
