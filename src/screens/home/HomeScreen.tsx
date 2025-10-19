@@ -21,33 +21,37 @@
  * - Smooth scrolling
  */
 
+import CollapsibleSection from '@/components/common/CollapsibleSection';
+import ThemedText from '@/components/common/ThemedText';
+import ThemedView from '@/components/common/ThemedView';
+import type { MainStackParamList } from '@/navigation/types';
+import { useAppSelector } from '@/redux/hooks';
+import { useTheme } from '@/theme';
+import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type React from 'react';
 import { useCallback } from 'react';
 import {
-  View,
+  Dimensions,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
-  Dimensions,
+  View,
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import { useTheme } from '@/theme';
-import { useAppSelector } from '@/redux/hooks';
-import type { MainStackParamList } from '@/navigation/types';
-import ThemedView from '@/components/common/ThemedView';
-import ThemedText from '@/components/common/ThemedText';
-import CollapsibleSection from '@/components/common/CollapsibleSection';
-
-type HomeScreenNavigationProp = NativeStackNavigationProp<MainStackParamList, 'Home'>;
+type HomeScreenNavigationProp = NativeStackNavigationProp<
+  MainStackParamList,
+  'Home'
+>;
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const CARD_PADDING = 16;
 const CARD_GAP = 12;
 const CARDS_PER_ROW = SCREEN_WIDTH > 768 ? 3 : 2; // 3 columns on tablet, 2 on phone
-const CARD_WIDTH = (SCREEN_WIDTH - (CARD_PADDING * 2) - (CARD_GAP * (CARDS_PER_ROW - 1))) / CARDS_PER_ROW;
+const CARD_WIDTH =
+  (SCREEN_WIDTH - CARD_PADDING * 2 - CARD_GAP * (CARDS_PER_ROW - 1)) /
+  CARDS_PER_ROW;
 
 /**
  * Navigation Card Props
@@ -143,11 +147,12 @@ const NavigationCard: React.FC<NavigationCardProps> = ({
 const HomeScreen: React.FC = () => {
   const { theme } = useTheme();
   const navigation = useNavigation<HomeScreenNavigationProp>();
-  const { user } = useAppSelector((state) => state.auth);
+  const { user } = useAppSelector(state => state.auth);
 
   // Extract first name from user profile for greeting
   // Username is typically an email, so extract the part before @
-  const firstName = user?.businessName || user?.username?.split('@')[0] || 'Inspector';
+  const firstName =
+    user?.businessName || user?.username?.split('@')[0] || 'Inspector';
 
   // Navigation handlers for each card
   const handleNavigation = useCallback(
@@ -155,7 +160,7 @@ const HomeScreen: React.FC = () => {
       // @ts-expect-error - Navigation with keyof requires runtime screen name
       navigation.navigate(screen);
     },
-    [navigation]
+    [navigation],
   );
 
   return (
@@ -178,7 +183,10 @@ const HomeScreen: React.FC = () => {
             </ThemedText>
             <ThemedText
               variant="body2"
-              style={[styles.subGreeting, { color: theme.colors.textSecondary }]}
+              style={[
+                styles.subGreeting,
+                { color: theme.colors.textSecondary },
+              ]}
             >
               Ready to inspect today?
             </ThemedText>

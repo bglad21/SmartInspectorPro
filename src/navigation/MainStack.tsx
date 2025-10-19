@@ -24,14 +24,12 @@
 
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import type React from 'react';
-import { useTheme } from '../theme';
-import type { MainStackParamList } from './types';
-
 // Import existing screens
 import HomeScreen from '../screens/home/HomeScreen';
-
 // Placeholder for screens not yet implemented
 import PlaceholderScreen from '../screens/PlaceholderScreen';
+import { useTheme } from '../theme';
+import type { MainStackParamList } from './types';
 
 const Stack = createNativeStackNavigator<MainStackParamList>();
 

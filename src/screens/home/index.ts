@@ -1,3 +1,2 @@
 // Home Screens
-export { default as HomeScreen } from './HomeScreen';
-export { default } from './HomeScreen';
+export { default as HomeScreen, default } from './HomeScreen';
