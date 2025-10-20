@@ -1,25 +1,28 @@
 # Smart Inspector Pro - Complete Build Layout Documentation
 
-**Document Version:** 1.3.0  
-**Last Updated:** October 17, 2025  
+**Document Version:** 1.3.0
+**Last Updated:** October 17, 2025
 **Status:** Pre-Development (100% Documentation, 0% Implementation)
 
 ## Project Overview
-**App Name:** Smart Inspector Pro  
-**Platform:** React Native (iOS & Android - simultaneous launch)  
-**Purpose:** Professional residential home inspection app with AI capabilities  
-**Main Data Source:** Single_Family.csv (33,432 inspection items) - Premium only  
-**Free/Preview Data:** single_family_sample.csv (2,504 items) - Bundled with app  
-**Architecture:** React Native frontend + Node.js backend + AWS infrastructure + OpenAI integration  
+
+**App Name:** Smart Inspector Pro
+**Platform:** React Native (iOS & Android - simultaneous launch)
+**Purpose:** Professional residential home inspection app with AI capabilities
+**Main Data Source:** Single_Family.csv (33,432 inspection items) - Premium only
+**Free/Preview Data:** single_family_sample.csv (2,504 items) - Bundled with app
+**Architecture:** React Native frontend + Node.js backend + AWS infrastructure + OpenAI integration
 **Launch Strategy:** Big-bang launch with full feature set
 
 **Version History:**
+
 - **1.3.0** (Oct 17, 2025): Added freemium business model, marketplace strategy, enhanced database schema
 - **1.2.0** (Oct 17, 2025): Added internationalization support (10 languages)
 - **1.1.0** (Oct 16, 2025): Initial AWS infrastructure specifications
 - **1.0.0** (Oct 15, 2025): Initial complete specification
 
 **Key Technology Decisions:**
+
 - **AI Service:** OpenAI GPT-4 Vision (photo recognition) + GPT-4 Turbo (report generation) - API key available
 - **Cloud Storage:** AWS S3 with intelligent tiering
 - **Database:** AWS RDS PostgreSQL with Redis caching
@@ -29,6 +32,7 @@
 ## Data Structure & Inspection Tables Strategy
 
 ### Free/Preview Mode (Bundled with App)
+
 - **File:** `single_family_sample.csv` (2,504 items)
 - **Size:** ~250 KB (small enough to bundle with app)
 - **Purpose:** Preview mode for free users, testing, and demos
@@ -36,6 +40,7 @@
 - **Limitation:** Reduced inspection item coverage, ideal for small inspections or demos
 
 ### Premium Membership (Cloud Download)
+
 - **File:** `Single_Family.csv` (33,432 items)
 - **Size:** ~3.5 MB (downloaded upon membership activation)
 - **Purpose:** Complete residential inspection coverage for professional inspectors
@@ -43,15 +48,19 @@
 - **Download:** Automatic on first app launch after subscription, cached locally in SQLite
 
 ### Data Table Marketplace (Future Feature)
+
 **In-App Store for Additional Inspection Tables:**
+
 - **Residential Add-Ons:**
+
   - Multi-Family Properties (duplexes, apartments)
   - Condominiums & Townhomes
   - Mobile/Manufactured Homes
   - Historic Homes (pre-1940s)
   - Luxury Properties (high-end features)
-  
+
 - **Commercial Add-Ons:**
+
   - Office Buildings
   - Retail Properties
   - Warehouses & Industrial
@@ -59,6 +68,7 @@
   - Hotels & Hospitality
 
 - **Pricing Model:**
+
   - Individual tables: $9.99 - $49.99 (one-time purchase)
   - Commercial bundle: $199.99 (all commercial tables)
   - Ultimate bundle: $299.99 (all residential + commercial)
@@ -70,6 +80,7 @@
   - Workflow editor supports multiple active tables
 
 **CSV Schema (All Tables):**
+
 ```
 Section → System → Location → Component → Material → Condition → Comment
 ```
@@ -81,6 +92,7 @@ Section → System → Location → Component → Material → Condition → Com
 ## Phase 1: Project Setup & Foundation
 
 ### 1.1 Development Environment Setup
+
 - **Framework:** React Native CLI (latest stable)
 - **State Management:** Redux Toolkit + RTK Query
 - **Navigation:** React Navigation v6
@@ -93,6 +105,7 @@ Section → System → Location → Component → Material → Condition → Com
 - **Cloud Storage:** AWS S3 with CloudFront CDN
 
 ### 1.2 Project Structure
+
 ```
 SmartInspectorPro/
 ├── src/
@@ -111,6 +124,7 @@ SmartInspectorPro/
 ```
 
 ### 1.3 Core Dependencies
+
 ```json
 {
   "react-native": "^0.72.x",
@@ -128,10 +142,12 @@ SmartInspectorPro/
 ```
 
 ### 1.4 Internationalization Setup
-**Supported Languages at Launch:** 4 English variants (en-US, en-GB, en-CA, en-AU)  
+
+**Supported Languages at Launch:** 4 English variants (en-US, en-GB, en-CA, en-AU)
 **Phase 2 Languages:** Spanish (es-ES, es-MX), French (fr-FR, fr-CA), German (de-DE), Portuguese (pt-BR)
 
 **i18n Configuration:**
+
 ```typescript
 // src/i18n/config.ts
 import i18n from 'i18next';
@@ -149,7 +165,7 @@ const resources = {
   'en-US': { translation: enUS },
   'en-GB': { translation: enGB },
   'en-CA': { translation: enCA },
-  'en-AU': { translation: enAU }
+  'en-AU': { translation: enAU },
 };
 
 // Detect device locale
@@ -157,22 +173,20 @@ const deviceLanguage = RNLocalize.getLocales()[0];
 const fallbackLocale = { languageTag: 'en-US', isRTL: false };
 const locale = deviceLanguage || fallbackLocale;
 
-i18n
-  .use(initReactI18next)
-  .init({
-    resources,
-    lng: locale.languageTag,
-    fallbackLng: 'en-US',
-    interpolation: {
-      escapeValue: false
-    },
-    react: {
-      useSuspense: false
-    }
-  });
+i18n.use(initReactI18next).init({
+  resources,
+  lng: locale.languageTag,
+  fallbackLng: 'en-US',
+  interpolation: {
+    escapeValue: false,
+  },
+  react: {
+    useSuspense: false,
+  },
+});
 
 // Persist language preference
-i18n.on('languageChanged', (lng) => {
+i18n.on('languageChanged', lng => {
   AsyncStorage.setItem('user-language', lng);
 });
 
@@ -180,6 +194,7 @@ export default i18n;
 ```
 
 **Translation File Structure:**
+
 ```
 src/i18n/locales/
 ├── en-US.json  # US English (base)
@@ -201,6 +216,7 @@ src/i18n/locales/
 ### 2.1 Database Schema Design
 
 #### Core Tables
+
 ```sql
 -- Users and Authentication
 CREATE TABLE users (
@@ -637,6 +653,7 @@ CREATE INDEX idx_inspection_standards_region ON inspection_standards(country_cod
 ```
 
 ### 2.2 Backend API Endpoints Structure
+
 ```
 /api/auth/
   POST /signup           # Cognito user registration with custom attributes
@@ -785,11 +802,13 @@ CREATE INDEX idx_inspection_standards_region ON inspection_standards(country_cod
 ```
 
 ### 2.3 Database Sharding Strategy (Implementation: Phase 2 - At 2,000+ Users)
-**Priority:** 🟡 High (Plan now, implement later)  
-**Timeline:** Implement when user count exceeds 2,000  
+
+**Priority:** 🟡 High (Plan now, implement later)
+**Timeline:** Implement when user count exceeds 2,000
 **Cost Impact:** Enables horizontal scaling without performance degradation
 
 #### Sharding Architecture
+
 ```typescript
 // Sharding configuration
 interface ShardConfig {
@@ -802,8 +821,22 @@ interface ShardConfig {
 }
 
 const SHARD_CONFIG: ShardConfig[] = [
-  { shardId: 0, minUserId: 0, maxUserId: 499, dbHost: 'shard-0.rds.amazonaws.com', dbPort: 5432, connectionPool: 20 },
-  { shardId: 1, minUserId: 500, maxUserId: 999, dbHost: 'shard-1.rds.amazonaws.com', dbPort: 5432, connectionPool: 20 },
+  {
+    shardId: 0,
+    minUserId: 0,
+    maxUserId: 499,
+    dbHost: 'shard-0.rds.amazonaws.com',
+    dbPort: 5432,
+    connectionPool: 20,
+  },
+  {
+    shardId: 1,
+    minUserId: 500,
+    maxUserId: 999,
+    dbHost: 'shard-1.rds.amazonaws.com',
+    dbPort: 5432,
+    connectionPool: 20,
+  },
   // Expand as needed: 2,000, 5,000, 10,000+ users
 ];
 
@@ -818,7 +851,11 @@ class ShardRouter {
     throw new Error(`No shard found for userId: ${userId}`);
   }
 
-  async executeQuery<T>(userId: number, query: string, params: any[]): Promise<T> {
+  async executeQuery<T>(
+    userId: number,
+    query: string,
+    params: any[],
+  ): Promise<T> {
     const shard = this.getShardForUser(userId);
     const connection = await this.getConnection(shard);
     return await connection.query(query, params);
@@ -832,7 +869,9 @@ class ShardRouter {
 ```
 
 #### Multi-Tenant Isolation
+
 All tables include `user_id` as the shard key:
+
 ```sql
 -- Example: All inspection data stays with user's shard
 CREATE TABLE inspections (
@@ -866,6 +905,7 @@ CREATE TABLE team_members (
 ```
 
 #### Sharding Strategy Benefits
+
 - **Horizontal Scalability:** Support 10,000+ users with 1M+ inspections
 - **Performance:** Smaller indexes, faster queries (each shard has 500-1,000 users)
 - **Cost Optimization:** Use smaller RDS instances per shard vs one massive instance
@@ -873,6 +913,7 @@ CREATE TABLE team_members (
 - **Gradual Expansion:** Add shards as user base grows
 
 #### Implementation Checklist
+
 - [ ] Design consistent hashing algorithm for user ID → shard mapping
 - [ ] Create database migration scripts for multi-shard schema
 - [ ] Implement shard router middleware in backend
@@ -884,16 +925,18 @@ CREATE TABLE team_members (
 ---
 
 ### 2.4 Read Replicas for Database Performance (Implementation: Phase 2 - At 500+ Users)
-**Priority:** 🟡 High (Optional now, recommended later)  
-**Timeline:** Add when 500+ active users or reporting becomes slow  
+
+**Priority:** 🟡 High (Optional now, recommended later)
+**Timeline:** Add when 500+ active users or reporting becomes slow
 **Cost Impact:** +$30-50/month (dev), +$150-200/month (production)
 
 #### Read Replica Architecture
+
 ```typescript
 // Database connection routing
 enum QueryType {
   READ = 'read',
-  WRITE = 'write'
+  WRITE = 'write',
 }
 
 class DatabaseRouter {
@@ -908,25 +951,30 @@ class DatabaseRouter {
       database: 'smartinspector',
       user: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
-      max: 20  // Connection pool
+      max: 20, // Connection pool
     });
 
     // Read replica instance
     this.replicaConnection = createConnection({
-      host: process.env.RDS_REPLICA_HOST,  // Different endpoint
+      host: process.env.RDS_REPLICA_HOST, // Different endpoint
       port: 5432,
       database: 'smartinspector',
       user: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
-      max: 50  // Larger pool for read-heavy workload
+      max: 50, // Larger pool for read-heavy workload
     });
   }
 
-  async query<T>(sql: string, params: any[], type: QueryType = QueryType.READ): Promise<T> {
-    const connection = type === QueryType.WRITE 
-      ? this.primaryConnection 
-      : this.replicaConnection;
-    
+  async query<T>(
+    sql: string,
+    params: any[],
+    type: QueryType = QueryType.READ,
+  ): Promise<T> {
+    const connection =
+      type === QueryType.WRITE
+        ? this.primaryConnection
+        : this.replicaConnection;
+
     return await connection.query(sql, params);
   }
 }
@@ -937,15 +985,15 @@ app.get('/api/reports/:inspectionId/generate', async (req, res) => {
   const inspectionData = await db.query(
     'SELECT * FROM inspections WHERE id = $1',
     [req.params.inspectionId],
-    QueryType.READ  // ← Routes to read replica
+    QueryType.READ, // ← Routes to read replica
   );
-  
+
   const records = await db.query(
     'SELECT * FROM inspection_records WHERE inspection_id = $1',
     [req.params.inspectionId],
-    QueryType.READ
+    QueryType.READ,
   );
-  
+
   res.json({ inspection: inspectionData, records });
 });
 
@@ -954,14 +1002,15 @@ app.post('/api/inspections', async (req, res) => {
   const newInspection = await db.query(
     'INSERT INTO inspections (user_id, property_address) VALUES ($1, $2) RETURNING *',
     [req.user.id, req.body.propertyAddress],
-    QueryType.WRITE  // ← Routes to primary instance
+    QueryType.WRITE, // ← Routes to primary instance
   );
-  
+
   res.json(newInspection);
 });
 ```
 
 #### Read Replica Use Cases
+
 - **Report Generation:** SELECT queries for inspection data, photos, records
 - **Analytics Dashboard:** Aggregate queries for business insights
 - **Search & Filters:** Complex queries across multiple tables
@@ -969,19 +1018,23 @@ app.post('/api/inspections', async (req, res) => {
 - **Client Portal Access:** Public-facing read-only queries
 
 #### Benefits
+
 - **50-70% Reduction in Primary DB Load:** Offload all read traffic
 - **Faster Report Generation:** No blocking on write operations
 - **High Availability:** Replica can be promoted to primary if failure occurs
 - **Performance Monitoring:** Separate metrics for read vs write performance
 
 #### Implementation Steps
+
 1. **Create Read Replica in AWS RDS Console:**
+
    - Navigate to RDS → Select primary instance → Actions → Create read replica
    - Choose instance type (same as primary or smaller)
    - Select availability zone (preferably different from primary)
    - Wait 15-30 minutes for replication to sync
 
 2. **Update Backend Configuration:**
+
    ```bash
    # .env file
    RDS_PRIMARY_HOST=sip-sandbox-postgres.xxxx.us-east-1.rds.amazonaws.com
@@ -989,10 +1042,11 @@ app.post('/api/inspections', async (req, res) => {
    ```
 
 3. **Test Replication Lag:**
+
    ```sql
    -- On primary: Insert test record
    INSERT INTO test_table (id, timestamp) VALUES (1, NOW());
-   
+
    -- On replica: Check replication lag (should be <1 second)
    SELECT * FROM test_table WHERE id = 1;
    ```
@@ -1002,6 +1056,7 @@ app.post('/api/inspections', async (req, res) => {
    - Alert if lag exceeds 30 seconds (indicates performance issue)
 
 #### When to Implement
+
 - ✅ **Now (Optional):** If you want to set up infrastructure from day 1
 - ⏳ **Wait:** If cost-conscious, add when experiencing slow report generation
 - 🚨 **Critical:** When primary DB CPU >70% consistently
@@ -1009,91 +1064,93 @@ app.post('/api/inspections', async (req, res) => {
 ---
 
 ### 2.5 API Rate Limiting (Implementation: Phase 1 - During Backend Development)
-**Priority:** 🟡 High (Implement during development)  
-**Timeline:** Build into backend from day 1  
+
+**Priority:** 🟡 High (Implement during development)
+**Timeline:** Build into backend from day 1
 **Cost Impact:** Minimal (leverages existing Redis instance)
 
 #### Redis-Based Rate Limiting
+
 ```typescript
 // Rate limiter middleware using Redis
 import Redis from 'ioredis';
 
 const redis = new Redis({
-  host: process.env.REDIS_HOST,  // ElastiCache endpoint
-  port: 6379
+  host: process.env.REDIS_HOST, // ElastiCache endpoint
+  port: 6379,
 });
 
 interface RateLimitConfig {
-  windowMs: number;     // Time window in milliseconds
-  maxRequests: number;  // Max requests per window
+  windowMs: number; // Time window in milliseconds
+  maxRequests: number; // Max requests per window
 }
 
 class RateLimiter {
   private config: Record<string, RateLimitConfig> = {
     // General API endpoints
-    '/api/inspections': { windowMs: 60000, maxRequests: 100 },      // 100/minute
-    '/api/users': { windowMs: 60000, maxRequests: 60 },              // 60/minute
-    '/api/photos/upload': { windowMs: 60000, maxRequests: 50 },      // 50/minute
-    
+    '/api/inspections': { windowMs: 60000, maxRequests: 100 }, // 100/minute
+    '/api/users': { windowMs: 60000, maxRequests: 60 }, // 60/minute
+    '/api/photos/upload': { windowMs: 60000, maxRequests: 50 }, // 50/minute
+
     // AI endpoints (expensive operations)
-    '/api/ai/analyze-photo': { windowMs: 60000, maxRequests: 10 },   // 10/minute
+    '/api/ai/analyze-photo': { windowMs: 60000, maxRequests: 10 }, // 10/minute
     '/api/ai/predict-inspection-item': { windowMs: 60000, maxRequests: 20 },
-    
+
     // Report generation (CPU-intensive)
     '/api/reports/:id/generate': { windowMs: 60000, maxRequests: 20 },
-    
+
     // Authentication endpoints (prevent brute force)
-    '/api/auth/login': { windowMs: 300000, maxRequests: 5 },         // 5 per 5 minutes
-    '/api/auth/signup': { windowMs: 3600000, maxRequests: 3 },       // 3 per hour
+    '/api/auth/login': { windowMs: 300000, maxRequests: 5 }, // 5 per 5 minutes
+    '/api/auth/signup': { windowMs: 3600000, maxRequests: 3 }, // 3 per hour
   };
 
   async checkLimit(
-    userId: string, 
-    endpoint: string, 
-    membershipTier: string = 'professional'
+    userId: string,
+    endpoint: string,
+    membershipTier: string = 'professional',
   ): Promise<{ allowed: boolean; remaining: number; resetAt: Date }> {
     const config = this.getConfigForEndpoint(endpoint, membershipTier);
     const key = `ratelimit:${userId}:${endpoint}`;
-    
+
     // Increment request count
     const requests = await redis.incr(key);
-    
+
     // Set expiration on first request
     if (requests === 1) {
       await redis.pexpire(key, config.windowMs);
     }
-    
+
     // Get TTL for reset time calculation
     const ttl = await redis.pttl(key);
     const resetAt = new Date(Date.now() + ttl);
-    
+
     return {
       allowed: requests <= config.maxRequests,
       remaining: Math.max(0, config.maxRequests - requests),
-      resetAt
+      resetAt,
     };
   }
 
   private getConfigForEndpoint(
-    endpoint: string, 
-    tier: string
+    endpoint: string,
+    tier: string,
   ): RateLimitConfig {
     // Base config
     let config = this.config[endpoint] || { windowMs: 60000, maxRequests: 60 };
-    
+
     // Tier-based multipliers
     const multipliers: Record<string, number> = {
-      'starter': 0.5,      // 50% of base limit
-      'professional': 1.0, // 100% (base)
-      'business': 2.0,     // 200%
-      'enterprise': 5.0    // 500%
+      starter: 0.5, // 50% of base limit
+      professional: 1.0, // 100% (base)
+      business: 2.0, // 200%
+      enterprise: 5.0, // 500%
     };
-    
+
     const multiplier = multipliers[tier] || 1.0;
-    
+
     return {
       windowMs: config.windowMs,
-      maxRequests: Math.floor(config.maxRequests * multiplier)
+      maxRequests: Math.floor(config.maxRequests * multiplier),
     };
   }
 }
@@ -1101,26 +1158,30 @@ class RateLimiter {
 // Express middleware
 const rateLimiter = new RateLimiter();
 
-export const rateLimitMiddleware = async (req: Request, res: Response, next: NextFunction) => {
-  const userId = req.user?.id || req.ip;  // Use IP for unauthenticated
+export const rateLimitMiddleware = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const userId = req.user?.id || req.ip; // Use IP for unauthenticated
   const endpoint = req.route.path;
   const tier = req.user?.membershipTier || 'professional';
-  
+
   const result = await rateLimiter.checkLimit(userId, endpoint, tier);
-  
+
   // Add rate limit headers
   res.setHeader('X-RateLimit-Limit', result.allowed ? '100' : '0');
   res.setHeader('X-RateLimit-Remaining', result.remaining.toString());
   res.setHeader('X-RateLimit-Reset', result.resetAt.toISOString());
-  
+
   if (!result.allowed) {
     return res.status(429).json({
       error: 'Too Many Requests',
       message: `Rate limit exceeded. Try again after ${result.resetAt.toISOString()}`,
-      retryAfter: Math.ceil((result.resetAt.getTime() - Date.now()) / 1000)
+      retryAfter: Math.ceil((result.resetAt.getTime() - Date.now()) / 1000),
     });
   }
-  
+
   next();
 };
 
@@ -1129,15 +1190,17 @@ app.use('/api/', rateLimitMiddleware);
 ```
 
 #### Tier-Based Rate Limits
-| Endpoint | Starter | Professional | Business | Enterprise |
-|----------|---------|--------------|----------|------------|
-| General API | 30/min | 60/min | 120/min | 300/min |
-| Photo Upload | 25/min | 50/min | 100/min | 250/min |
-| AI Analysis | 5/min | 10/min | 20/min | 50/min |
-| Report Generation | 10/min | 20/min | 40/min | 100/min |
-| Auth (Login) | 3/5min | 5/5min | 10/5min | 20/5min |
+
+| Endpoint          | Starter | Professional | Business | Enterprise |
+| ----------------- | ------- | ------------ | -------- | ---------- |
+| General API       | 30/min  | 60/min       | 120/min  | 300/min    |
+| Photo Upload      | 25/min  | 50/min       | 100/min  | 250/min    |
+| AI Analysis       | 5/min   | 10/min       | 20/min   | 50/min     |
+| Report Generation | 10/min  | 20/min       | 40/min   | 100/min    |
+| Auth (Login)      | 3/5min  | 5/5min       | 10/5min  | 20/5min    |
 
 #### Benefits
+
 - **Prevents Abuse:** Protects infrastructure from malicious users or bugs
 - **Cost Control:** Prevents runaway AI costs from rapid-fire API calls
 - **Fair Usage:** Ensures all users get consistent performance
@@ -1145,6 +1208,7 @@ app.use('/api/', rateLimitMiddleware);
 - **Security:** Rate limit auth endpoints to prevent brute force attacks
 
 #### Implementation Checklist
+
 - [ ] Install `ioredis` package for Redis client
 - [ ] Create `RateLimiter` class with tier-based logic
 - [ ] Add middleware to Express app
@@ -1156,18 +1220,22 @@ app.use('/api/', rateLimitMiddleware);
 ---
 
 ### 2.6 GraphQL API Alternative (Implementation: Phase 2 - Optional)
-**Priority:** 🟢 Medium (Nice-to-have, not critical for MVP)  
-**Timeline:** Post-launch optimization  
+
+**Priority:** 🟢 Medium (Nice-to-have, not critical for MVP)
+**Timeline:** Post-launch optimization
 **Cost Impact:** Similar to REST API Gateway
 
 #### Why Consider GraphQL?
+
 **Mobile App Benefits:**
+
 - **Reduced Bandwidth:** Fetch only the fields you need (critical on cellular data)
 - **Fewer Requests:** Get related data in single query (inspection + records + photos)
 - **Type Safety:** Schema validation prevents runtime errors
 - **Real-Time Updates:** Native subscription support for team collaboration
 
 **Example: REST vs GraphQL**
+
 ```typescript
 // ❌ REST: Multiple requests, over-fetching data
 GET /api/inspections/123  // Returns ALL fields
@@ -1199,6 +1267,7 @@ query {
 ```
 
 #### GraphQL Schema Design
+
 ```graphql
 # Type definitions
 type User {
@@ -1287,7 +1356,7 @@ type Query {
   # User queries
   me: User!
   user(id: ID!): User
-  
+
   # Inspection queries
   inspection(id: ID!): Inspection
   inspections(
@@ -1297,11 +1366,11 @@ type Query {
     limit: Int
     offset: Int
   ): [Inspection!]!
-  
+
   # Photo queries
   photo(id: ID!): Photo
   searchPhotosByTags(tags: [String!]!, limit: Int): [Photo!]!
-  
+
   # Workflow queries
   workflows: [Workflow!]!
   workflow(id: ID!): Workflow
@@ -1313,15 +1382,15 @@ type Mutation {
   createInspection(input: CreateInspectionInput!): Inspection!
   updateInspection(id: ID!, input: UpdateInspectionInput!): Inspection!
   deleteInspection(id: ID!): Boolean!
-  
+
   # Record mutations
   addInspectionRecord(input: AddRecordInput!): InspectionRecord!
   updateRecord(id: ID!, input: UpdateRecordInput!): InspectionRecord!
-  
+
   # Photo mutations
   uploadPhoto(inspectionId: ID!, recordId: ID, file: Upload!): Photo!
   deletePhoto(id: ID!): Boolean!
-  
+
   # AI mutations
   analyzePhoto(photoId: ID!): AIAnalysisResult!
 }
@@ -1336,13 +1405,14 @@ type Subscription {
 ```
 
 #### AWS AppSync Implementation
+
 ```typescript
 // AWS AppSync configuration (serverless GraphQL)
 import { ApolloClient, InMemoryCache, createHttpLink } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 
 const httpLink = createHttpLink({
-  uri: process.env.APPSYNC_ENDPOINT,  // AWS AppSync GraphQL endpoint
+  uri: process.env.APPSYNC_ENDPOINT, // AWS AppSync GraphQL endpoint
 });
 
 const authLink = setContext((_, { headers }) => {
@@ -1351,7 +1421,7 @@ const authLink = setContext((_, { headers }) => {
     headers: {
       ...headers,
       authorization: token ? `Bearer ${token}` : '',
-    }
+    },
   };
 });
 
@@ -1405,11 +1475,14 @@ const InspectionDetailsScreen = ({ inspectionId }) => {
 ```
 
 #### Cost Comparison: REST vs GraphQL
+
 **AWS API Gateway (REST):**
+
 - $3.50 per million requests
 - Data transfer: $0.09/GB
 
 **AWS AppSync (GraphQL):**
+
 - $4.00 per million query/mutation requests
 - $2.00 per million real-time updates (subscriptions)
 - Data transfer: $0.09/GB
@@ -1417,11 +1490,13 @@ const InspectionDetailsScreen = ({ inspectionId }) => {
 **Verdict:** Similar cost, slight premium for GraphQL subscriptions
 
 #### When to Implement GraphQL
+
 - ✅ **Post-Launch:** After MVP validation, optimize mobile bandwidth
 - ✅ **If Real-Time Critical:** Team collaboration features need subscriptions
 - ❌ **Skip for MVP:** REST API is simpler and faster to develop
 
 #### Implementation Checklist (If Pursued)
+
 - [ ] Design GraphQL schema for all core types
 - [ ] Set up AWS AppSync in AWS Console
 - [ ] Create resolvers (Lambda or direct DynamoDB/RDS)
@@ -1436,14 +1511,17 @@ const InspectionDetailsScreen = ({ inspectionId }) => {
 ## Phase 2.7: Security & Compliance
 
 ### 2.7.1 Photo Watermarking for Legal Protection (Implementation: Phase 1 - Critical)
-**Priority:** 🔴 Critical (Must have before launch)  
-**Timeline:** Implement during backend development (2-3 days)  
+
+**Priority:** 🔴 Critical (Must have before launch)
+**Timeline:** Implement during backend development (2-3 days)
 **Cost Impact:** Minimal (Lambda execution costs ~$0.001 per watermark)
 
 #### Problem Statement
+
 Inspection photos can be screenshot/copied by clients and used without attribution, creating legal liability for inspectors and copyright issues.
 
 #### Solution: Automated Server-Side Watermarking
+
 ```typescript
 // Lambda function triggered on S3 upload
 import sharp from 'sharp';
@@ -1461,20 +1539,24 @@ interface WatermarkConfig {
 
 export const handler = async (event: any) => {
   const bucket = event.Records[0].s3.bucket.name;
-  const key = decodeURIComponent(event.Records[0].s3.object.key.replace(/\+/g, ' '));
-  
+  const key = decodeURIComponent(
+    event.Records[0].s3.object.key.replace(/\+/g, ' '),
+  );
+
   // Get original photo from S3
-  const originalPhoto = await s3.getObject({ Bucket: bucket, Key: key }).promise();
-  
+  const originalPhoto = await s3
+    .getObject({ Bucket: bucket, Key: key })
+    .promise();
+
   // Get watermark configuration from metadata
   const config: WatermarkConfig = JSON.parse(
-    originalPhoto.Metadata?.watermark_config || '{}'
+    originalPhoto.Metadata?.watermark_config || '{}',
   );
-  
+
   if (!config.enabled) {
     return { statusCode: 200, body: 'Watermarking disabled' };
   }
-  
+
   // Create watermark text
   const watermarkText = `
     Inspector: ${config.inspectorName} (#${config.licenseNumber})
@@ -1482,59 +1564,72 @@ export const handler = async (event: any) => {
     Property: ${config.propertyAddress}
     © Smart Inspector Pro - Do Not Reproduce
   `.trim();
-  
+
   // Generate watermark overlay using SVG
   const watermarkSVG = `
     <svg width="800" height="150">
       <style>
-        .watermark { 
-          font: 18px Arial; 
-          fill: white; 
+        .watermark {
+          font: 18px Arial;
+          fill: white;
           opacity: 0.7;
           text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
         }
       </style>
-      <text x="10" y="30" class="watermark">${watermarkText.split('\n')[0]}</text>
-      <text x="10" y="55" class="watermark">${watermarkText.split('\n')[1]}</text>
-      <text x="10" y="80" class="watermark">${watermarkText.split('\n')[2]}</text>
-      <text x="10" y="105" class="watermark">${watermarkText.split('\n')[3]}</text>
+      <text x="10" y="30" class="watermark">${
+        watermarkText.split('\n')[0]
+      }</text>
+      <text x="10" y="55" class="watermark">${
+        watermarkText.split('\n')[1]
+      }</text>
+      <text x="10" y="80" class="watermark">${
+        watermarkText.split('\n')[2]
+      }</text>
+      <text x="10" y="105" class="watermark">${
+        watermarkText.split('\n')[3]
+      }</text>
     </svg>
   `;
-  
+
   // Apply watermark to photo
   const watermarkedPhoto = await sharp(originalPhoto.Body as Buffer)
-    .composite([{
-      input: Buffer.from(watermarkSVG),
-      gravity: 'southwest',
-      blend: 'over'
-    }])
+    .composite([
+      {
+        input: Buffer.from(watermarkSVG),
+        gravity: 'southwest',
+        blend: 'over',
+      },
+    ])
     .toBuffer();
-  
+
   // Save watermarked version
   const watermarkedKey = key.replace('/original/', '/watermarked/');
-  await s3.putObject({
-    Bucket: bucket,
-    Key: watermarkedKey,
-    Body: watermarkedPhoto,
-    ContentType: 'image/jpeg',
-    Metadata: {
-      original_key: key,
-      watermarked: 'true',
-      watermarked_at: new Date().toISOString()
-    }
-  }).promise();
-  
+  await s3
+    .putObject({
+      Bucket: bucket,
+      Key: watermarkedKey,
+      Body: watermarkedPhoto,
+      ContentType: 'image/jpeg',
+      Metadata: {
+        original_key: key,
+        watermarked: 'true',
+        watermarked_at: new Date().toISOString(),
+      },
+    })
+    .promise();
+
   return {
     statusCode: 200,
     body: JSON.stringify({
       originalKey: key,
-      watermarkedKey: watermarkedKey
-    })
+      watermarkedKey: watermarkedKey,
+    }),
   };
 };
 ```
 
 #### S3 Folder Structure
+
 ```
 smart-inspector-production/
 ├── photos/
@@ -1547,47 +1642,51 @@ smart-inspector-production/
 ```
 
 #### Backend API Integration
+
 ```typescript
 // Photo upload endpoint
 app.post('/api/photos/upload', authenticate, async (req, res) => {
   const { inspectionId, file } = req.body;
   const user = req.user;
-  
+
   // Get inspection details for watermark
   const inspection = await db.query(
     'SELECT property_address FROM inspections WHERE id = $1',
-    [inspectionId]
+    [inspectionId],
   );
-  
+
   // Upload to S3 with watermark configuration in metadata
   const s3Key = `photos/original/${user.id}/${inspectionId}/${uuidv4()}.jpg`;
-  await s3.putObject({
-    Bucket: 'smart-inspector-production',
-    Key: s3Key,
-    Body: file,
-    ContentType: 'image/jpeg',
-    Metadata: {
-      watermark_config: JSON.stringify({
-        inspectorName: `${user.firstName} ${user.lastName}`,
-        licenseNumber: user.licenseNumber,
-        propertyAddress: inspection.rows[0].property_address,
-        timestamp: new Date(),
-        enabled: user.watermarkEnabled ?? true  // User can toggle
-      })
-    }
-  }).promise();
-  
+  await s3
+    .putObject({
+      Bucket: 'smart-inspector-production',
+      Key: s3Key,
+      Body: file,
+      ContentType: 'image/jpeg',
+      Metadata: {
+        watermark_config: JSON.stringify({
+          inspectorName: `${user.firstName} ${user.lastName}`,
+          licenseNumber: user.licenseNumber,
+          propertyAddress: inspection.rows[0].property_address,
+          timestamp: new Date(),
+          enabled: user.watermarkEnabled ?? true, // User can toggle
+        }),
+      },
+    })
+    .promise();
+
   // Lambda function automatically triggers and creates watermarked version
-  
+
   res.json({
     photoId: s3Key,
     watermarkedUrl: `https://${CLOUDFRONT_DOMAIN}/photos/watermarked/${user.id}/${inspectionId}/${s3Key}`,
-    originalUrl: `https://${CLOUDFRONT_DOMAIN}/photos/original/${user.id}/${inspectionId}/${s3Key}`
+    originalUrl: `https://${CLOUDFRONT_DOMAIN}/photos/original/${user.id}/${inspectionId}/${s3Key}`,
   });
 });
 ```
 
 #### User Settings (Toggle Watermark)
+
 ```typescript
 // User preferences table
 CREATE TABLE user_preferences (
@@ -1602,6 +1701,7 @@ CREATE TABLE user_preferences (
 ```
 
 #### Benefits
+
 - **Legal Protection:** Deters unauthorized use of inspection photos
 - **Copyright Enforcement:** Clear ownership and attribution
 - **Professional Appearance:** Branded watermarks enhance credibility
@@ -1611,164 +1711,209 @@ CREATE TABLE user_preferences (
 ---
 
 ### 2.7.2 Digital Signature Validation (Implementation: Phase 1 - Critical)
-**Priority:** 🔴 Critical (Legal compliance requirement)  
-**Timeline:** Implement during backend development (3-4 days)  
+
+**Priority:** 🔴 Critical (Legal compliance requirement)
+**Timeline:** Implement during backend development (3-4 days)
 **Cost Impact:** DocuSign API: $10-20/month/user OR Custom PKI: $0.75/month
 
 #### Solution A: DocuSign Integration (Recommended for MVP)
+
 ```typescript
 import docusign from 'docusign-esign';
 
 class DigitalSignatureService {
   private apiClient: docusign.ApiClient;
   private accountId: string;
-  
+
   constructor() {
     this.apiClient = new docusign.ApiClient();
     this.apiClient.setBasePath(process.env.DOCUSIGN_BASE_PATH);
-    this.apiClient.addDefaultHeader('Authorization', `Bearer ${process.env.DOCUSIGN_ACCESS_TOKEN}`);
+    this.apiClient.addDefaultHeader(
+      'Authorization',
+      `Bearer ${process.env.DOCUSIGN_ACCESS_TOKEN}`,
+    );
     this.accountId = process.env.DOCUSIGN_ACCOUNT_ID;
   }
-  
-  async createEnvelope(inspectionId: string, reportPdfBuffer: Buffer): Promise<string> {
+
+  async createEnvelope(
+    inspectionId: string,
+    reportPdfBuffer: Buffer,
+  ): Promise<string> {
     const envelopesApi = new docusign.EnvelopesApi(this.apiClient);
-    
+
     // Get inspection details
     const inspection = await db.query(
       'SELECT i.*, u.email, u.first_name, u.last_name FROM inspections i JOIN users u ON i.user_id = u.id WHERE i.id = $1',
-      [inspectionId]
+      [inspectionId],
     );
-    
-    const { email, first_name, last_name, property_address } = inspection.rows[0];
-    
+
+    const { email, first_name, last_name, property_address } =
+      inspection.rows[0];
+
     // Create envelope definition
     const envelopeDefinition = {
       emailSubject: `Inspection Report Signature Required - ${property_address}`,
-      documents: [{
-        documentBase64: reportPdfBuffer.toString('base64'),
-        name: `Inspection_Report_${inspectionId}.pdf`,
-        fileExtension: 'pdf',
-        documentId: '1'
-      }],
+      documents: [
+        {
+          documentBase64: reportPdfBuffer.toString('base64'),
+          name: `Inspection_Report_${inspectionId}.pdf`,
+          fileExtension: 'pdf',
+          documentId: '1',
+        },
+      ],
       recipients: {
-        signers: [{
-          email: email,
-          name: `${first_name} ${last_name}`,
-          recipientId: '1',
-          routingOrder: '1',
-          tabs: {
-            signHereTabs: [{
-              documentId: '1',
-              pageNumber: '1',
-              xPosition: '100',
-              yPosition: '700'
-            }],
-            dateSignedTabs: [{
-              documentId: '1',
-              pageNumber: '1',
-              xPosition: '300',
-              yPosition: '700'
-            }]
-          }
-        }]
+        signers: [
+          {
+            email: email,
+            name: `${first_name} ${last_name}`,
+            recipientId: '1',
+            routingOrder: '1',
+            tabs: {
+              signHereTabs: [
+                {
+                  documentId: '1',
+                  pageNumber: '1',
+                  xPosition: '100',
+                  yPosition: '700',
+                },
+              ],
+              dateSignedTabs: [
+                {
+                  documentId: '1',
+                  pageNumber: '1',
+                  xPosition: '300',
+                  yPosition: '700',
+                },
+              ],
+            },
+          },
+        ],
       },
-      status: 'sent'
+      status: 'sent',
     };
-    
+
     const results = await envelopesApi.createEnvelope(this.accountId, {
-      envelopeDefinition: envelopeDefinition
+      envelopeDefinition: envelopeDefinition,
     });
-    
+
     // Store envelope ID for tracking
     await db.query(
       'UPDATE inspections SET docusign_envelope_id = $1, signature_status = $2 WHERE id = $3',
-      [results.envelopeId, 'sent', inspectionId]
+      [results.envelopeId, 'sent', inspectionId],
     );
-    
+
     return results.envelopeId;
   }
-  
-  async checkSignatureStatus(envelopeId: string): Promise<'sent' | 'delivered' | 'completed' | 'declined'> {
+
+  async checkSignatureStatus(
+    envelopeId: string,
+  ): Promise<'sent' | 'delivered' | 'completed' | 'declined'> {
     const envelopesApi = new docusign.EnvelopesApi(this.apiClient);
     const envelope = await envelopesApi.getEnvelope(this.accountId, envelopeId);
     return envelope.status;
   }
-  
+
   async getSignedDocument(envelopeId: string): Promise<Buffer> {
     const envelopesApi = new docusign.EnvelopesApi(this.apiClient);
-    const document = await envelopesApi.getDocument(this.accountId, envelopeId, '1');
+    const document = await envelopesApi.getDocument(
+      this.accountId,
+      envelopeId,
+      '1',
+    );
     return Buffer.from(document);
   }
 }
 
 // API endpoints
-app.post('/api/reports/:inspectionId/request-signature', authenticate, async (req, res) => {
-  const { inspectionId } = req.params;
-  
-  // Generate PDF report
-  const reportPdf = await generateInspectionReport(inspectionId);
-  
-  // Send for signature via DocuSign
-  const signatureService = new DigitalSignatureService();
-  const envelopeId = await signatureService.createEnvelope(inspectionId, reportPdf);
-  
-  res.json({
-    envelopeId,
-    status: 'sent',
-    message: 'Signature request sent to inspector email'
-  });
-});
+app.post(
+  '/api/reports/:inspectionId/request-signature',
+  authenticate,
+  async (req, res) => {
+    const { inspectionId } = req.params;
 
-app.get('/api/reports/:inspectionId/signature-status', authenticate, async (req, res) => {
-  const inspection = await db.query(
-    'SELECT docusign_envelope_id FROM inspections WHERE id = $1',
-    [req.params.inspectionId]
-  );
-  
-  const signatureService = new DigitalSignatureService();
-  const status = await signatureService.checkSignatureStatus(
-    inspection.rows[0].docusign_envelope_id
-  );
-  
-  res.json({ status });
-});
+    // Generate PDF report
+    const reportPdf = await generateInspectionReport(inspectionId);
+
+    // Send for signature via DocuSign
+    const signatureService = new DigitalSignatureService();
+    const envelopeId = await signatureService.createEnvelope(
+      inspectionId,
+      reportPdf,
+    );
+
+    res.json({
+      envelopeId,
+      status: 'sent',
+      message: 'Signature request sent to inspector email',
+    });
+  },
+);
+
+app.get(
+  '/api/reports/:inspectionId/signature-status',
+  authenticate,
+  async (req, res) => {
+    const inspection = await db.query(
+      'SELECT docusign_envelope_id FROM inspections WHERE id = $1',
+      [req.params.inspectionId],
+    );
+
+    const signatureService = new DigitalSignatureService();
+    const status = await signatureService.checkSignatureStatus(
+      inspection.rows[0].docusign_envelope_id,
+    );
+
+    res.json({ status });
+  },
+);
 ```
 
 #### Solution B: Custom PKI-Based Signing (Cost Optimization)
+
 ```typescript
 import crypto from 'crypto';
 import forge from 'node-forge';
 
 class CustomSignatureService {
   // Generate x.509 certificate for inspector
-  async generateCertificate(userId: string, inspectorData: any): Promise<string> {
+  async generateCertificate(
+    userId: string,
+    inspectorData: any,
+  ): Promise<string> {
     const keys = forge.pki.rsa.generateKeyPair(2048);
     const cert = forge.pki.createCertificate();
-    
+
     cert.publicKey = keys.publicKey;
     cert.serialNumber = '01';
     cert.validity.notBefore = new Date();
     cert.validity.notAfter = new Date();
-    cert.validity.notAfter.setFullYear(cert.validity.notBefore.getFullYear() + 1);
-    
-    const attrs = [{
-      name: 'commonName',
-      value: `${inspectorData.firstName} ${inspectorData.lastName}`
-    }, {
-      name: 'countryName',
-      value: 'US'
-    }, {
-      shortName: 'ST',
-      value: inspectorData.state
-    }, {
-      name: 'organizationName',
-      value: 'Smart Inspector Pro'
-    }];
-    
+    cert.validity.notAfter.setFullYear(
+      cert.validity.notBefore.getFullYear() + 1,
+    );
+
+    const attrs = [
+      {
+        name: 'commonName',
+        value: `${inspectorData.firstName} ${inspectorData.lastName}`,
+      },
+      {
+        name: 'countryName',
+        value: 'US',
+      },
+      {
+        shortName: 'ST',
+        value: inspectorData.state,
+      },
+      {
+        name: 'organizationName',
+        value: 'Smart Inspector Pro',
+      },
+    ];
+
     cert.setSubject(attrs);
     cert.setIssuer(attrs);
     cert.sign(keys.privateKey);
-    
+
     // Store certificate
     await db.query(
       'INSERT INTO inspector_certificates (user_id, public_key, private_key, expires_at) VALUES ($1, $2, $3, $4)',
@@ -1776,67 +1921,75 @@ class CustomSignatureService {
         userId,
         forge.pki.publicKeyToPem(keys.publicKey),
         forge.pki.privateKeyToPem(keys.privateKey),
-        cert.validity.notAfter
-      ]
+        cert.validity.notAfter,
+      ],
     );
-    
+
     return forge.pki.certificateToPem(cert);
   }
-  
+
   // Sign PDF document
   async signDocument(userId: string, pdfBuffer: Buffer): Promise<Buffer> {
     const cert = await db.query(
       'SELECT private_key FROM inspector_certificates WHERE user_id = $1',
-      [userId]
+      [userId],
     );
-    
+
     const privateKey = forge.pki.privateKeyFromPem(cert.rows[0].private_key);
-    
+
     // Create SHA-256 hash of document
     const hash = crypto.createHash('sha256').update(pdfBuffer).digest('hex');
-    
+
     // Sign the hash
     const md = forge.md.sha256.create();
     md.update(hash, 'utf8');
     const signature = privateKey.sign(md);
-    
+
     // Embed signature in PDF metadata
-    const signedPdf = await this.embedSignatureInPdf(pdfBuffer, signature, hash);
-    
+    const signedPdf = await this.embedSignatureInPdf(
+      pdfBuffer,
+      signature,
+      hash,
+    );
+
     // Store signature record
     await db.query(
       'INSERT INTO document_signatures (user_id, document_hash, signature, signed_at) VALUES ($1, $2, $3, NOW())',
-      [userId, hash, signature]
+      [userId, hash, signature],
     );
-    
+
     return signedPdf;
   }
-  
+
   // Validate signature
-  async validateSignature(pdfBuffer: Buffer, signature: string): Promise<boolean> {
+  async validateSignature(
+    pdfBuffer: Buffer,
+    signature: string,
+  ): Promise<boolean> {
     const hash = crypto.createHash('sha256').update(pdfBuffer).digest('hex');
-    
+
     const signatureRecord = await db.query(
       'SELECT user_id FROM document_signatures WHERE document_hash = $1 AND signature = $2',
-      [hash, signature]
+      [hash, signature],
     );
-    
+
     if (signatureRecord.rows.length === 0) {
-      return false;  // Signature not found
+      return false; // Signature not found
     }
-    
+
     // Verify signature hasn't been tampered with
     const storedHash = await db.query(
       'SELECT document_hash FROM document_signatures WHERE signature = $1',
-      [signature]
+      [signature],
     );
-    
+
     return storedHash.rows[0].document_hash === hash;
   }
 }
 ```
 
 #### Database Schema
+
 ```sql
 -- Inspector certificates (for custom PKI)
 CREATE TABLE inspector_certificates (
@@ -1867,6 +2020,7 @@ CREATE TABLE document_signatures (
 ```
 
 #### Implementation Checklist
+
 - [ ] Choose signature method (DocuSign for MVP, PKI for cost optimization)
 - [ ] Set up DocuSign developer account and API credentials
 - [ ] Create signature request workflow in backend
@@ -1879,116 +2033,171 @@ CREATE TABLE document_signatures (
 ---
 
 ### 2.7.3 GDPR Compliance Features (Implementation: Phase 1 - High Priority)
-**Priority:** 🟡 High (Required for European market)  
-**Timeline:** Implement during backend development (1 week)  
+
+**Priority:** 🟡 High (Required for European market)
+**Timeline:** Implement during backend development (1 week)
 **Cost Impact:** Minimal (development time only)
 
 #### Right to Access (Article 15)
+
 ```typescript
 // Export all user data
 app.post('/api/user/export-data', authenticate, async (req, res) => {
   const userId = req.user.id;
-  
+
   // Gather all user data
   const userData = {
     profile: await db.query('SELECT * FROM users WHERE id = $1', [userId]),
-    inspections: await db.query('SELECT * FROM inspections WHERE user_id = $1', [userId]),
-    records: await db.query(`
+    inspections: await db.query(
+      'SELECT * FROM inspections WHERE user_id = $1',
+      [userId],
+    ),
+    records: await db.query(
+      `
       SELECT ir.* FROM inspection_records ir
       JOIN inspections i ON ir.inspection_id = i.id
       WHERE i.user_id = $1
-    `, [userId]),
-    photos: await db.query(`
+    `,
+      [userId],
+    ),
+    photos: await db.query(
+      `
       SELECT p.* FROM photos p
       JOIN inspections i ON p.inspection_id = i.id
       WHERE i.user_id = $1
-    `, [userId]),
-    teams: await db.query('SELECT * FROM team_members WHERE user_id = $1', [userId]),
-    workflows: await db.query('SELECT * FROM workflows WHERE user_id = $1', [userId]),
-    contacts: await db.query('SELECT * FROM contacts WHERE user_id = $1', [userId]),
-    invoices: await db.query('SELECT * FROM invoices WHERE user_id = $1', [userId])
+    `,
+      [userId],
+    ),
+    teams: await db.query('SELECT * FROM team_members WHERE user_id = $1', [
+      userId,
+    ]),
+    workflows: await db.query('SELECT * FROM workflows WHERE user_id = $1', [
+      userId,
+    ]),
+    contacts: await db.query('SELECT * FROM contacts WHERE user_id = $1', [
+      userId,
+    ]),
+    invoices: await db.query('SELECT * FROM invoices WHERE user_id = $1', [
+      userId,
+    ]),
   };
-  
+
   // Generate downloadable ZIP file
   const zip = new AdmZip();
-  zip.addFile('profile.json', Buffer.from(JSON.stringify(userData.profile.rows, null, 2)));
-  zip.addFile('inspections.json', Buffer.from(JSON.stringify(userData.inspections.rows, null, 2)));
-  zip.addFile('records.json', Buffer.from(JSON.stringify(userData.records.rows, null, 2)));
-  zip.addFile('photos.json', Buffer.from(JSON.stringify(userData.photos.rows, null, 2)));
-  
+  zip.addFile(
+    'profile.json',
+    Buffer.from(JSON.stringify(userData.profile.rows, null, 2)),
+  );
+  zip.addFile(
+    'inspections.json',
+    Buffer.from(JSON.stringify(userData.inspections.rows, null, 2)),
+  );
+  zip.addFile(
+    'records.json',
+    Buffer.from(JSON.stringify(userData.records.rows, null, 2)),
+  );
+  zip.addFile(
+    'photos.json',
+    Buffer.from(JSON.stringify(userData.photos.rows, null, 2)),
+  );
+
   // Add photo files
   for (const photo of userData.photos.rows) {
-    const photoBuffer = await s3.getObject({
-      Bucket: 'smart-inspector-production',
-      Key: photo.s3_key
-    }).promise();
+    const photoBuffer = await s3
+      .getObject({
+        Bucket: 'smart-inspector-production',
+        Key: photo.s3_key,
+      })
+      .promise();
     zip.addFile(`photos/${photo.id}.jpg`, photoBuffer.Body as Buffer);
   }
-  
+
   res.setHeader('Content-Type', 'application/zip');
-  res.setHeader('Content-Disposition', `attachment; filename=user-data-${userId}.zip`);
+  res.setHeader(
+    'Content-Disposition',
+    `attachment; filename=user-data-${userId}.zip`,
+  );
   res.send(zip.toBuffer());
 });
 ```
 
 #### Right to Deletion (Article 17)
+
 ```typescript
 app.delete('/api/user/delete-account', authenticate, async (req, res) => {
   const userId = req.user.id;
   const { confirmPassword } = req.body;
-  
+
   // Verify password before deletion
-  const user = await db.query('SELECT password_hash FROM users WHERE id = $1', [userId]);
-  const validPassword = await bcrypt.compare(confirmPassword, user.rows[0].password_hash);
-  
+  const user = await db.query('SELECT password_hash FROM users WHERE id = $1', [
+    userId,
+  ]);
+  const validPassword = await bcrypt.compare(
+    confirmPassword,
+    user.rows[0].password_hash,
+  );
+
   if (!validPassword) {
     return res.status(401).json({ error: 'Invalid password' });
   }
-  
+
   // Start transaction
   await db.query('BEGIN');
-  
+
   try {
     // Delete from Cognito
-    await cognito.adminDeleteUser({
-      UserPoolId: process.env.COGNITO_USER_POOL_ID,
-      Username: userId
-    }).promise();
-    
+    await cognito
+      .adminDeleteUser({
+        UserPoolId: process.env.COGNITO_USER_POOL_ID,
+        Username: userId,
+      })
+      .promise();
+
     // Delete all photos from S3
-    const photos = await db.query(`
+    const photos = await db.query(
+      `
       SELECT p.s3_key FROM photos p
       JOIN inspections i ON p.inspection_id = i.id
       WHERE i.user_id = $1
-    `, [userId]);
-    
+    `,
+      [userId],
+    );
+
     for (const photo of photos.rows) {
-      await s3.deleteObject({
-        Bucket: 'smart-inspector-production',
-        Key: photo.s3_key
-      }).promise();
+      await s3
+        .deleteObject({
+          Bucket: 'smart-inspector-production',
+          Key: photo.s3_key,
+        })
+        .promise();
     }
-    
+
     // Cascade delete from database (order matters due to foreign keys)
-    await db.query('DELETE FROM photos WHERE inspection_id IN (SELECT id FROM inspections WHERE user_id = $1)', [userId]);
-    await db.query('DELETE FROM inspection_records WHERE inspection_id IN (SELECT id FROM inspections WHERE user_id = $1)', [userId]);
+    await db.query(
+      'DELETE FROM photos WHERE inspection_id IN (SELECT id FROM inspections WHERE user_id = $1)',
+      [userId],
+    );
+    await db.query(
+      'DELETE FROM inspection_records WHERE inspection_id IN (SELECT id FROM inspections WHERE user_id = $1)',
+      [userId],
+    );
     await db.query('DELETE FROM inspections WHERE user_id = $1', [userId]);
     await db.query('DELETE FROM workflows WHERE user_id = $1', [userId]);
     await db.query('DELETE FROM contacts WHERE user_id = $1', [userId]);
     await db.query('DELETE FROM invoices WHERE user_id = $1', [userId]);
     await db.query('DELETE FROM team_members WHERE user_id = $1', [userId]);
-    
+
     // Anonymize in audit logs (don't delete for compliance)
     await db.query(
       'UPDATE audit_logs SET user_id = $1, anonymized = TRUE WHERE user_id = $2',
-      [`deleted-user-${crypto.randomBytes(16).toString('hex')}`, userId]
+      [`deleted-user-${crypto.randomBytes(16).toString('hex')}`, userId],
     );
-    
+
     // Delete user account
     await db.query('DELETE FROM users WHERE id = $1', [userId]);
-    
+
     await db.query('COMMIT');
-    
+
     res.json({ message: 'Account successfully deleted' });
   } catch (error) {
     await db.query('ROLLBACK');
@@ -1998,6 +2207,7 @@ app.delete('/api/user/delete-account', authenticate, async (req, res) => {
 ```
 
 #### Consent Management
+
 ```sql
 -- User consent tracking
 CREATE TABLE user_consents (
@@ -2015,6 +2225,7 @@ CREATE TABLE user_consents (
 ```
 
 #### Implementation Checklist
+
 - [ ] Add "Download My Data" button in app settings
 - [ ] Implement ZIP export with all user data + photos
 - [ ] Add "Delete Account" flow with password confirmation
@@ -2027,11 +2238,13 @@ CREATE TABLE user_consents (
 ---
 
 ### 2.7.4 Two-Factor Authentication (2FA) (Implementation: Phase 1 - High Priority)
-**Priority:** 🟡 High (Security best practice)  
-**Timeline:** 2 days (enable in Cognito + mobile UI)  
+
+**Priority:** 🟡 High (Security best practice)
+**Timeline:** 2 days (enable in Cognito + mobile UI)
 **Cost Impact:** Minimal (SMS costs ~$0.00645 per message)
 
 #### Cognito MFA Configuration
+
 ```typescript
 // Enable MFA in Cognito User Pool (AWS Console or CLI)
 aws cognito-idp set-user-pool-mfa-config \
@@ -2042,6 +2255,7 @@ aws cognito-idp set-user-pool-mfa-config \
 ```
 
 #### React Native MFA Setup
+
 ```typescript
 import { Auth } from 'aws-amplify';
 
@@ -2050,11 +2264,11 @@ const setupTOTP = async () => {
   try {
     const user = await Auth.currentAuthenticatedUser();
     const code = await Auth.setupTOTP(user);
-    
+
     // Generate QR code for Google Authenticator
     const qrCodeUrl = `otpauth://totp/SmartInspectorPro:${user.username}?secret=${code}&issuer=SmartInspectorPro`;
-    
-    return qrCodeUrl;  // Display QR code to user
+
+    return qrCodeUrl; // Display QR code to user
   } catch (error) {
     console.error('Error setting up TOTP:', error);
   }
@@ -2066,7 +2280,7 @@ const verifyTOTP = async (totpCode: string) => {
     const user = await Auth.currentAuthenticatedUser();
     await Auth.verifyTotpToken(user, totpCode);
     await Auth.setPreferredMFA(user, 'TOTP');
-    
+
     return { success: true };
   } catch (error) {
     return { success: false, error: 'Invalid code' };
@@ -2077,14 +2291,21 @@ const verifyTOTP = async (totpCode: string) => {
 const signInWithMFA = async (username: string, password: string) => {
   try {
     const user = await Auth.signIn(username, password);
-    
-    if (user.challengeName === 'SMS_MFA' || user.challengeName === 'SOFTWARE_TOKEN_MFA') {
+
+    if (
+      user.challengeName === 'SMS_MFA' ||
+      user.challengeName === 'SOFTWARE_TOKEN_MFA'
+    ) {
       // Prompt user for MFA code
       const mfaCode = await promptUserForCode();
-      const loggedUser = await Auth.confirmSignIn(user, mfaCode, user.challengeName);
+      const loggedUser = await Auth.confirmSignIn(
+        user,
+        mfaCode,
+        user.challengeName,
+      );
       return loggedUser;
     }
-    
+
     return user;
   } catch (error) {
     console.error('MFA login error:', error);
@@ -2093,24 +2314,27 @@ const signInWithMFA = async (username: string, password: string) => {
 ```
 
 #### Tier-Based MFA Requirements
+
 ```typescript
 // Middleware to enforce MFA based on membership tier
 const requireMFA = async (req: Request, res: Response, next: NextFunction) => {
   const user = req.user;
-  
+
   // Enterprise tier: MFA mandatory
   if (user.membershipTier === 'enterprise' && !user.mfaEnabled) {
     return res.status(403).json({
       error: 'MFA required for Enterprise tier',
-      message: 'Please enable two-factor authentication in your account settings'
+      message:
+        'Please enable two-factor authentication in your account settings',
     });
   }
-  
+
   next();
 };
 ```
 
 #### Implementation Checklist
+
 - [ ] Enable MFA in Cognito User Pool settings
 - [ ] Add "Enable 2FA" screen in mobile app settings
 - [ ] Generate QR code for TOTP setup (Google Authenticator/Authy)
@@ -2123,11 +2347,13 @@ const requireMFA = async (req: Request, res: Response, next: NextFunction) => {
 ---
 
 ### 2.7.5 Audit Logging for Compliance (Implementation: Phase 1 - Medium Priority)
-**Priority:** 🟢 Medium (Good practice, required for some certifications)  
-**Timeline:** 1 week  
+
+**Priority:** 🟢 Medium (Good practice, required for some certifications)
+**Timeline:** 1 week
 **Cost Impact:** CloudWatch Logs ~$0.50/GB ingested
 
 #### Audit Log Implementation
+
 ```typescript
 interface AuditLog {
   timestamp: Date;
@@ -2145,41 +2371,48 @@ interface AuditLog {
 class AuditLogger {
   async log(event: AuditLog): Promise<void> {
     // Log to PostgreSQL for searchability
-    await db.query(`
-      INSERT INTO audit_logs 
+    await db.query(
+      `
+      INSERT INTO audit_logs
       (user_id, action, resource, resource_id, ip_address, user_agent, result, error_message, metadata)
       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
-    `, [
-      event.userId,
-      event.action,
-      event.resource,
-      event.resourceId,
-      event.ipAddress,
-      event.userAgent,
-      event.result,
-      event.errorMessage,
-      JSON.stringify(event.metadata)
-    ]);
-    
+    `,
+      [
+        event.userId,
+        event.action,
+        event.resource,
+        event.resourceId,
+        event.ipAddress,
+        event.userAgent,
+        event.result,
+        event.errorMessage,
+        JSON.stringify(event.metadata),
+      ],
+    );
+
     // Also log to CloudWatch for real-time monitoring
-    await cloudwatch.putLogEvents({
-      logGroupName: '/smartinspector/audit',
-      logStreamName: new Date().toISOString().split('T')[0],
-      logEvents: [{
-        timestamp: Date.now(),
-        message: JSON.stringify(event)
-      }]
-    }).promise();
+    await cloudwatch
+      .putLogEvents({
+        logGroupName: '/smartinspector/audit',
+        logStreamName: new Date().toISOString().split('T')[0],
+        logEvents: [
+          {
+            timestamp: Date.now(),
+            message: JSON.stringify(event),
+          },
+        ],
+      })
+      .promise();
   }
 }
 
 // Middleware to automatically log all API requests
 app.use(async (req: Request, res: Response, next: NextFunction) => {
   const auditLogger = new AuditLogger();
-  
+
   // Capture response
   const originalSend = res.send;
-  res.send = function(data) {
+  res.send = function (data) {
     // Log after response
     auditLogger.log({
       timestamp: new Date(),
@@ -2192,18 +2425,19 @@ app.use(async (req: Request, res: Response, next: NextFunction) => {
       result: res.statusCode < 400 ? 'success' : 'failure',
       metadata: {
         statusCode: res.statusCode,
-        responseSize: data?.length || 0
-      }
+        responseSize: data?.length || 0,
+      },
     });
-    
+
     return originalSend.call(this, data);
   };
-  
+
   next();
 });
 ```
 
 #### Database Schema
+
 ```sql
 CREATE TABLE audit_logs (
   id UUID PRIMARY KEY,
@@ -2230,21 +2464,22 @@ FOR VALUES FROM ('2025-10-01') TO ('2025-11-01');
 ```
 
 #### Retention Policy
+
 ```typescript
 // Cleanup old audit logs (run as cron job)
 const cleanupAuditLogs = async () => {
   // Professional/Business: Keep 90 days
   await db.query(`
-    DELETE FROM audit_logs 
+    DELETE FROM audit_logs
     WHERE created_at < NOW() - INTERVAL '90 days'
     AND user_id IN (
       SELECT id FROM users WHERE membership_tier IN ('professional', 'business')
     )
   `);
-  
+
   // Enterprise: Keep 2 years
   await db.query(`
-    DELETE FROM audit_logs 
+    DELETE FROM audit_logs
     WHERE created_at < NOW() - INTERVAL '2 years'
     AND user_id IN (
       SELECT id FROM users WHERE membership_tier = 'enterprise'
@@ -2254,6 +2489,7 @@ const cleanupAuditLogs = async () => {
 ```
 
 #### Implementation Checklist
+
 - [ ] Create audit_logs table with partitioning
 - [ ] Implement AuditLogger class
 - [ ] Add middleware to log all API requests
@@ -2268,11 +2504,13 @@ const cleanupAuditLogs = async () => {
 ## Phase 2.8: AWS Infrastructure Optimization
 
 ### 2.8.1 S3 Intelligent-Tiering Lifecycle Policies (Implementation: Now - 30 minutes)
-**Priority:** 🟡 High (Immediate cost savings)  
-**Timeline:** 30 minutes (configure now, saves 39% storage costs)  
+
+**Priority:** 🟡 High (Immediate cost savings)
+**Timeline:** 30 minutes (configure now, saves 39% storage costs)
 **Cost Impact:** -$1.79/month per 200GB user (39% reduction)
 
 #### Lifecycle Policy Configuration
+
 ```json
 {
   "Rules": [
@@ -2321,6 +2559,7 @@ const cleanupAuditLogs = async () => {
 ```
 
 #### Apply Lifecycle Policy via AWS CLI
+
 ```bash
 # Save JSON to file
 cat > lifecycle-policy.json << 'EOF'
@@ -2340,13 +2579,15 @@ aws s3api get-bucket-lifecycle-configuration \
 ```
 
 #### Cost Breakdown
-| Storage Tier | Cost/GB/Month | Use Case | Savings |
-|--------------|---------------|----------|---------|
-| S3 Standard | $0.023 | First 90 days | Baseline |
-| Intelligent Tiering | $0.0125 | 90-365 days | 46% savings |
-| Glacier IR | $0.004 | 365+ days | 83% savings |
+
+| Storage Tier        | Cost/GB/Month | Use Case      | Savings     |
+| ------------------- | ------------- | ------------- | ----------- |
+| S3 Standard         | $0.023        | First 90 days | Baseline    |
+| Intelligent Tiering | $0.0125       | 90-365 days   | 46% savings |
+| Glacier IR          | $0.004        | 365+ days     | 83% savings |
 
 **Example: Enterprise User (200GB)**
+
 - Without lifecycle: 200GB × $0.023 = $4.60/month
 - With lifecycle (50% >90 days, 25% >365 days):
   - 50GB Standard: $1.15
@@ -2355,6 +2596,7 @@ aws s3api get-bucket-lifecycle-configuration \
   - **Total: $2.60/month (43% savings)**
 
 #### Implementation Checklist
+
 - [x] S3 lifecycle policy already configured (done during Phase 4.1)
 - [ ] Monitor S3 storage class distribution via CloudWatch
 - [ ] Adjust transition days based on usage patterns
@@ -2364,17 +2606,20 @@ aws s3api get-bucket-lifecycle-configuration \
 ---
 
 ### 2.8.2 CloudFront Advanced Cache Behaviors (Implementation: Phase 1 - Optional)
-**Priority:** 🟡 High (90% faster photo loads)  
-**Timeline:** 1 day (already deployed, can add advanced behaviors)  
+
+**Priority:** 🟡 High (90% faster photo loads)
+**Timeline:** 1 day (already deployed, can add advanced behaviors)
 **Cost Impact:** Minimal ($0.085/GB vs $0.09/GB from S3)
 
 #### Current Setup (Already Deployed)
+
 - Distribution: E18KTSLFCJOP7D
 - Domain: d3g3dd1e1f7859.cloudfront.net
 - Default cache: 1 hour TTL
 - Compression: Enabled
 
 #### Advanced Cache Behaviors (Optional Enhancement)
+
 ```json
 {
   "CacheBehaviors": [
@@ -2385,8 +2630,8 @@ aws s3api get-bucket-lifecycle-configuration \
       "AllowedMethods": ["GET", "HEAD"],
       "CachedMethods": ["GET", "HEAD"],
       "Compress": true,
-      "DefaultTTL": 604800,  // 7 days
-      "MaxTTL": 31536000,    // 1 year
+      "DefaultTTL": 604800, // 7 days
+      "MaxTTL": 31536000, // 1 year
       "MinTTL": 0,
       "ForwardedValues": {
         "QueryString": false,
@@ -2395,17 +2640,17 @@ aws s3api get-bucket-lifecycle-configuration \
     },
     {
       "PathPattern": "photos/thumbnails/*",
-      "DefaultTTL": 2592000,  // 30 days (thumbnails never change)
+      "DefaultTTL": 2592000, // 30 days (thumbnails never change)
       "MaxTTL": 31536000
     },
     {
       "PathPattern": "reports/*.pdf",
-      "DefaultTTL": 86400,   // 1 day (reports may regenerate)
+      "DefaultTTL": 86400, // 1 day (reports may regenerate)
       "MaxTTL": 604800
     },
     {
       "PathPattern": "api/*",
-      "DefaultTTL": 0,       // No cache for API
+      "DefaultTTL": 0, // No cache for API
       "MaxTTL": 0,
       "MinTTL": 0
     }
@@ -2414,6 +2659,7 @@ aws s3api get-bucket-lifecycle-configuration \
 ```
 
 #### Update CloudFront Distribution
+
 ```bash
 # Get current config
 aws cloudfront get-distribution-config \
@@ -2430,11 +2676,13 @@ aws cloudfront update-distribution \
 ```
 
 #### Performance Impact
+
 - **Before:** 500-1000ms from S3 (Ohio → User)
 - **After:** 50-200ms from CloudFront edge location
 - **Improvement:** 90% faster (5-10x speedup)
 
 #### Implementation Checklist
+
 - [x] CloudFront distribution deployed (Phase 4.1)
 - [ ] Add path-specific cache behaviors (optional)
 - [ ] Test cache hit rates (target >60%)
@@ -2445,37 +2693,41 @@ aws cloudfront update-distribution \
 ---
 
 ### 2.8.3 RDS Reserved Instances (Implementation: Phase 2 - After 6 Months)
-**Priority:** 🟢 Medium (40-60% cost savings after validation)  
-**Timeline:** Switch after 3-6 months of stable usage  
+
+**Priority:** 🟢 Medium (40-60% cost savings after validation)
+**Timeline:** Switch after 3-6 months of stable usage
 **Cost Impact:** -$20-30/month per instance (40-60% savings)
 
 #### Cost Comparison (db.t3.medium PostgreSQL)
-| Pricing Model | Cost/Hour | Cost/Month | Savings |
-|---------------|-----------|------------|---------|
-| On-Demand | $0.068 | $49.44 | Baseline |
-| 1-Year Reserved (No Upfront) | $0.047 | $34.16 | 31% |
-| 1-Year Reserved (Partial Upfront) | $0.042 | $30.53 | 38% |
-| 1-Year Reserved (All Upfront) | $0.041 | $29.81 | 40% |
-| 3-Year Reserved (All Upfront) | $0.027 | $19.62 | 60% |
+
+| Pricing Model                     | Cost/Hour | Cost/Month | Savings  |
+| --------------------------------- | --------- | ---------- | -------- |
+| On-Demand                         | $0.068    | $49.44     | Baseline |
+| 1-Year Reserved (No Upfront)      | $0.047    | $34.16     | 31%      |
+| 1-Year Reserved (Partial Upfront) | $0.042    | $30.53     | 38%      |
+| 1-Year Reserved (All Upfront)     | $0.041    | $29.81     | 40%      |
+| 3-Year Reserved (All Upfront)     | $0.027    | $19.62     | 60%      |
 
 #### When to Purchase
+
 ```typescript
 // Decision criteria
 const shouldPurchaseReservedInstance = () => {
   const criteria = {
-    timeSinceLaunch: 6,  // months
-    averageCPU: 40,       // %
+    timeSinceLaunch: 6, // months
+    averageCPU: 40, // %
     averageConnections: 30,
     userCount: 1000,
-    monthlyRevenue: 90000  // $90k MRR
+    monthlyRevenue: 90000, // $90k MRR
   };
-  
+
   // Purchase if stable for 6 months and CPU >30%
   return criteria.timeSinceReservation >= 6 && criteria.averageCPU > 30;
 };
 ```
 
 #### Purchase via AWS Console
+
 1. Navigate to RDS → Reserved Instances
 2. Click "Purchase Reserved DB Instance"
 3. Select:
@@ -2487,6 +2739,7 @@ const shouldPurchaseReservedInstance = () => {
 4. Review and purchase
 
 #### Implementation Checklist
+
 - [ ] Wait 3-6 months after launch
 - [ ] Analyze RDS CloudWatch metrics (CPU, connections, IOPS)
 - [ ] Confirm instance size is appropriate (not over/under-provisioned)
@@ -2497,11 +2750,13 @@ const shouldPurchaseReservedInstance = () => {
 ---
 
 ### 2.8.4 Lambda Concurrency Limits (Implementation: Phase 1 - During Development)
-**Priority:** 🟡 High (Prevents runaway costs)  
-**Timeline:** Configure during Lambda deployment  
+
+**Priority:** 🟡 High (Prevents runaway costs)
+**Timeline:** Configure during Lambda deployment
 **Cost Impact:** Prevents potential $1,000+ bills from bugs
 
 #### Configure Reserved Concurrency
+
 ```bash
 # Set concurrency limits for each Lambda function
 aws lambda put-function-concurrency \
@@ -2518,6 +2773,7 @@ aws lambda put-function-concurrency \
 ```
 
 #### Provisioned Concurrency (Eliminate Cold Starts)
+
 ```bash
 # For critical functions that need <100ms response
 aws lambda put-provisioned-concurrency-config \
@@ -2527,30 +2783,32 @@ aws lambda put-provisioned-concurrency-config \
 ```
 
 #### Cost Control Configuration
+
 ```yaml
 # serverless.yml or SAM template
 Functions:
   PreSignUpTrigger:
     Handler: triggers/preSignUp.handler
-    Timeout: 10  # seconds (prevent stuck functions)
-    MemorySize: 256  # MB
+    Timeout: 10 # seconds (prevent stuck functions)
+    MemorySize: 256 # MB
     ReservedConcurrentExecutions: 10
-    ProvisionedConcurrency: 2  # Always-warm instances
-    
+    ProvisionedConcurrency: 2 # Always-warm instances
+
   PhotoWatermarkProcessor:
     Handler: photos/watermark.handler
     Timeout: 30
-    MemorySize: 1024  # Higher memory for image processing
+    MemorySize: 1024 # Higher memory for image processing
     ReservedConcurrentExecutions: 50
-    
+
   AIPhotoAnalysis:
     Handler: ai/analyzePhoto.handler
-    Timeout: 60  # Allow time for OpenAI API
+    Timeout: 60 # Allow time for OpenAI API
     MemorySize: 512
-    ReservedConcurrentExecutions: 100  # Max 100 simultaneous AI calls
+    ReservedConcurrentExecutions: 100 # Max 100 simultaneous AI calls
 ```
 
 #### Implementation Checklist
+
 - [ ] Set timeout limits (10-60s depending on function)
 - [ ] Configure reserved concurrency (10-100 based on expected load)
 - [ ] Add provisioned concurrency for auth functions (2-5 instances)
@@ -2561,11 +2819,13 @@ Functions:
 ---
 
 ### 2.8.5 AWS Backup for Disaster Recovery (Implementation: Phase 2 - Before Production)
-**Priority:** 🟢 Medium (Critical for production, optional for dev)  
-**Timeline:** Set up before handling real customer data  
+
+**Priority:** 🟢 Medium (Critical for production, optional for dev)
+**Timeline:** Set up before handling real customer data
 **Cost Impact:** ~$5-10/month (dev), ~$50-100/month (production)
 
 #### Backup Strategy
+
 ```json
 {
   "BackupPlan": {
@@ -2574,11 +2834,11 @@ Functions:
       {
         "RuleName": "DailyBackupRule",
         "TargetBackupVault": "Default",
-        "ScheduleExpression": "cron(0 5 * * ? *)",  // 5 AM UTC daily
+        "ScheduleExpression": "cron(0 5 * * ? *)", // 5 AM UTC daily
         "StartWindowMinutes": 60,
         "CompletionWindowMinutes": 120,
         "Lifecycle": {
-          "DeleteAfterDays": 7,  // 7-day retention for daily
+          "DeleteAfterDays": 7, // 7-day retention for daily
           "MoveToColdStorageAfterDays": null
         },
         "RecoveryPointTags": {
@@ -2588,9 +2848,9 @@ Functions:
       },
       {
         "RuleName": "WeeklyBackupRule",
-        "ScheduleExpression": "cron(0 6 ? * SUN *)",  // Sunday 6 AM
+        "ScheduleExpression": "cron(0 6 ? * SUN *)", // Sunday 6 AM
         "Lifecycle": {
-          "DeleteAfterDays": 30,  // 30-day retention for weekly
+          "DeleteAfterDays": 30, // 30-day retention for weekly
           "MoveToColdStorageAfterDays": 7
         }
       }
@@ -2607,6 +2867,7 @@ Functions:
 ```
 
 #### Enable Point-in-Time Recovery for RDS
+
 ```bash
 # Enable automated backups with 7-day retention
 aws rds modify-db-instance \
@@ -2617,6 +2878,7 @@ aws rds modify-db-instance \
 ```
 
 #### Cross-Region Replication for S3
+
 ```json
 {
   "Role": "arn:aws:iam::112540263981:role/S3ReplicationRole",
@@ -2643,7 +2905,9 @@ aws rds modify-db-instance \
 ```
 
 #### Recovery Objectives
+
 - **RTO (Recovery Time Objective):** 2 hours
+
   - Time to restore RDS from snapshot: ~30 minutes
   - Time to redirect traffic to backup region: ~30 minutes
   - Time to verify data integrity: ~1 hour
@@ -2653,6 +2917,7 @@ aws rds modify-db-instance \
   - Maximum data loss: 24 hours of data
 
 #### Implementation Checklist
+
 - [ ] Enable automated RDS backups (7-day retention)
 - [ ] Set up AWS Backup plan with daily/weekly schedules
 - [ ] Configure S3 versioning (already enabled)
@@ -2666,6 +2931,7 @@ aws rds modify-db-instance \
 ## Phase 3: React Native App Structure
 
 ### 3.1 Screen Hierarchy & Navigation
+
 ```
 App Navigator (Stack)
 ├── Auth Stack
@@ -2702,6 +2968,7 @@ App Navigator (Stack)
 ```
 
 ### 3.2 Component Library Structure
+
 ```
 components/
 ├── common/
@@ -2750,7 +3017,9 @@ components/
 ## Phase 4: Detailed Implementation Plan
 
 ### Step 1: Home Screen Implementation
+
 **Components Needed:**
+
 - Professional dashboard layout
 - Quick action buttons with icons
 - Recent inspections widget
@@ -2758,6 +3027,7 @@ components/
 - Team status indicator
 
 **Features:**
+
 - Smart Inspector button (primary CTA)
 - New/Continue/Join Inspection buttons
 - Inspection Reports access
@@ -2767,13 +3037,16 @@ components/
 - Settings and profile access
 
 ### Step 2: Inspection Data Management
+
 **CSV Processing Engine:**
+
 - Papa Parse integration for CSV reading
 - SQLite local storage for performance
 - Cloud sync capabilities
 - Validation and error handling
 
 **Features:**
+
 - Default single_family.csv integration (33,432 items)
 - Add-on management system
 - Purchase/download simulation
@@ -2781,19 +3054,24 @@ components/
 - Data validation and cleanup
 
 ### Step 3: SQL Database Implementation
+
 **Local Database (SQLite):**
+
 - Offline-first architecture
 - Local data caching
 - Sync queue management
 
 **Cloud Database (PostgreSQL):**
+
 - Multi-tenant architecture
 - Team collaboration support
 - Backup and recovery
 - Performance optimization
 
 ### Step 4: Workflow Editor System
+
 **Features:**
+
 - CSV table selection
 - Hierarchical filtering (Section → System → Location → Component → Material → Condition)
 - Drag-and-drop reordering
@@ -2802,19 +3080,23 @@ components/
 - Import team workflows
 
 **Technical Implementation:**
+
 - Custom drag-and-drop components
 - Real-time filtering engine
 - State persistence
 - Team synchronization
 
 ### Step 5: Report Templates System
+
 **Pre-built Templates:**
+
 1. **Standard Residential Report** - Comprehensive home inspection
 2. **Pre-Purchase Report** - Buyer-focused inspection
 3. **Pre-Sale Report** - Seller-focused inspection
 4. **Specialty Systems Report** - HVAC/Electrical/Plumbing focus
 
 **Features:**
+
 - Template customization
 - Photo integration
 - AI-generated descriptions
@@ -2823,25 +3105,31 @@ components/
 - Email delivery
 
 ### Step 6: Inspection Forms System
+
 **Legal Forms (Auto-generated with user info):**
+
 - Pre-Inspection Agreement
 - Release of Liability
 - Fee Agreement
 
 **Additional Documents:**
+
 - Home buying guides
 - System maintenance guides
 - Safety recommendations
 - Code compliance information
 
 **Features:**
+
 - Digital signature capture
 - Email delivery
 - Status tracking
 - Legal compliance validation
 
 ### Step 7: Scheduling System
+
 **Features:**
+
 - Calendar integration
 - Team scheduling
 - Notification system
@@ -2850,7 +3138,9 @@ components/
 - Client communication
 
 ### Step 8: Contact Management
+
 **Features:**
+
 - Realtor/Client categorization
 - Import/export capabilities
 - Search and filtering
@@ -2859,7 +3149,9 @@ components/
 - Team sharing
 
 ### Step 9: Accounting System
+
 **Features:**
+
 - Invoice generation and tracking
 - Expense categorization
 - Mileage tracking with GPS
@@ -2868,7 +3160,9 @@ components/
 - Payment processing integration
 
 ### Step 10: Team Management
+
 **Features:**
+
 - Role-based permissions
 - Inspection assignment
 - Real-time collaboration
@@ -2877,7 +3171,9 @@ components/
 - Resource sharing
 
 ### Step 11: Data Management
+
 **Features:**
+
 - Cloud storage management
 - Backup and sync
 - Storage analytics
@@ -2886,7 +3182,9 @@ components/
 - Security management
 
 ### Step 12: Membership System
+
 **Features:**
+
 - Profile management
 - Billing management
 - Plan upgrades
@@ -2895,7 +3193,9 @@ components/
 - Support integration
 
 ### Step 13: New Inspection Flow
+
 **Form Fields:**
+
 - Scheduling (date/time pickers)
 - Inspector assignment (team dropdown)
 - Property address (auto-complete)
@@ -2907,17 +3207,21 @@ components/
 - Workflow selection (dropdown)
 
 **Actions:**
+
 - Save inspection (return to home)
 - Start inspection (open workflow)
 
 ### Step 14: Inspection Workflow Core
+
 **Inspection Workflow Screen:**
+
 - Property display with front photo
 - Quick Photo Links (dynamic hierarchy)
 - Photo capture/upload/device connection
 - Inspection progress tracker
 
 **Smart Inspector Screen:**
+
 - Image display
 - Navigation breadcrumbs
 - Hierarchical filtering buttons
@@ -2925,13 +3229,16 @@ components/
 - Comment selection
 
 **Inspection Item Review Screen:**
+
 - Photo markup tools
 - Comment editing
 - Additional notes
 - Final submission
 
 ### Step 15: Continue Inspection
+
 **Features:**
+
 - Upcoming inspections list
 - Saved inspections (drafts)
 - Import shared inspections
@@ -2939,7 +3246,9 @@ components/
 - Progress tracking
 
 ### Step 16: Team Collaboration
+
 **Features:**
+
 - Real-time inspection sharing
 - Multiple inspector support
 - Live photo sharing
@@ -2948,7 +3257,9 @@ components/
 - Conflict resolution
 
 ### Step 17: Inspection Reports
+
 **Features:**
+
 - Report viewing/editing
 - Regeneration with AI
 - Print/PDF export
@@ -2957,7 +3268,9 @@ components/
 - Template selection
 
 ### Step 18: Quality Assurance & Testing
+
 **Testing Strategy:**
+
 - Unit tests for all components
 - Integration tests for workflows
 - E2E tests for critical paths
@@ -2970,25 +3283,30 @@ components/
 ## Phase 5: AI Integration Strategy
 
 ### 5.1 AI Features Implementation
+
 **Image Recognition:**
+
 - Component identification
 - Material recognition
 - Condition assessment
 - Defect detection
 
 **Prediction Engine:**
+
 - Section/System/Component suggestions
 - Condition likelihood
 - Comment recommendations
 - Risk assessment
 
 **Natural Language Processing:**
+
 - Comment generation
 - Report summarization
 - Voice-to-text notes
 - Smart search
 
 ### 5.2 AI Training Data
+
 - Use single_family.csv as training foundation
 - User interaction learning
 - Photo annotation system
@@ -2999,6 +3317,7 @@ components/
 ## Phase 6: Security & Compliance
 
 ### 6.1 Data Security
+
 - End-to-end encryption
 - Secure file storage
 - **AWS Cognito authentication** with JWT tokens
@@ -3009,7 +3328,9 @@ components/
 - GDPR compliance
 
 ### 6.2 Cognito Integration Architecture
+
 **User Pools Configuration:**
+
 - Email/password authentication
 - Custom attributes: `businessName`, `membershipTier`, `licenseNumber`
 - Groups: `team-leader`, `senior-inspector`, `assistant-inspector`, `admin`
@@ -3017,11 +3338,13 @@ components/
 - Password policy enforcement
 
 **Identity Pools Configuration:**
+
 - Authenticated role for S3 direct uploads
 - Unauthenticated role for public assets only
 - Fine-grained IAM policies per user role
 
 **Mobile App Integration:**
+
 ```typescript
 // AWS Amplify configuration
 import { Amplify, Auth } from 'aws-amplify';
@@ -3032,7 +3355,7 @@ Amplify.configure({
     userPoolId: 'us-east-1_XXXXXXXXX',
     userPoolWebClientId: 'XXXXXXXXXXXXXXXXX',
     identityPoolId: 'us-east-1:XXXX-XXXX-XXXX',
-  }
+  },
 });
 
 // Sign in flow
@@ -3044,12 +3367,14 @@ const groups = user.signInUserSession.accessToken.payload['cognito:groups'];
 ```
 
 **Backend Token Validation:**
+
 - Verify JWT signature using Cognito public keys
 - Validate token expiration and claims
 - Extract user groups for authorization
 - Automatic token refresh handled by Amplify
 
 ### 6.3 Legal Compliance
+
 - Digital signature validation
 - Document retention policies
 - Professional liability coverage
@@ -3061,6 +3386,7 @@ const groups = user.signInUserSession.accessToken.payload['cognito:groups'];
 ## Phase 7: Performance Optimization
 
 ### 7.1 App Performance
+
 - Lazy loading for large datasets
 - Image compression and caching
 - Offline-first architecture
@@ -3069,6 +3395,7 @@ const groups = user.signInUserSession.accessToken.payload['cognito:groups'];
 - Battery optimization
 
 ### 7.2 Scalability
+
 - Microservices architecture
 - CDN for file delivery
 - Database indexing
@@ -3083,48 +3410,56 @@ const groups = user.signInUserSession.accessToken.payload['cognito:groups'];
 ### 8.1 Development Timeline (15 Weeks to Launch)
 
 **Week 1-2: Foundation**
+
 - React Native project setup for iOS & Android
 - AWS infrastructure configuration (all 8 services)
 - Backend API framework (Express.js + PostgreSQL)
 - Development environment setup
 
 **Week 3-4: Data Layer**
+
 - CSV data loading (Papa Parse)
 - SQLite local storage
 - PostgreSQL cloud sync
 - Offline-first architecture
 
 **Week 5-6: Authentication & Core UI**
+
 - Cognito integration with Amplify
 - Authentication screens (login, register, reset)
 - Home screen and navigation
 - Basic inspection workflow
 
 **Week 7-8: Smart Inspector Workflow**
+
 - 6-step hierarchical selection
 - Photo capture and S3 upload
 - Workflow editor (drag-and-drop)
 - Inspection progress tracking
 
 **Week 9-10: AI Integration**
+
 - OpenAI GPT-4 Vision for photo analysis
 - AI prediction UI components
 - Rate limiting and cost tracking
 - Fallback to manual workflow
 
 **Week 11-12: Advanced Features**
+
 - Report generation (AI descriptions, PDF)
 - Digital forms and signatures
 - Team collaboration (Socket.io)
 - Business tools (scheduling, contacts, accounting)
 
 **Week 13-14: Polish & Testing**
+
 - Cross-platform testing (iOS and Android)
 - Performance optimization
 - UI/UX refinement (custom design)
 - Security audit and compliance checks
 
 **Week 15: Launch**
+
 - App Store submission (iOS)
 - Google Play submission (Android)
 - Production infrastructure scaling
@@ -3133,12 +3468,14 @@ const groups = user.signInUserSession.accessToken.payload['cognito:groups'];
 ### 8.2 Big-Bang Launch Strategy
 
 **Rationale:**
+
 - Full feature parity from day one
 - No feature limitations or "coming soon" placeholders
 - Immediate competitive advantage with AI features
 - Professional credibility with complete business tools
 
 **Pre-Launch Checklist:**
+
 - [ ] All 19+ screens implemented and tested
 - [ ] Both iOS and Android apps approved by stores
 - [ ] AWS infrastructure at production scale
@@ -3151,6 +3488,7 @@ const groups = user.signInUserSession.accessToken.payload['cognito:groups'];
 - [ ] Security audit passed
 
 **Launch Day Activities:**
+
 1. **6:00 AM EST**: App goes live on both stores
 2. **8:00 AM EST**: Marketing campaign begins
 3. **9:00 AM EST**: Email to beta testers
@@ -3158,6 +3496,7 @@ const groups = user.signInUserSession.accessToken.payload['cognito:groups'];
 5. **Ongoing**: Monitor CloudWatch, error tracking, user feedback
 
 **Post-Launch Monitoring:**
+
 - Real-time CloudWatch dashboards
 - Error tracking (Sentry or similar)
 - User analytics (Mixpanel or similar)
@@ -3168,18 +3507,21 @@ const groups = user.signInUserSession.accessToken.payload['cognito:groups'];
 
 **iOS App Store:**
 **iOS App Store:**
+
 - Developer account required ($99/year)
 - Build with Xcode, submit via App Store Connect
 - Review time: 1-3 days typically
 - Custom design assets required: App icon, screenshots, preview video
 
 **Google Play Store:**
+
 - Developer account required ($25 one-time)
 - Build with Android Studio, submit via Google Play Console
 - Review time: Few hours to 1 day typically
 - Custom design assets required: Feature graphic, screenshots, promo video
 
 **Simultaneous Launch Strategy:**
+
 1. Submit iOS version first (longer review)
 2. Submit Android 1-2 days later
 3. Coordinate approval timing
@@ -3196,6 +3538,7 @@ const groups = user.signInUserSession.accessToken.payload['cognito:groups'];
 home inspection, property inspection, house inspector, real estate inspection, building inspection, AI inspection, inspection software, inspection app, home inspector tools, inspection reports
 
 **Description Highlights:**
+
 - ✨ AI-Powered photo recognition (Premium feature)
 - 📸 33,432+ pre-loaded inspection items
 - 📊 Professional PDF reports with custom branding
@@ -3206,6 +3549,7 @@ home inspection, property inspection, house inspector, real estate inspection, b
 - 🔒 Bank-level security with AWS Cognito
 
 **Target Audience:**
+
 - Professional home inspectors
 - Real estate inspection companies
 - Property management firms
@@ -3218,12 +3562,14 @@ home inspection, property inspection, house inspector, real estate inspection, b
 ### 9.1 Design Philosophy
 
 **Brand Identity:**
+
 - **Professional**: Inspires trust and credibility
 - **Modern**: Clean, contemporary interface
 - **Efficient**: Optimized for speed and productivity
 - **Accessible**: Easy to use in field conditions
 
 **Color Palette (To Be Defined):**
+
 ```
 Primary Color:    #2E5BBA (Professional Blue) - or custom
 Secondary Color:  #4CAF50 (Success Green)
@@ -3235,6 +3581,7 @@ Text Secondary:   #6C757D (Medium Gray)
 ```
 
 **Typography (System Fonts):**
+
 - **iOS**: SF Pro (San Francisco)
 - **Android**: Roboto
 - **Headings**: Semi-bold, 18-24pt
@@ -3242,6 +3589,7 @@ Text Secondary:   #6C757D (Medium Gray)
 - **Captions**: Regular, 12-14pt
 
 **Icon Style:**
+
 - Consistent icon family (Material Design or Feather Icons)
 - 24x24dp standard size
 - Outline style for consistency
@@ -3250,24 +3598,28 @@ Text Secondary:   #6C757D (Medium Gray)
 ### 9.2 Component Design Standards
 
 **Buttons:**
+
 - Rounded corners (8px border radius)
 - Minimum tap target: 44x44pt (iOS) / 48x48dp (Android)
 - Elevation/shadow for depth
 - Disabled state: 50% opacity
 
 **Cards:**
+
 - White background with subtle shadow
 - 12px padding
 - 8px border radius
 - Separator lines between sections
 
 **Forms:**
+
 - Floating labels or top-aligned labels
 - Clear validation messages
 - Real-time validation feedback
 - Error states in red accent color
 
 **Navigation:**
+
 - Bottom tab navigation for main sections
 - Stack navigation for hierarchical flows
 - Consistent back button placement
@@ -3276,6 +3628,7 @@ Text Secondary:   #6C757D (Medium Gray)
 ### 9.3 Platform-Specific Considerations
 
 **iOS Design:**
+
 - Follow Apple Human Interface Guidelines
 - Use native navigation patterns (UINavigationController)
 - iOS-style action sheets
@@ -3283,6 +3636,7 @@ Text Secondary:   #6C757D (Medium Gray)
 - Face ID/Touch ID for authentication
 
 **Android Design:**
+
 - Follow Material Design 3 guidelines
 - Use native navigation patterns (Bottom Navigation)
 - Android-style dialogs and snackbars
@@ -3290,6 +3644,7 @@ Text Secondary:   #6C757D (Medium Gray)
 - Biometric authentication
 
 **Shared Components:**
+
 - 95% code reuse between platforms
 - Platform-specific overrides for native feel
 - Consistent business logic
@@ -3300,6 +3655,7 @@ Text Secondary:   #6C757D (Medium Gray)
 ## Phase 10: Detailed Screen Layouts & UI Specifications
 
 ### Frontend Stack
+
 - **React Native 0.72+** with TypeScript
 - **Redux Toolkit** for state management
 - **React Navigation 6** for routing
@@ -3307,6 +3663,7 @@ Text Secondary:   #6C757D (Medium Gray)
 - **React Native SQLite** for local storage
 
 ### Backend Stack
+
 - **Node.js** with Express.js
 - **PostgreSQL** for production database
 - **Redis** for caching and sessions
@@ -3314,6 +3671,7 @@ Text Secondary:   #6C757D (Medium Gray)
 - **Socket.io** for real-time features
 
 ### Infrastructure
+
 - **AWS/GCP** for cloud hosting
 - **Docker** for containerization
 - **CI/CD** with GitHub Actions
@@ -3321,12 +3679,14 @@ Text Secondary:   #6C757D (Medium Gray)
 - **Analytics** with Firebase/Mixpanel
 
 ### Estimated Timeline
+
 - **Months 1-2:** Setup, database, basic screens
 - **Months 3-4:** Core inspection workflow
 - **Months 5-6:** AI integration, advanced features
 - **Months 7-8:** Polish, testing, deployment
 
 ### Budget Considerations
+
 - Development team (4-6 developers)
 - Cloud infrastructure costs
 - Third-party service integrations
@@ -3339,50 +3699,162 @@ Text Secondary:   #6C757D (Medium Gray)
 ## Phase 10: Detailed Screen Layouts & UI Specifications
 
 ### 10.1 Home Screen Layout
-**Header Section:**
-- App logo (Smart Inspector Pro) - top left
-- User profile avatar/initials - top right
-- Notification bell icon with badge - top right
-- Team status indicator (online/offline) - next to profile
 
-**Main Content Area:**
+**Implementation Status**: ✅ **COMPLETED** - Phase 8, Task P8-T02 (October 19, 2025)
+
+**Architecture**: Tab-based navigation with context-specific cards and priority-focused quick actions
+
+#### Header Section
+
+- **Greeting**: "Hello, {FirstName}" with subtitle "Ready to inspect today?"
+- **Primary Color Background**: Theme-aware header with elevation shadow
+- **Notification Bell**: Icon with badge counter (top right)
+- **User Context**: Pulls from Redux auth state
+
+#### Quick Actions Bar
+
+Located below header, always visible:
+
 ```
-┌─────────────────────────────────--------────┐
-│ Smart Inspector Pro                         │
-│ Smart Inspector                             │ ← CollapsibleSection header
-│ [Schedule Inspection] [Continue Inspection] │ ← NavCard row (icon + subtitle)
-│ [Join Team Inspection] [New Inspection]     │
-│                                             │
-│ Business Management                         │
-│ [Calendar] [Contacts] [Notifications]       │
-│ [Team Management] [Accounting]              │
-│                                             │
-│ Inspection Management                       │
-│ [Workflow Editor] [My Inspections]          │
-│ [Report Templates] [Inspection Forms]       │
-│ [Inspection Data]                           │
-│                                             │
-│ App Management                              │
-│ [Data Management] [Membership Details]      │
-│ [Store] [Settings] [Help & Support]         │
-└─────────────────────────────────--------────┘
+┌────────────────────────────────────────────┐
+│ [🏠 New Inspection]  [📅 Schedule]        │ ← Two primary CTAs
+└────────────────────────────────────────────┘
 ```
 
-**UI Specifications:**
-- **Color Scheme:** Professional blue/gray theme (#2E5BBA primary, #F8F9FA background)
-- **Typography:** Modern sans-serif (system fonts)
-- **Button Style:** Rounded corners (8px), subtle shadows
-- **Grid Layout:** 2-column for tablets, single column for phones
-- **Icons:** Consistent icon family (Feather or Material Design)
-- **Spacing:** 16px padding, 12px margins between elements
+- **New Inspection**: Green (#4CAF50), icon + label
+- **Schedule**: Blue (#2196F3), icon + label
+- **Style**: 16px vertical padding, 12px horizontal, rounded 12px, elevation shadow
+
+#### Tab Navigation
+
+Three tabs with icon + label, 3px bottom border on active:
+
+```
+┌────────────────────────────────────────────┐
+│ [📋 Inspector] [💼 Business] [⚙️ Manage] │
+└────────────────────────────────────────────┘
+```
+
+- **Active State**: Primary color icon/text + bottom border
+- **Inactive State**: Secondary text color
+- **Layout**: Equal flex distribution, centered content
+
+#### Tab Content Areas
+
+**Inspector Tab** (8 cards):
+
+- Section: "Inspection Workflow"
+  - Continue Inspection (orange icon, badge "2")
+  - Join Team (purple icon)
+- Section: "Inspection Assets"
+  - My Inspections (blue icon)
+  - Workflow Editor (green icon)
+  - Report Templates (orange-red icon)
+  - Inspection Forms (cyan icon)
+  - Inspection Data (gray icon)
+
+**Business Tab** (5 cards):
+
+- Section: "Business Tools"
+  - Calendar (green icon)
+  - Contacts (blue icon)
+  - Team Management (purple icon)
+  - Accounting (orange icon)
+  - Notifications (red icon, badge "3")
+
+**Manage Tab** (5 cards):
+
+- Section: "App Management"
+  - Data Management (cyan icon)
+  - Membership (green icon)
+  - Store (purple icon)
+  - Settings (gray icon)
+  - Help & Support (blue icon)
+
+#### MenuCard Design Pattern (CRITICAL - USE FOR ALL SCREENS)
+
+**Visual Signature**: 4px colored accent stripe on left edge (from old app design)
+
+```
+┌────────────────────────────────────────┐
+│█ [○] Menu Card Title             [>] │ ← 4px accent stripe
+└────────────────────────────────────────┘
+```
+
+**Component Structure**:
+
+```typescript
+<MenuCard>
+  <AccentStripe color={accentColor} /> // 4px left edge
+  <IconCircle background={accentColor + '22'}>
+    {' '}
+    // 13% opacity tint
+    <Icon size={24} color={accentColor} /> // 34x34 circle
+  </IconCircle>
+  <CardContent flex={1}>
+    <Title fontSize={16} fontWeight="600" /> // Larger text
+  </CardContent>
+  {badge && <Badge />}
+  <ChevronRight />
+</MenuCard>
+```
+
+**Styling Specifications**:
+
+- **Accent Stripe**: 4px width, full height, position absolute left 0
+- **Icon Circle**: 34x34px, borderRadius 17px, background `${accentColor}22` (13% opacity)
+- **Icon Size**: 24px within circle
+- **Card Padding**: Top/bottom 11px, right 14px, left 18px (after stripe)
+- **Title Font**: 16px (increased from standard 14px), fontWeight 600
+- **Card Border**: 1px solid theme.colors.border, borderRadius 12px
+- **Shadow**: None (cleaner look vs standard elevation)
+- **Spacing**: 10px marginBottom between cards
+- **Pressed State**: Background changes to theme.colors.background
+
+**Color Coding Pattern** (use consistently):
+
+- 🟢 **Green (#4CAF50)**: Success actions, workflow editor, calendar, membership
+- 🔵 **Blue (#2196F3)**: Primary actions, my inspections, contacts, help
+- 🟠 **Orange (#FF9800)**: In-progress items, continue inspection, accounting
+- 🟣 **Purple (#9C27B0)**: Team/collaboration features
+- 🔴 **Red (#F44336)**: Notifications, alerts, urgent items
+- 🟠 **Orange-Red (#FF5722)**: Report templates
+- 🔵 **Cyan (#00BCD4)**: Forms, data management
+- ⚫ **Gray (#607D8B)**: Settings, system tools, inspection data
+
+**Layout Rules**:
+
+- **Full Width Cards**: Default for all menu navigation cards
+- **2-Column Cards**: Reserved for specific use cases (not used in Home Screen)
+- **Section Headers**: h6 variant, fontWeight 700, 12px marginBottom
+- **Section Spacing**: 24px marginTop between sections
+
+**Accessibility**:
+
+- accessibilityRole="button" on all cards
+- accessibilityLabel with descriptive text
+- Badge numbers announced for screen readers
+- High contrast maintained in dark mode
+
+**UI Specifications**:
+
+- **Color Scheme**: Theme-aware (light/dark mode support via ThemeContext)
+- **Typography**: System fonts via ThemedText variants
+- **Icons**: Material Community Icons (react-native-vector-icons)
+- **Grid Layout**: Single column full-width cards
+- **Spacing**: 16px horizontal padding, 20px top padding in tab content
+- **ScrollView**: Vertical with 32px bottom padding
 
 ### 10.2 Inspection Data Screen Layout
+
 **Header:**
+
 - Back navigation arrow
 - Screen title: "Inspection Data"
 - Search/filter icon
 
 **Content Sections:**
+
 ```
 ┌─────────────────────────────────────┐
 │ My Downloaded Tables & Add-Ons     │
@@ -3441,6 +3913,7 @@ Text Secondary:   #6C757D (Medium Gray)
 ```
 
 ### 10.3 Workflow Editor Screen Layout
+
 ```
 ┌─────────────────────────────────────┐
 │ My Workflows                        │
@@ -3478,11 +3951,14 @@ Text Secondary:   #6C757D (Medium Gray)
 ```
 
 ### 10.4 Table Editor Screen Layout
+
 **Header:**
+
 - Workflow name and save status
 - Save, Share, and Exit buttons
 
 **Main Content:**
+
 ```
 ┌─────────────────────────────────────┐
 │ Section Controls                    │
@@ -3505,6 +3981,7 @@ Text Secondary:   #6C757D (Medium Gray)
 ```
 
 **Detailed Section View (when Exterior Grounds is expanded):**
+
 ```
 ┌─────────────────────────────────────┐
 │ Exterior Grounds - System Controls  │
@@ -3519,6 +3996,7 @@ Text Secondary:   #6C757D (Medium Gray)
 ```
 
 **Detailed System View (when Drainage is expanded):**
+
 ```
 ┌─────────────────────────────────────┐
 │ Drainage - Component Controls       │
@@ -3533,6 +4011,7 @@ Text Secondary:   #6C757D (Medium Gray)
 ```
 
 **Material & Condition Filters:**
+
 ```
 ┌─────────────────────────────────────┐
 │ Material Type Filters               │
@@ -3554,6 +4033,7 @@ Text Secondary:   #6C757D (Medium Gray)
 ```
 
 ### 10.5 Report Templates Screen Layout
+
 ```
 ┌─────────────────────────────────────┐
 │ My Templates                        │
@@ -3599,6 +4079,7 @@ Text Secondary:   #6C757D (Medium Gray)
 ```
 
 ### 10.6 Inspection Forms Screen Layout
+
 ```
 ┌─────────────────────────────────────┐
 │ Form Status Tracking                │
@@ -3657,7 +4138,9 @@ Text Secondary:   #6C757D (Medium Gray)
 ```
 
 ### 10.7 Scheduling Screen Layout
+
 **Calendar View:**
+
 ```
 ┌─────────────────────────────────────┐
 │ January 2025        [<] [Today] [>] │
@@ -3701,9 +4184,11 @@ Text Secondary:   #6C757D (Medium Gray)
 ```
 
 ### 10.8 Contacts Screen Layout
+
 **Tab Navigation:** [Realtors] [Clients]
 
 **Realtor Tab:**
+
 ```
 ┌─────────────────────────────────────┐
 │ [🔍 Search] [+ Add Realtor] [Filter]│
@@ -3729,9 +4214,11 @@ Text Secondary:   #6C757D (Medium Gray)
 **Client Tab:** (Similar layout with client-specific information)
 
 ### 10.9 Accounting Screen Layout
+
 **Tab Navigation:** [Invoices] [Expenses] [Mileage] [Reports]
 
 **Invoices Tab:**
+
 ```
 ┌─────────────────────────────────────┐
 │ [+ New Invoice] [Filter] [Export]   │
@@ -3759,6 +4246,7 @@ Text Secondary:   #6C757D (Medium Gray)
 ```
 
 **Expenses Tab:**
+
 ```
 ┌─────────────────────────────────────┐
 │ [+ Add Expense] [Categories] [Export]│
@@ -3786,6 +4274,7 @@ Text Secondary:   #6C757D (Medium Gray)
 ```
 
 **Mileage Tab:**
+
 ```
 ┌─────────────────────────────────────┐
 │ [+ Add Trip] [Auto-Track] [Export]  │
@@ -3816,6 +4305,7 @@ Text Secondary:   #6C757D (Medium Gray)
 ```
 
 **Reports Tab:**
+
 ```
 ┌─────────────────────────────────────┐
 │ [Generate Report] [Date Range] [Export]│
@@ -3846,6 +4336,7 @@ Text Secondary:   #6C757D (Medium Gray)
 ### 10.12 Smart Inspector Screen Layout - Complete Hierarchy Views
 
 **Initial Screen (Step 1 of 6):**
+
 ```
 ┌─────────────────────────────────────┐
 │ Photo Display                       │
@@ -3880,6 +4371,7 @@ Text Secondary:   #6C757D (Medium Gray)
 ```
 
 **System Selection View (Step 2 of 6 - after Exterior Grounds selected):**
+
 ```
 ┌─────────────────────────────────────┐
 │ Navigation Breadcrumbs              │
@@ -3903,6 +4395,7 @@ Text Secondary:   #6C757D (Medium Gray)
 ```
 
 **Location Selection View (Step 3 of 6 - after Drainage selected):**
+
 ```
 ┌─────────────────────────────────────┐
 │ Navigation Breadcrumbs              │
@@ -3920,6 +4413,7 @@ Text Secondary:   #6C757D (Medium Gray)
 ```
 
 **Component Selection View (Step 4 of 6):**
+
 ```
 ┌─────────────────────────────────────┐
 │ Navigation Breadcrumbs              │
@@ -3942,6 +4436,7 @@ Text Secondary:   #6C757D (Medium Gray)
 ```
 
 **Material Selection View (Step 5 of 6):**
+
 ```
 ┌─────────────────────────────────────┐
 │ Navigation Breadcrumbs              │
@@ -3964,6 +4459,7 @@ Text Secondary:   #6C757D (Medium Gray)
 ```
 
 **Condition Selection View (Step 6 of 6):**
+
 ```
 ┌─────────────────────────────────────┐
 │ Navigation Breadcrumbs              │
@@ -3987,6 +4483,7 @@ Text Secondary:   #6C757D (Medium Gray)
 ```
 
 **Comment Selection View (Final Step):**
+
 ```
 ┌─────────────────────────────────────┐
 │ Final Selection                     │
@@ -4022,6 +4519,7 @@ Text Secondary:   #6C757D (Medium Gray)
 ```
 
 ### 10.13 Inspection Item Review Screen Layout
+
 ```
 ┌─────────────────────────────────────┐
 │ Photo Review                        │
@@ -4064,6 +4562,7 @@ Text Secondary:   #6C757D (Medium Gray)
 ```
 
 ### 10.14 Continue Inspection Screen Layout
+
 ```
 ┌─────────────────────────────────────┐
 │ Upcoming Inspections                │
@@ -4108,6 +4607,7 @@ Text Secondary:   #6C757D (Medium Gray)
 ```
 
 ### 10.15 Join Team Inspection Screen Layout
+
 ```
 ┌─────────────────────────────────────┐
 │ Join Active Inspection              │
@@ -4151,6 +4651,7 @@ Text Secondary:   #6C757D (Medium Gray)
 ```
 
 ### 10.16 Team Management Screen Layout
+
 ```
 ┌─────────────────────────────────────┐
 │ Team Overview                       │
@@ -4205,6 +4706,7 @@ Text Secondary:   #6C757D (Medium Gray)
 ```
 
 ### 10.17 Data Management Screen Layout
+
 ```
 ┌─────────────────────────────────────┐
 │ Storage Overview                    │
@@ -4255,6 +4757,7 @@ Text Secondary:   #6C757D (Medium Gray)
 ```
 
 ### 10.18 Membership Details Screen Layout
+
 ```
 ┌─────────────────────────────────────┐
 │ Account Information                 │
@@ -4376,6 +4879,7 @@ Text Secondary:   #6C757D (Medium Gray)
 ```
 
 ### 10.19 Inspection Reports Screen Layout
+
 ```
 ┌─────────────────────────────────────┐
 │ Report Filters & Search             │
@@ -4441,11 +4945,13 @@ Text Secondary:   #6C757D (Medium Gray)
 ### 11.1 Final Technology Stack Decision
 
 #### **AI Services: OpenAI Complete Solution**
+
 - **Photo Recognition:** OpenAI GPT-4 Vision API
 - **Report Generation:** OpenAI GPT-4 Turbo API
 - **Benefits:** Single vendor, consistent quality, unified billing
 
 #### **Cloud Infrastructure: AWS Complete Solution**
+
 - **Storage:** AWS S3 with CloudFront CDN
 - **Database:** AWS RDS PostgreSQL + ElastiCache Redis
 - **Benefits:** Enterprise reliability, global scale, cost optimization
@@ -4459,10 +4965,12 @@ SmartInspectorPro uses a **premium pricing strategy** with three paid tiers plus
 ---
 
 #### **Preview Tier (Free)**
-**Target:** Inspectors evaluating the platform  
+
+**Target:** Inspectors evaluating the platform
 **Cost:** $0 (no time limit)
 
 **Features:**
+
 - ✅ Explore Smart Inspector Screen with Single Family sample data (33,432 items)
 - ✅ Navigate 6-level hierarchy workflow
 - ✅ See pre-written comments for all components
@@ -4470,6 +4978,7 @@ SmartInspectorPro uses a **premium pricing strategy** with three paid tiers plus
 - ✅ Access tutorial videos and documentation
 
 **Restrictions:**
+
 - ❌ No actual inspections (sample data only)
 - ❌ No photo capture or storage
 - ❌ No AI report generation
@@ -4481,10 +4990,12 @@ SmartInspectorPro uses a **premium pricing strategy** with three paid tiers plus
 ---
 
 #### **Professional Tier: $299/month**
-**Target:** Solo inspectors and small teams (1-2 inspectors)  
+
+**Target:** Solo inspectors and small teams (1-2 inspectors)
 **Annual:** $3,050/year (save $538 - 15% discount)
 
 **Core Features:**
+
 - ✅ **Unlimited residential and commercial inspections** per month
 - ✅ **2 team members included** (additional: $50/month each)
 - ✅ **100GB cloud storage** (~400 inspections with photos)
@@ -4507,6 +5018,7 @@ SmartInspectorPro uses a **premium pricing strategy** with three paid tiers plus
 - ✅ **Priority email support** (12-hour response)
 
 **AI Report Generation (Pay-Per-Use):**
+
 - 🤖 **Residential reports**: $9.99 per report
 - 🤖 **Commercial reports**: $19.99 per report
 - GPT-4 Turbo generates complete professional reports
@@ -4515,6 +5027,7 @@ SmartInspectorPro uses a **premium pricing strategy** with three paid tiers plus
 - AI cost: ~$5-10 (residential), ~$15-25 (commercial)
 
 **Ideal For:**
+
 - Solo inspectors doing 5-20 inspections/month
 - New inspection businesses
 - Inspectors doing residential and/or light commercial work
@@ -4522,24 +5035,28 @@ SmartInspectorPro uses a **premium pricing strategy** with three paid tiers plus
 ---
 
 #### **Business Tier: $749/month**
-**Target:** Established inspection companies (3-5 inspectors)  
+
+**Target:** Established inspection companies (3-5 inspectors)
 **Annual:** $7,640/year (save $1,348 - 15% discount)
 
 **Everything in Professional, PLUS:**
 
 **Enhanced Team Management:**
+
 - 👥 **5 team members included** (additional: $40/month each)
 - 📊 Team performance analytics
 - 🎯 Team scheduling and assignment management
 - 👤 Advanced role management
 
 **AI Report Generation (Volume Discount):**
+
 - 🤖 **Residential reports**: $8.99 per report (save $1 vs Professional)
 - 🤖 **Commercial reports**: $17.99 per report (save $2 vs Professional)
 - Priority processing (faster generation)
 - Same GPT-4 Turbo quality
 
 **Expanded Capabilities:**
+
 - 📋 **3 inspection tables**: Single Family, Multi-Family, Town House
 - 🏗️ **Commercial inspections included** (no add-on)
 - 🔄 **25 custom workflows** (vs 5 in Professional)
@@ -4547,6 +5064,7 @@ SmartInspectorPro uses a **premium pricing strategy** with three paid tiers plus
 - 🔗 MLS and CRM integrations
 
 **Premium Features:**
+
 - 💾 **300GB cloud storage** (~1,200 inspections)
 - 📈 Advanced analytics dashboard (revenue per inspector, completion rates)
 - 💰 Multi-inspector accounting
@@ -4561,11 +5079,13 @@ SmartInspectorPro uses a **premium pricing strategy** with three paid tiers plus
 - 🎥 Monthly training webinars
 
 **Optional Add-Ons:**
+
 - **White-Label Reports**: $99/month (remove branding, add your logo)
 - **Additional Client Portals**: $5/portal (beyond 5 included)
 - **Additional Storage**: $20/month per 100GB
 
 **Ideal For:**
+
 - Teams with 3-5 inspectors
 - Companies doing 50-200 inspections/month
 - Businesses wanting team analytics
@@ -4573,23 +5093,27 @@ SmartInspectorPro uses a **premium pricing strategy** with three paid tiers plus
 ---
 
 #### **Enterprise Tier (Custom Pricing)**
-**Target:** Large inspection firms, franchises (10+ inspectors)  
+
+**Target:** Large inspection firms, franchises (10+ inspectors)
 **Starting:** ~$1,299-2,500/month (based on team size)
 
 **Everything in Business, PLUS:**
 
 **Unlimited Scale:**
+
 - 👥 **15+ team members included** (additional: $30/month each)
 - 🌐 Multi-location support
 - 🏢 Franchise management tools
 
 **AI Report Generation (Best Pricing):**
+
 - 🤖 **Residential reports**: $7.99 per report (best pricing)
 - 🤖 **Commercial reports**: $15.99 per report (best pricing)
 - Dedicated AI capacity (no throttling)
 - Custom report templates
 
 **All Inspection Types:**
+
 - ✅ All residential types (Single Family, Multi-Family, Town House, Condo)
 - ✅ All commercial types (included)
 - ✅ Specialty inspections (pools, energy audits, mold)
@@ -4597,6 +5121,7 @@ SmartInspectorPro uses a **premium pricing strategy** with three paid tiers plus
 - 🔄 Unlimited custom workflows
 
 **White-Label & Enterprise Features:**
+
 - 🎨 **White-label mobile app** (your branding in app stores)
 - 📄 Custom report templates (fully branded)
 - 🌐 Custom domain for client portals
@@ -4606,12 +5131,14 @@ SmartInspectorPro uses a **premium pricing strategy** with three paid tiers plus
 - ⚡ **99.9% SLA guarantee**
 
 **API & Integrations:**
+
 - 🔌 Full REST API access
 - 🔗 Custom integrations (CRM, accounting, MLS)
 - 📊 Webhook notifications
 - 📈 BI tool exports (Tableau, Power BI)
 
 **Dedicated Support:**
+
 - 🤝 Dedicated account manager
 - 📞 24/7 phone support
 - 🎓 Custom training program
@@ -4620,12 +5147,14 @@ SmartInspectorPro uses a **premium pricing strategy** with three paid tiers plus
 - 🚀 Migration assistance
 
 **Enhanced UX Features (Enterprise Only):**
+
 - 🟢 **Unlimited inspection comparisons** - Historical tracking for all properties (Rec 2.5)
 - 🟢 **Unlimited client portals** - Premium branded portals for all clients (Rec 2.6)
 - 🟢 **Advanced photo search** - Cross-inspection tag search, export photo libraries (Rec 2.3)
 - 🟢 **Batch voice transcription** - Process multiple recordings at once (Rec 2.2)
 
 **Ideal For:**
+
 - Large firms (10+ inspectors)
 - Multi-location operations
 - 200+ inspections/month
@@ -4636,11 +5165,13 @@ SmartInspectorPro uses a **premium pricing strategy** with three paid tiers plus
 #### **Cost Analysis & Profitability:**
 
 **AI Report Generation Costs:**
+
 - OpenAI GPT-4 Turbo: ~$5-10 per residential report, ~$15-25 per commercial report
 - Residential pricing: $9.99/$8.99/$7.99 (profit margin: 0-50%)
 - Commercial pricing: $19.99/$17.99/$15.99 (profit margin: ~20-30%)
 
 **Monthly Service Example (Professional + 10 AI Reports):**
+
 ```
 Solo Inspector (8 residential, 2 commercial inspections):
 ├── Subscription: $299.00
@@ -4654,6 +5185,7 @@ Solo Inspector (8 residential, 2 commercial inspections):
 ### 11.3 Smart Inspector Workflow Integration
 
 #### **Without AI Photo Recognition (Standard):**
+
 ```
 1. User takes photo
 2. Manual selection through hierarchy:
@@ -4663,6 +5195,7 @@ Solo Inspector (8 residential, 2 commercial inspections):
 ```
 
 #### **With AI Photo Recognition (Premium):**
+
 ```
 1. User takes photo
 2. Photo sent to OpenAI GPT-4 Vision
@@ -4677,55 +5210,58 @@ Solo Inspector (8 residential, 2 commercial inspections):
 ```
 
 #### **Technical Implementation:**
+
 ```typescript
 class AIPhotoService {
   async analyzeInspectionPhoto(photoBase64: string, userTier: string) {
     // Check if user has AI Photo Recognition
     if (!this.hasAIPhotoAccess(userTier)) {
-      return { 
-        hasAccess: false, 
-        upgradePrompt: "Upgrade to unlock AI Photo Recognition" 
+      return {
+        hasAccess: false,
+        upgradePrompt: 'Upgrade to unlock AI Photo Recognition',
       };
     }
 
     // Send to OpenAI GPT-4 Vision
     const response = await openai.chat.completions.create({
-      model: "gpt-4-vision-preview",
-      messages: [{
-        role: "user",
-        content: [
-          {
-            type: "text",
-            text: `Analyze this home inspection photo. Based on the image, identify:
+      model: 'gpt-4-vision-preview',
+      messages: [
+        {
+          role: 'user',
+          content: [
+            {
+              type: 'text',
+              text: `Analyze this home inspection photo. Based on the image, identify:
             1. Section (Exterior Grounds, Interior, Mechanical, Structure)
             2. System (e.g., Drainage, HVAC, Electrical)
             3. Component (specific item being inspected)
             4. Material (construction material type)
             5. Condition (Acceptable, Monitor, Repair/Replace, Safety, Access Restricted)
             6. Specific issues or concerns noted
-            
-            Respond in JSON format matching our CSV structure. Include confidence scores.`
-          },
-          {
-            type: "image_url",
-            image_url: { url: `data:image/jpeg;base64,${photoBase64}` }
-          }
-        ]
-      }],
-      max_tokens: 500
+
+            Respond in JSON format matching our CSV structure. Include confidence scores.`,
+            },
+            {
+              type: 'image_url',
+              image_url: { url: `data:image/jpeg;base64,${photoBase64}` },
+            },
+          ],
+        },
+      ],
+      max_tokens: 500,
     });
 
     // Parse and format response
     const analysis = JSON.parse(response.choices[0].message.content);
-    
+
     // Log usage for billing
     await this.logAIUsage(userTier, 'photo_analysis');
-    
+
     return {
       hasAccess: true,
       analysis: analysis,
       confidence: analysis.confidence,
-      suggestions: analysis.suggestions
+      suggestions: analysis.suggestions,
     };
   }
 
@@ -4733,14 +5269,17 @@ class AIPhotoService {
     // All paid tiers have AI report generation (pay-per-use)
     return ['professional', 'business', 'enterprise'].includes(userTier);
   }
-  
-  private getAIReportPrice(userTier: string, inspectionType: 'residential' | 'commercial'): number {
+
+  private getAIReportPrice(
+    userTier: string,
+    inspectionType: 'residential' | 'commercial',
+  ): number {
     const pricing = {
       professional: { residential: 9.99, commercial: 19.99 },
       business: { residential: 8.99, commercial: 17.99 },
-      enterprise: { residential: 7.99, commercial: 15.99 }
+      enterprise: { residential: 7.99, commercial: 15.99 },
     };
-    
+
     return pricing[userTier]?.[inspectionType] || 0;
   }
 }
@@ -4749,6 +5288,7 @@ class AIPhotoService {
 ### 11.4 AWS Infrastructure Setup
 
 #### **Storage Architecture:**
+
 ```
 AWS S3 Bucket Structure:
 ├── smart-inspector-production/
@@ -4767,6 +5307,7 @@ AWS S3 Bucket Structure:
 ```
 
 #### **Database Configuration:**
+
 ```sql
 -- AWS RDS PostgreSQL Setup
 Instance: db.t3.medium (2 vCPU, 4GB RAM)
@@ -4801,6 +5342,7 @@ CREATE TABLE user_ai_features (
 ### 11.5 Billing Integration Updates
 
 #### **Stripe Integration for AI Add-ons:**
+
 ```typescript
 // Subscription with add-ons
 const createSubscriptionWithAI = async (customerId: string) => {
@@ -4813,7 +5355,7 @@ const createSubscriptionWithAI = async (customerId: string) => {
       {
         price: 'price_ai_photo_recognition', // $29.99
         quantity: 1,
-      }
+      },
     ],
     payment_behavior: 'default_incomplete',
     payment_settings: { save_default_payment_method: 'on_subscription' },
@@ -4826,11 +5368,11 @@ const createSubscriptionWithAI = async (customerId: string) => {
 // Usage-based billing for overages
 const trackAIOverage = async (userId: string, serviceType: string) => {
   const usage = await getMonthlyUsage(userId, serviceType);
-  
+
   if (usage.photos > usage.limit) {
     const overage = usage.photos - usage.limit;
     const cost = overage * 0.25; // $0.25 per additional analysis
-    
+
     await stripe.invoiceItems.create({
       customer: usage.stripeCustomerId,
       amount: Math.round(cost * 100), // Convert to cents
@@ -4844,12 +5386,14 @@ const trackAIOverage = async (userId: string, serviceType: string) => {
 ### 11.6 User Experience Flow
 
 #### **AI Feature Discovery:**
+
 1. User takes photo in Smart Inspector
 2. System shows "AI Photo Recognition available - Upgrade to analyze this photo instantly"
 3. Clear comparison: "Manual process: 2-3 minutes vs AI analysis: 15 seconds"
 4. One-click upgrade flow
 
 #### **Seamless Integration:**
+
 1. Existing users keep manual workflow
 2. Premium users get AI suggestions
 3. No disruption to current functionality
@@ -4858,16 +5402,19 @@ const trackAIOverage = async (userId: string, serviceType: string) => {
 ### 11.7 Cost Optimization Strategies
 
 #### **Smart Caching:**
+
 - Cache common AI responses (e.g., "cracked concrete driveway")
 - Reduce duplicate API calls by 40-60%
 - Store cache in Redis for fast retrieval
 
 #### **Batch Processing:**
+
 - Process multiple photos in single API call when possible
 - Group similar components for analysis
 - Reduce per-request overhead
 
 #### **Tiered Quality:**
+
 - Standard quality for real-time suggestions
 - High quality for final report generation
 - Optimize costs based on use case
@@ -4881,6 +5428,7 @@ This implementation provides a premium AI feature that significantly enhances us
 ### 12.1 Cognito User Pool Configuration
 
 #### **User Pool Settings:**
+
 ```json
 {
   "userPoolName": "smart-inspector-users",
@@ -4920,6 +5468,7 @@ This implementation provides a premium AI feature that significantly enhances us
 ```
 
 #### **Cognito Groups for RBAC:**
+
 ```
 Groups:
 ├── team-leader
@@ -4947,24 +5496,19 @@ Groups:
 ### 12.2 Identity Pool Configuration
 
 #### **IAM Roles for Authenticated Users:**
+
 ```json
 {
   "Version": "2012-10-17",
   "Statement": [
     {
       "Effect": "Allow",
-      "Action": [
-        "s3:PutObject",
-        "s3:GetObject",
-        "s3:DeleteObject"
-      ],
+      "Action": ["s3:PutObject", "s3:GetObject", "s3:DeleteObject"],
       "Resource": "arn:aws:s3:::smart-inspector-production/users/${cognito-identity.amazonaws.com:sub}/*"
     },
     {
       "Effect": "Allow",
-      "Action": [
-        "s3:ListBucket"
-      ],
+      "Action": ["s3:ListBucket"],
       "Resource": "arn:aws:s3:::smart-inspector-production",
       "Condition": {
         "StringLike": {
@@ -4977,6 +5521,7 @@ Groups:
 ```
 
 #### **Role-Based S3 Access:**
+
 - Team leaders: Full S3 access to team folder
 - Senior inspectors: Read/write to assigned inspections
 - Assistants: Upload photos only, no delete permissions
@@ -4985,6 +5530,7 @@ Groups:
 ### 12.3 Mobile App Integration with AWS Amplify
 
 #### **Installation and Configuration:**
+
 ```bash
 # Install Amplify dependencies
 npm install aws-amplify @aws-amplify/auth @aws-amplify/storage
@@ -5013,6 +5559,7 @@ Amplify.configure({
 #### **Authentication Flows:**
 
 **Sign Up Flow:**
+
 ```typescript
 import { Auth } from 'aws-amplify';
 
@@ -5027,10 +5574,10 @@ const signUp = async (email: string, password: string, userData: any) => {
         'custom:businessName': userData.businessName,
         'custom:membershipTier': 'professional',
         'custom:licenseNumber': userData.licenseNumber,
-        'custom:phoneNumber': userData.phoneNumber
-      }
+        'custom:phoneNumber': userData.phoneNumber,
+      },
     });
-    
+
     console.log('User registered:', user);
     return user;
   } catch (error) {
@@ -5052,32 +5599,33 @@ const confirmSignUp = async (email: string, code: string) => {
 ```
 
 **Sign In Flow:**
+
 ```typescript
 // Sign in user
 const signIn = async (email: string, password: string) => {
   try {
     const user = await Auth.signIn(email, password);
-    
+
     // Get JWT tokens
     const session = await Auth.currentSession();
     const idToken = session.getIdToken().getJwtToken();
     const accessToken = session.getAccessToken().getJwtToken();
     const refreshToken = session.getRefreshToken().getToken();
-    
+
     // Get user groups for RBAC
     const groups = session.getAccessToken().payload['cognito:groups'] || [];
-    
+
     // Get custom attributes
     const userInfo = await Auth.currentUserInfo();
     const membershipTier = userInfo.attributes['custom:membershipTier'];
     const businessName = userInfo.attributes['custom:businessName'];
-    
+
     return {
       user,
       tokens: { idToken, accessToken, refreshToken },
       groups,
       membershipTier,
-      businessName
+      businessName,
     };
   } catch (error) {
     console.error('Sign in error:', error);
@@ -5087,6 +5635,7 @@ const signIn = async (email: string, password: string) => {
 ```
 
 **Password Reset Flow:**
+
 ```typescript
 // Initiate password reset
 const forgotPassword = async (email: string) => {
@@ -5100,7 +5649,11 @@ const forgotPassword = async (email: string) => {
 };
 
 // Complete password reset
-const confirmPassword = async (email: string, code: string, newPassword: string) => {
+const confirmPassword = async (
+  email: string,
+  code: string,
+  newPassword: string,
+) => {
   try {
     await Auth.forgotPasswordSubmit(email, code, newPassword);
     console.log('Password reset successful');
@@ -5112,6 +5665,7 @@ const confirmPassword = async (email: string, code: string, newPassword: string)
 ```
 
 **Token Management:**
+
 ```typescript
 // Get current user
 const getCurrentUser = async () => {
@@ -5142,12 +5696,13 @@ const signOut = async () => {
 ### 12.4 Backend Token Validation
 
 #### **Express.js Middleware:**
+
 ```typescript
 import jwt from 'jsonwebtoken';
 import jwksClient from 'jwks-rsa';
 
 const client = jwksClient({
-  jwksUri: `https://cognito-idp.us-east-1.amazonaws.com/${process.env.COGNITO_USER_POOL_ID}/.well-known/jwks.json`
+  jwksUri: `https://cognito-idp.us-east-1.amazonaws.com/${process.env.COGNITO_USER_POOL_ID}/.well-known/jwks.json`,
 });
 
 function getKey(header: any, callback: any) {
@@ -5158,49 +5713,70 @@ function getKey(header: any, callback: any) {
 }
 
 // Middleware to verify Cognito JWT
-export const authenticateToken = (req: Request, res: Response, next: NextFunction) => {
+export const authenticateToken = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   const token = req.headers.authorization?.split(' ')[1];
-  
+
   if (!token) {
     return res.status(401).json({ error: 'No token provided' });
   }
-  
-  jwt.verify(token, getKey, {
-    algorithms: ['RS256'],
-    issuer: `https://cognito-idp.us-east-1.amazonaws.com/${process.env.COGNITO_USER_POOL_ID}`
-  }, (err, decoded) => {
-    if (err) {
-      return res.status(401).json({ error: 'Invalid token' });
-    }
-    
-    req.user = decoded;
-    next();
-  });
+
+  jwt.verify(
+    token,
+    getKey,
+    {
+      algorithms: ['RS256'],
+      issuer: `https://cognito-idp.us-east-1.amazonaws.com/${process.env.COGNITO_USER_POOL_ID}`,
+    },
+    (err, decoded) => {
+      if (err) {
+        return res.status(401).json({ error: 'Invalid token' });
+      }
+
+      req.user = decoded;
+      next();
+    },
+  );
 };
 
 // Middleware to check user groups
 export const requireGroup = (allowedGroups: string[]) => {
   return (req: Request, res: Response, next: NextFunction) => {
     const userGroups = req.user['cognito:groups'] || [];
-    
-    const hasPermission = allowedGroups.some(group => userGroups.includes(group));
-    
+
+    const hasPermission = allowedGroups.some(group =>
+      userGroups.includes(group),
+    );
+
     if (!hasPermission) {
       return res.status(403).json({ error: 'Insufficient permissions' });
     }
-    
+
     next();
   };
 };
 
 // Usage in routes
-app.get('/api/teams', authenticateToken, requireGroup(['team-leader', 'admin']), (req, res) => {
-  // Only team leaders and admins can access
-});
+app.get(
+  '/api/teams',
+  authenticateToken,
+  requireGroup(['team-leader', 'admin']),
+  (req, res) => {
+    // Only team leaders and admins can access
+  },
+);
 
-app.post('/api/inspections', authenticateToken, requireGroup(['team-leader', 'senior-inspector']), (req, res) => {
-  // Create inspection
-});
+app.post(
+  '/api/inspections',
+  authenticateToken,
+  requireGroup(['team-leader', 'senior-inspector']),
+  (req, res) => {
+    // Create inspection
+  },
+);
 
 app.get('/api/inspections/:id', authenticateToken, (req, res) => {
   // All authenticated users can view assigned inspections
@@ -5211,6 +5787,7 @@ app.get('/api/inspections/:id', authenticateToken, (req, res) => {
 ### 12.5 Direct S3 Upload with Identity Pool
 
 #### **Client-Side Upload:**
+
 ```typescript
 import { Storage } from 'aws-amplify';
 
@@ -5224,12 +5801,12 @@ const uploadPhoto = async (file: File, inspectionId: string) => {
       {
         level: 'private', // Uses user's cognito identity in path
         contentType: file.type,
-        progressCallback: (progress) => {
+        progressCallback: progress => {
           console.log(`Uploaded: ${progress.loaded}/${progress.total}`);
-        }
-      }
+        },
+      },
     );
-    
+
     return result.key;
   } catch (error) {
     console.error('Upload error:', error);
@@ -5252,7 +5829,7 @@ const downloadPhoto = async (key: string) => {
 const listPhotos = async (inspectionId: string) => {
   try {
     const result = await Storage.list(`inspections/${inspectionId}/photos/`, {
-      level: 'private'
+      level: 'private',
     });
     return result;
   } catch (error) {
@@ -5265,37 +5842,39 @@ const listPhotos = async (inspectionId: string) => {
 ### 12.6 Cognito Lambda Triggers
 
 #### **Pre-Signup Trigger (Validation):**
+
 ```javascript
-exports.handler = async (event) => {
+exports.handler = async event => {
   // Validate business email
   const email = event.request.userAttributes.email;
-  
+
   if (email.endsWith('@temp.com') || email.endsWith('@disposable.com')) {
     throw new Error('Disposable email addresses are not allowed');
   }
-  
+
   // Validate license number format (if provided)
   const licenseNumber = event.request.userAttributes['custom:licenseNumber'];
   if (licenseNumber && !/^[A-Z]{2}\d{6}$/.test(licenseNumber)) {
     throw new Error('Invalid license number format');
   }
-  
+
   return event;
 };
 ```
 
 #### **Post-Confirmation Trigger (Welcome Email):**
+
 ```javascript
 const AWS = require('aws-sdk');
 const ses = new AWS.SES();
 
-exports.handler = async (event) => {
+exports.handler = async event => {
   const email = event.request.userAttributes.email;
   const businessName = event.request.userAttributes['custom:businessName'];
-  
+
   const params = {
     Destination: {
-      ToAddresses: [email]
+      ToAddresses: [email],
     },
     Message: {
       Body: {
@@ -5305,37 +5884,40 @@ exports.handler = async (event) => {
             <p>Hi ${businessName},</p>
             <p>Your account has been successfully created.</p>
             <p>Start your first inspection today!</p>
-          `
-        }
+          `,
+        },
       },
       Subject: {
-        Data: 'Welcome to Smart Inspector Pro'
-      }
+        Data: 'Welcome to Smart Inspector Pro',
+      },
     },
-    Source: 'noreply@smartinspectorpro.com'
+    Source: 'noreply@smartinspectorpro.com',
   };
-  
+
   await ses.sendEmail(params).promise();
-  
+
   return event;
 };
 ```
 
 #### **Pre-Token Generation (Add Custom Claims):**
+
 ```javascript
-exports.handler = async (event) => {
+exports.handler = async event => {
   // Add membership tier to token claims
   const membershipTier = event.request.userAttributes['custom:membershipTier'];
-  
+
   event.response = {
     claimsOverrideDetails: {
       claimsToAddOrOverride: {
-        'membershipTier': membershipTier,
-        'hasAIAccess': membershipTier === 'enterprise' || membershipTier === 'professional_ai_addon'
-      }
-    }
+        membershipTier: membershipTier,
+        hasAIAccess:
+          membershipTier === 'enterprise' ||
+          membershipTier === 'professional_ai_addon',
+      },
+    },
   };
-  
+
   return event;
 };
 ```
@@ -5343,6 +5925,7 @@ exports.handler = async (event) => {
 ### 12.7 Security Best Practices
 
 #### **Token Security:**
+
 - Store refresh token securely (React Native Keychain/Keystore)
 - Never log tokens or credentials
 - Use HTTPS for all API calls
@@ -5350,13 +5933,14 @@ exports.handler = async (event) => {
 - Rotate secrets regularly
 
 #### **MFA Implementation:**
+
 ```typescript
 // Enable MFA for user
 const enableMFA = async () => {
   try {
     const user = await Auth.currentAuthenticatedUser();
     await Auth.setPreferredMFA(user, 'TOTP');
-    
+
     // Generate QR code for TOTP setup
     const code = await Auth.setupTOTP(user);
     return code; // Display as QR code
@@ -5381,6 +5965,7 @@ const verifyMFA = async (code: string) => {
 ```
 
 #### **Rate Limiting:**
+
 ```typescript
 // Implement rate limiting for auth endpoints
 import rateLimit from 'express-rate-limit';
@@ -5388,7 +5973,7 @@ import rateLimit from 'express-rate-limit';
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 5, // 5 requests per window
-  message: 'Too many authentication attempts, please try again later'
+  message: 'Too many authentication attempts, please try again later',
 });
 
 app.post('/api/auth/login', authLimiter, loginController);
@@ -5398,6 +5983,7 @@ app.post('/api/auth/signup', authLimiter, signupController);
 ### 12.8 Testing Cognito Integration
 
 #### **Unit Tests:**
+
 ```typescript
 import { Auth } from 'aws-amplify';
 
@@ -5407,17 +5993,21 @@ describe('Authentication', () => {
   it('should sign in user successfully', async () => {
     const mockUser = { username: 'test@example.com' };
     (Auth.signIn as jest.Mock).mockResolvedValue(mockUser);
-    
+
     const result = await signIn('test@example.com', 'password123');
-    
+
     expect(Auth.signIn).toHaveBeenCalledWith('test@example.com', 'password123');
     expect(result.user).toEqual(mockUser);
   });
-  
+
   it('should handle sign in errors', async () => {
-    (Auth.signIn as jest.Mock).mockRejectedValue(new Error('Invalid credentials'));
-    
-    await expect(signIn('test@example.com', 'wrong')).rejects.toThrow('Invalid credentials');
+    (Auth.signIn as jest.Mock).mockRejectedValue(
+      new Error('Invalid credentials'),
+    );
+
+    await expect(signIn('test@example.com', 'wrong')).rejects.toThrow(
+      'Invalid credentials',
+    );
   });
 });
 ```
@@ -5439,6 +6029,7 @@ This phase implements enhanced user experience features to significantly improve
 **Solution:** Robust offline-first photo storage with background sync queue.
 
 #### **Architecture:**
+
 ```
 ┌─────────────┐
 │   Camera    │
@@ -5473,6 +6064,7 @@ This phase implements enhanced user experience features to significantly improve
 #### **Implementation Code:**
 
 **1. Offline Photo Queue Service**
+
 ```typescript
 // services/PhotoSyncService.ts
 import SQLite from 'react-native-sqlite-storage';
@@ -5498,9 +6090,9 @@ class PhotoSyncService {
   async initialize() {
     this.db = await SQLite.openDatabase({
       name: 'smart_inspector.db',
-      location: 'default'
+      location: 'default',
     });
-    
+
     // Create offline queue table
     await this.db.executeSql(`
       CREATE TABLE IF NOT EXISTS offline_photo_queue (
@@ -5526,10 +6118,10 @@ class PhotoSyncService {
     metadata: InspectionRecord;
   }): Promise<string> {
     const id = `photo_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    
+
     await this.db.executeSql(
-      `INSERT INTO offline_photo_queue 
-       (id, inspection_id, photo_uri, timestamp, metadata, upload_status) 
+      `INSERT INTO offline_photo_queue
+       (id, inspection_id, photo_uri, timestamp, metadata, upload_status)
        VALUES (?, ?, ?, ?, ?, ?)`,
       [
         id,
@@ -5537,31 +6129,31 @@ class PhotoSyncService {
         photo.photoUri,
         new Date().toISOString(),
         JSON.stringify(photo.metadata),
-        'pending'
-      ]
+        'pending',
+      ],
     );
 
     console.log(`✅ Photo added to offline queue: ${id}`);
-    
+
     // Try immediate sync if online
     this.triggerSync();
-    
+
     return id;
   }
 
   async syncPendingPhotos(): Promise<void> {
     const netInfo = await NetInfo.fetch();
-    
+
     if (!netInfo.isConnected) {
       console.log('📴 No internet connection. Sync postponed.');
       return;
     }
 
     const [results] = await this.db.executeSql(
-      `SELECT * FROM offline_photo_queue 
-       WHERE upload_status = 'pending' OR upload_status = 'failed' 
-       ORDER BY created_at ASC 
-       LIMIT 10` // Process 10 at a time to avoid overwhelming
+      `SELECT * FROM offline_photo_queue
+       WHERE upload_status = 'pending' OR upload_status = 'failed'
+       ORDER BY created_at ASC
+       LIMIT 10`, // Process 10 at a time to avoid overwhelming
     );
 
     const pendingPhotos: OfflinePhoto[] = results.rows.raw();
@@ -5582,7 +6174,7 @@ class PhotoSyncService {
     // Mark as uploading
     await this.db.executeSql(
       `UPDATE offline_photo_queue SET upload_status = 'uploading' WHERE id = ?`,
-      [photo.id]
+      [photo.id],
     );
 
     // Read file from local storage
@@ -5596,16 +6188,16 @@ class PhotoSyncService {
       metadata: {
         inspectionId: photo.inspectionId,
         timestamp: photo.timestamp,
-        ...photo.metadata
-      }
+        ...photo.metadata,
+      },
     });
 
     // Mark as uploaded
     await this.db.executeSql(
-      `UPDATE offline_photo_queue 
-       SET upload_status = 'uploaded', uploaded_at = ? 
+      `UPDATE offline_photo_queue
+       SET upload_status = 'uploaded', uploaded_at = ?
        WHERE id = ?`,
-      [new Date().toISOString(), photo.id]
+      [new Date().toISOString(), photo.id],
     );
 
     console.log(`✅ Photo uploaded successfully: ${photo.id}`);
@@ -5614,24 +6206,29 @@ class PhotoSyncService {
     // await RNFS.unlink(photo.photoUri);
   }
 
-  private async handleUploadFailure(photoId: string, errorMessage: string): Promise<void> {
+  private async handleUploadFailure(
+    photoId: string,
+    errorMessage: string,
+  ): Promise<void> {
     await this.db.executeSql(
-      `UPDATE offline_photo_queue 
-       SET upload_status = 'failed', 
+      `UPDATE offline_photo_queue
+       SET upload_status = 'failed',
            retry_count = retry_count + 1,
            error_message = ?
        WHERE id = ?`,
-      [errorMessage, photoId]
+      [errorMessage, photoId],
     );
 
     // If retry count > 5, mark as permanently failed and alert user
     const [result] = await this.db.executeSql(
       `SELECT retry_count FROM offline_photo_queue WHERE id = ?`,
-      [photoId]
+      [photoId],
     );
 
     if (result.rows.item(0).retry_count > 5) {
-      console.error(`❌ Photo ${photoId} failed after 5 retries. Manual intervention needed.`);
+      console.error(
+        `❌ Photo ${photoId} failed after 5 retries. Manual intervention needed.`,
+      );
       // TODO: Show user notification
     }
   }
@@ -5658,7 +6255,7 @@ class PhotoSyncService {
 
   async getPendingCount(): Promise<number> {
     const [result] = await this.db.executeSql(
-      `SELECT COUNT(*) as count FROM offline_photo_queue WHERE upload_status = 'pending'`
+      `SELECT COUNT(*) as count FROM offline_photo_queue WHERE upload_status = 'pending'`,
     );
     return result.rows.item(0).count;
   }
@@ -5670,7 +6267,7 @@ class PhotoSyncService {
     failed: number;
   }> {
     const [result] = await this.db.executeSql(`
-      SELECT 
+      SELECT
         upload_status,
         COUNT(*) as count
       FROM offline_photo_queue
@@ -5681,7 +6278,7 @@ class PhotoSyncService {
       pending: 0,
       uploading: 0,
       uploaded: 0,
-      failed: 0
+      failed: 0,
     };
 
     for (let i = 0; i < result.rows.length; i++) {
@@ -5697,10 +6294,17 @@ export default new PhotoSyncService();
 ```
 
 **2. UI Component - Offline Photo Queue Viewer**
+
 ```typescript
 // components/inspection/OfflinePhotoQueue.tsx
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
+import {
+  View,
+  Text,
+  FlatList,
+  TouchableOpacity,
+  StyleSheet,
+} from 'react-native';
 import { Badge, Icon, ProgressBar } from 'react-native-elements';
 import PhotoSyncService from '../../services/PhotoSyncService';
 
@@ -5709,7 +6313,7 @@ export const OfflinePhotoQueue: React.FC = () => {
     pending: 0,
     uploading: 0,
     uploaded: 0,
-    failed: 0
+    failed: 0,
   });
 
   useEffect(() => {
@@ -5753,7 +6357,12 @@ export const OfflinePhotoQueue: React.FC = () => {
 
       <View style={styles.statusGrid}>
         <View style={styles.statusItem}>
-          <Icon name="hourglass-empty" type="material" size={20} color="#FFA500" />
+          <Icon
+            name="hourglass-empty"
+            type="material"
+            size={20}
+            color="#FFA500"
+          />
           <Text style={styles.statusCount}>{status.pending}</Text>
           <Text style={styles.statusLabel}>Pending</Text>
         </View>
@@ -5778,10 +6387,7 @@ export const OfflinePhotoQueue: React.FC = () => {
       </View>
 
       {status.pending > 0 && (
-        <TouchableOpacity
-          style={styles.syncButton}
-          onPress={handleForceSync}
-        >
+        <TouchableOpacity style={styles.syncButton} onPress={handleForceSync}>
           <Icon name="sync" type="material" size={20} color="#FFF" />
           <Text style={styles.syncButtonText}>Force Sync Now</Text>
         </TouchableOpacity>
@@ -5808,45 +6414,45 @@ const styles = StyleSheet.create({
     shadowColor: '#000',
     shadowOpacity: 0.1,
     shadowRadius: 4,
-    elevation: 2
+    elevation: 2,
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 12
+    marginBottom: 12,
   },
   title: {
     fontSize: 16,
     fontWeight: '600',
     marginLeft: 8,
-    flex: 1
+    flex: 1,
   },
   badge: {
-    marginLeft: 'auto'
+    marginLeft: 'auto',
   },
   progressBar: {
     height: 6,
     borderRadius: 3,
-    marginBottom: 16
+    marginBottom: 16,
   },
   statusGrid: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 16
+    marginBottom: 16,
   },
   statusItem: {
     alignItems: 'center',
-    flex: 1
+    flex: 1,
   },
   statusCount: {
     fontSize: 20,
     fontWeight: 'bold',
-    marginTop: 4
+    marginTop: 4,
   },
   statusLabel: {
     fontSize: 12,
     color: '#666',
-    marginTop: 2
+    marginTop: 2,
   },
   syncButton: {
     flexDirection: 'row',
@@ -5855,30 +6461,31 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 8
+    marginBottom: 8,
   },
   syncButtonText: {
     color: '#FFF',
     fontWeight: '600',
-    marginLeft: 8
+    marginLeft: 8,
   },
   errorAlert: {
     flexDirection: 'row',
     backgroundColor: '#FFEBEE',
     padding: 12,
     borderRadius: 8,
-    alignItems: 'center'
+    alignItems: 'center',
   },
   errorText: {
     color: '#F44336',
     fontSize: 14,
     marginLeft: 8,
-    flex: 1
-  }
+    flex: 1,
+  },
 });
 ```
 
 **Benefits:**
+
 - ✅ Works in 100% offline environments (basements, rural areas)
 - ✅ Prevents data loss from connectivity issues
 - ✅ Background sync when connection restored
@@ -5895,6 +6502,7 @@ const styles = StyleSheet.create({
 **Solution:** Voice recording with automatic transcription to text comments.
 
 #### **Architecture:**
+
 ```
 ┌──────────────┐
 │ Voice Button │
@@ -5919,7 +6527,7 @@ const styles = StyleSheet.create({
          └──► Option B: AWS Transcribe (Online, better accuracy)
               └─► Upload to S3, trigger Lambda
               └─► Returns transcribed text
-         
+
          ▼
 ┌──────────────────┐
 │  Display Text    │ ◄── Show transcription
@@ -5930,6 +6538,7 @@ const styles = StyleSheet.create({
 #### **Implementation Code:**
 
 **1. Voice Recording Service**
+
 ```typescript
 // services/VoiceTranscriptionService.ts
 import Voice from '@react-native-voice/voice';
@@ -6002,25 +6611,29 @@ class VoiceTranscriptionService {
     const fileName = `voice/${Date.now()}.m4a`;
 
     const s3 = new AWS.S3();
-    await s3.putObject({
-      Bucket: process.env.S3_BUCKET,
-      Key: fileName,
-      Body: Buffer.from(audioData, 'base64'),
-      ContentType: 'audio/m4a'
-    }).promise();
+    await s3
+      .putObject({
+        Bucket: process.env.S3_BUCKET,
+        Key: fileName,
+        Body: Buffer.from(audioData, 'base64'),
+        ContentType: 'audio/m4a',
+      })
+      .promise();
 
     // Start transcription job
     const transcribe = new AWS.TranscribeService();
     const jobName = `transcription_${Date.now()}`;
 
-    await transcribe.startTranscriptionJob({
-      TranscriptionJobName: jobName,
-      LanguageCode: 'en-US',
-      MediaFormat: 'm4a',
-      Media: {
-        MediaFileUri: `s3://${process.env.S3_BUCKET}/${fileName}`
-      }
-    }).promise();
+    await transcribe
+      .startTranscriptionJob({
+        TranscriptionJobName: jobName,
+        LanguageCode: 'en-US',
+        MediaFormat: 'm4a',
+        Media: {
+          MediaFileUri: `s3://${process.env.S3_BUCKET}/${fileName}`,
+        },
+      })
+      .promise();
 
     // Poll for completion (simplified - use webhooks in production)
     let status = 'IN_PROGRESS';
@@ -6029,9 +6642,11 @@ class VoiceTranscriptionService {
     while (status === 'IN_PROGRESS') {
       await new Promise(resolve => setTimeout(resolve, 2000)); // Wait 2s
 
-      const job = await transcribe.getTranscriptionJob({
-        TranscriptionJobName: jobName
-      }).promise();
+      const job = await transcribe
+        .getTranscriptionJob({
+          TranscriptionJobName: jobName,
+        })
+        .promise();
 
       status = job.TranscriptionJob.TranscriptionJobStatus;
 
@@ -6051,7 +6666,7 @@ class VoiceTranscriptionService {
     return {
       text: transcription,
       cost,
-      durationSeconds
+      durationSeconds,
     };
   }
 
@@ -6068,10 +6683,17 @@ export default new VoiceTranscriptionService();
 ```
 
 **2. Voice Recorder UI Component**
+
 ```typescript
 // components/inspection/VoiceRecorder.tsx
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Animated } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Animated,
+} from 'react-native';
 import { Icon } from 'react-native-elements';
 import VoiceTranscriptionService from '../../services/VoiceTranscriptionService';
 
@@ -6082,7 +6704,7 @@ interface VoiceRecorderProps {
 
 export const VoiceRecorder: React.FC<VoiceRecorderProps> = ({
   onTranscriptionComplete,
-  useAWSTranscribe = false
+  useAWSTranscribe = false,
 }) => {
   const [isRecording, setIsRecording] = useState(false);
   const [transcriptionText, setTranscriptionText] = useState('');
@@ -6105,14 +6727,14 @@ export const VoiceRecorder: React.FC<VoiceRecorderProps> = ({
           Animated.timing(pulseAnim, {
             toValue: 1.2,
             duration: 500,
-            useNativeDriver: true
+            useNativeDriver: true,
           }),
           Animated.timing(pulseAnim, {
             toValue: 1,
             duration: 500,
-            useNativeDriver: true
-          })
-        ])
+            useNativeDriver: true,
+          }),
+        ]),
       ).start();
     } else {
       pulseAnim.setValue(1);
@@ -6136,7 +6758,7 @@ export const VoiceRecorder: React.FC<VoiceRecorderProps> = ({
       setIsProcessing(true);
 
       const text = await VoiceTranscriptionService.stopRecording();
-      
+
       if (text) {
         setTranscriptionText(text);
         onTranscriptionComplete(text);
@@ -6161,7 +6783,7 @@ export const VoiceRecorder: React.FC<VoiceRecorderProps> = ({
           style={[
             styles.micButton,
             isRecording && styles.recordingButton,
-            { transform: [{ scale: pulseAnim }] }
+            { transform: [{ scale: pulseAnim }] },
           ]}
         >
           <Icon
@@ -6177,7 +6799,9 @@ export const VoiceRecorder: React.FC<VoiceRecorderProps> = ({
         {isRecording && (
           <View style={styles.recordingIndicator}>
             <View style={styles.recordingDot} />
-            <Text style={styles.recordingText}>Recording... (Release to stop)</Text>
+            <Text style={styles.recordingText}>
+              Recording... (Release to stop)
+            </Text>
           </View>
         )}
 
@@ -6186,7 +6810,9 @@ export const VoiceRecorder: React.FC<VoiceRecorderProps> = ({
         )}
 
         {!isRecording && !isProcessing && (
-          <Text style={styles.instructionText}>Press & hold to record voice memo</Text>
+          <Text style={styles.instructionText}>
+            Press & hold to record voice memo
+          </Text>
         )}
       </View>
 
@@ -6212,10 +6838,10 @@ export const VoiceRecorder: React.FC<VoiceRecorderProps> = ({
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    padding: 16
+    padding: 16,
   },
   recordButton: {
-    marginBottom: 12
+    marginBottom: 12,
   },
   micButton: {
     width: 64,
@@ -6227,39 +6853,39 @@ const styles = StyleSheet.create({
     shadowColor: '#000',
     shadowOpacity: 0.2,
     shadowRadius: 8,
-    elevation: 4
+    elevation: 4,
   },
   recordingButton: {
-    backgroundColor: '#F44336'
+    backgroundColor: '#F44336',
   },
   instructionContainer: {
     height: 24,
-    marginBottom: 12
+    marginBottom: 12,
   },
   recordingIndicator: {
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   recordingDot: {
     width: 8,
     height: 8,
     borderRadius: 4,
     backgroundColor: '#F44336',
-    marginRight: 8
+    marginRight: 8,
   },
   recordingText: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#F44336'
+    color: '#F44336',
   },
   processingText: {
     fontSize: 14,
     color: '#007AFF',
-    fontStyle: 'italic'
+    fontStyle: 'italic',
   },
   instructionText: {
     fontSize: 14,
-    color: '#666'
+    color: '#666',
   },
   transcriptionPreview: {
     flexDirection: 'row',
@@ -6269,29 +6895,30 @@ const styles = StyleSheet.create({
     borderLeftWidth: 3,
     borderLeftColor: '#007AFF',
     alignItems: 'flex-start',
-    maxWidth: '100%'
+    maxWidth: '100%',
   },
   transcriptionText: {
     fontSize: 14,
     color: '#333',
     marginLeft: 8,
     flex: 1,
-    fontStyle: 'italic'
+    fontStyle: 'italic',
   },
   awsIndicator: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 8
+    marginTop: 8,
   },
   awsText: {
     fontSize: 12,
     color: '#666',
-    marginLeft: 4
-  }
+    marginLeft: 4,
+  },
 });
 ```
 
 **Benefits:**
+
 - ✅ 3-5x faster than typing on mobile
 - ✅ Safer (hands-free in dangerous locations like ladders)
 - ✅ More detailed comments (easier to speak than type)
@@ -6310,6 +6937,7 @@ const styles = StyleSheet.create({
 #### **AI Photo Tagging Implementation:**
 
 **1. Photo Tagging Service**
+
 ```typescript
 // services/PhotoTaggingService.ts
 import { OpenAI } from 'openai';
@@ -6327,7 +6955,7 @@ class PhotoTaggingService {
 
   constructor() {
     this.openai = new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY
+      apiKey: process.env.OPENAI_API_KEY,
     });
   }
 
@@ -6335,16 +6963,20 @@ class PhotoTaggingService {
     this.db = database;
   }
 
-  async generateTags(photoBase64: string, photoId: string): Promise<PhotoTag[]> {
+  async generateTags(
+    photoBase64: string,
+    photoId: string,
+  ): Promise<PhotoTag[]> {
     // Piggyback on existing GPT-4 Vision call (no extra cost if already analyzing)
     const response = await this.openai.chat.completions.create({
       model: 'gpt-4-vision-preview',
-      messages: [{
-        role: 'user',
-        content: [
-          {
-            type: 'text',
-            text: `Analyze this home inspection photo and generate descriptive tags for categorization and search.
+      messages: [
+        {
+          role: 'user',
+          content: [
+            {
+              type: 'text',
+              text: `Analyze this home inspection photo and generate descriptive tags for categorization and search.
 
             Return a JSON array of tags with the following categories:
             1. issue-type: What problems are visible? (e.g., "water damage", "cracked foundation", "rust", "mold", "electrical hazard")
@@ -6356,17 +6988,18 @@ class PhotoTaggingService {
             [
               { "tagName": "water damage", "tagCategory": "issue-type", "confidenceScore": 0.95 },
               { "tagName": "severe", "tagCategory": "severity", "confidenceScore": 0.88 }
-            ]`
-          },
-          {
-            type: 'image_url',
-            image_url: {
-              url: `data:image/jpeg;base64,${photoBase64}`
-            }
-          }
-        ]
-      }],
-      max_tokens: 500
+            ]`,
+            },
+            {
+              type: 'image_url',
+              image_url: {
+                url: `data:image/jpeg;base64,${photoBase64}`,
+              },
+            },
+          ],
+        },
+      ],
+      max_tokens: 500,
     });
 
     const tagsJson = response.choices[0].message.content;
@@ -6381,8 +7014,8 @@ class PhotoTaggingService {
   private async saveTags(photoId: string, tags: PhotoTag[]): Promise<void> {
     for (const tag of tags) {
       await this.db.executeSql(
-        `INSERT INTO photo_ai_tags 
-         (id, photo_id, tag_name, tag_category, confidence_score, ai_model_version) 
+        `INSERT INTO photo_ai_tags
+         (id, photo_id, tag_name, tag_category, confidence_score, ai_model_version)
          VALUES (?, ?, ?, ?, ?, ?)`,
         [
           `tag_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
@@ -6390,8 +7023,8 @@ class PhotoTaggingService {
           tag.tagName.toLowerCase(),
           tag.tagCategory,
           tag.confidenceScore,
-          'gpt-4-vision-preview'
-        ]
+          'gpt-4-vision-preview',
+        ],
       );
     }
 
@@ -6401,11 +7034,12 @@ class PhotoTaggingService {
   async searchPhotosByTags(
     userId: string,
     searchQuery: string,
-    minConfidence: number = 0.7
+    minConfidence: number = 0.7,
   ): Promise<any[]> {
     // Full-text search using PostgreSQL tsvector (or SQLite FTS)
-    const [results] = await this.db.executeSql(`
-      SELECT DISTINCT 
+    const [results] = await this.db.executeSql(
+      `
+      SELECT DISTINCT
         p.id,
         p.file_path,
         p.thumbnail_path,
@@ -6422,14 +7056,16 @@ class PhotoTaggingService {
       GROUP BY p.id
       ORDER BY p.created_at DESC
       LIMIT 50
-    `, [userId, `%${searchQuery}%`, minConfidence]);
+    `,
+      [userId, `%${searchQuery}%`, minConfidence],
+    );
 
     return results.rows.raw();
   }
 
   async getTagsByCategory(
     photoId: string,
-    category?: string
+    category?: string,
   ): Promise<PhotoTag[]> {
     const query = category
       ? `SELECT * FROM photo_ai_tags WHERE photo_id = ? AND tag_category = ? ORDER BY confidence_score DESC`
@@ -6441,12 +7077,18 @@ class PhotoTaggingService {
     return results.rows.raw();
   }
 
-  async getPopularTags(userId: string, limit: number = 20): Promise<Array<{
-    tagName: string;
-    count: number;
-  }>> {
-    const [results] = await this.db.executeSql(`
-      SELECT 
+  async getPopularTags(
+    userId: string,
+    limit: number = 20,
+  ): Promise<
+    Array<{
+      tagName: string;
+      count: number;
+    }>
+  > {
+    const [results] = await this.db.executeSql(
+      `
+      SELECT
         t.tag_name,
         COUNT(*) as count
       FROM photo_ai_tags t
@@ -6456,7 +7098,9 @@ class PhotoTaggingService {
       GROUP BY t.tag_name
       ORDER BY count DESC
       LIMIT ?
-    `, [userId, limit]);
+    `,
+      [userId, limit],
+    );
 
     return results.rows.raw();
   }
@@ -6466,6 +7110,7 @@ export default new PhotoTaggingService();
 ```
 
 **2. Photo Search UI Component**
+
 ```typescript
 // components/inspection/PhotoSearch.tsx
 import React, { useState, useEffect } from 'react';
@@ -6476,7 +7121,7 @@ import {
   FlatList,
   Image,
   TouchableOpacity,
-  StyleSheet
+  StyleSheet,
 } from 'react-native';
 import { Icon, Chip } from 'react-native-elements';
 import PhotoTaggingService from '../../services/PhotoTaggingService';
@@ -6493,7 +7138,9 @@ interface SearchResult {
 export const PhotoSearch: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [results, setResults] = useState<SearchResult[]>([]);
-  const [popularTags, setPopularTags] = useState<Array<{ tagName: string; count: number }>>([]);
+  const [popularTags, setPopularTags] = useState<
+    Array<{ tagName: string; count: number }>
+  >([]);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -6501,7 +7148,10 @@ export const PhotoSearch: React.FC = () => {
   }, []);
 
   const loadPopularTags = async () => {
-    const tags = await PhotoTaggingService.getPopularTags('current-user-id', 10);
+    const tags = await PhotoTaggingService.getPopularTags(
+      'current-user-id',
+      10,
+    );
     setPopularTags(tags);
   };
 
@@ -6517,7 +7167,7 @@ export const PhotoSearch: React.FC = () => {
     const searchResults = await PhotoTaggingService.searchPhotosByTags(
       'current-user-id',
       query,
-      0.7 // Minimum 70% confidence
+      0.7, // Minimum 70% confidence
     );
     setResults(searchResults);
     setIsLoading(false);
@@ -6543,15 +7193,18 @@ export const PhotoSearch: React.FC = () => {
           {new Date(item.scheduledDate).toLocaleDateString()}
         </Text>
         <View style={styles.tagsContainer}>
-          {item.tags.split(',').slice(0, 3).map((tag, index) => (
-            <Chip
-              key={index}
-              title={tag}
-              type="outline"
-              containerStyle={styles.chip}
-              titleStyle={styles.chipText}
-            />
-          ))}
+          {item.tags
+            .split(',')
+            .slice(0, 3)
+            .map((tag, index) => (
+              <Chip
+                key={index}
+                title={tag}
+                type="outline"
+                containerStyle={styles.chip}
+                titleStyle={styles.chipText}
+              />
+            ))}
         </View>
       </View>
     </TouchableOpacity>
@@ -6617,7 +7270,12 @@ export const PhotoSearch: React.FC = () => {
             ListEmptyComponent={
               !isLoading && (
                 <View style={styles.emptyState}>
-                  <Icon name="image-search" type="material" size={64} color="#CCC" />
+                  <Icon
+                    name="image-search"
+                    type="material"
+                    size={64}
+                    color="#CCC"
+                  />
                   <Text style={styles.emptyText}>No photos found</Text>
                   <Text style={styles.emptyHint}>
                     Try different tags like "water damage", "rust", or "mold"
@@ -6635,7 +7293,7 @@ export const PhotoSearch: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5F5F5'
+    backgroundColor: '#F5F5F5',
   },
   searchContainer: {
     flexDirection: 'row',
@@ -6647,51 +7305,51 @@ const styles = StyleSheet.create({
     shadowColor: '#000',
     shadowOpacity: 0.1,
     shadowRadius: 4,
-    elevation: 2
+    elevation: 2,
   },
   searchInput: {
     flex: 1,
     marginLeft: 8,
-    fontSize: 16
+    fontSize: 16,
   },
   popularSection: {
     backgroundColor: '#FFF',
     padding: 16,
     marginHorizontal: 16,
     marginBottom: 16,
-    borderRadius: 8
+    borderRadius: 8,
   },
   sectionTitle: {
     fontSize: 16,
     fontWeight: '600',
-    marginBottom: 12
+    marginBottom: 12,
   },
   tagsWrap: {
     flexDirection: 'row',
-    flexWrap: 'wrap'
+    flexWrap: 'wrap',
   },
   popularChip: {
     marginRight: 8,
-    marginBottom: 8
+    marginBottom: 8,
   },
   popularChipButton: {
-    backgroundColor: '#007AFF'
+    backgroundColor: '#007AFF',
   },
   popularChipText: {
-    fontSize: 13
+    fontSize: 13,
   },
   resultsContainer: {
     flex: 1,
-    marginHorizontal: 16
+    marginHorizontal: 16,
   },
   resultsHeader: {
     fontSize: 14,
     fontWeight: '600',
     marginBottom: 12,
-    color: '#666'
+    color: '#666',
   },
   resultsList: {
-    paddingBottom: 16
+    paddingBottom: 16,
   },
   photoCard: {
     flexDirection: 'row',
@@ -6702,57 +7360,58 @@ const styles = StyleSheet.create({
     shadowColor: '#000',
     shadowOpacity: 0.1,
     shadowRadius: 4,
-    elevation: 2
+    elevation: 2,
   },
   thumbnail: {
     width: 100,
-    height: 100
+    height: 100,
   },
   photoInfo: {
     flex: 1,
-    padding: 12
+    padding: 12,
   },
   propertyAddress: {
     fontSize: 15,
     fontWeight: '600',
-    marginBottom: 4
+    marginBottom: 4,
   },
   date: {
     fontSize: 13,
     color: '#666',
-    marginBottom: 8
+    marginBottom: 8,
   },
   tagsContainer: {
     flexDirection: 'row',
-    flexWrap: 'wrap'
+    flexWrap: 'wrap',
   },
   chip: {
     marginRight: 6,
-    marginBottom: 4
+    marginBottom: 4,
   },
   chipText: {
-    fontSize: 11
+    fontSize: 11,
   },
   emptyState: {
     alignItems: 'center',
-    paddingVertical: 48
+    paddingVertical: 48,
   },
   emptyText: {
     fontSize: 18,
     fontWeight: '600',
     color: '#999',
-    marginTop: 16
+    marginTop: 16,
   },
   emptyHint: {
     fontSize: 14,
     color: '#CCC',
     marginTop: 8,
-    textAlign: 'center'
-  }
+    textAlign: 'center',
+  },
 });
 ```
 
 **Benefits:**
+
 - ✅ Fast photo search across all inspections
 - ✅ Legal protection (quickly find evidence for disputes)
 - ✅ Training tool (new inspectors search examples)
@@ -6790,7 +7449,7 @@ class PhotoMetadataService {
     photoUri: string,
     inspectorId: string,
     inspectorLicense: string,
-    propertyAddress: string
+    propertyAddress: string,
   ): Promise<ExtendedPhotoMetadata> {
     // GPS coordinates
     const gpsCoordinates = await this.getCurrentLocation();
@@ -6799,13 +7458,13 @@ class PhotoMetadataService {
     const deviceInfo = {
       model: await DeviceInfo.getModel(),
       os: Platform.OS,
-      osVersion: await DeviceInfo.getSystemVersion()
+      osVersion: await DeviceInfo.getSystemVersion(),
     };
 
     // Weather conditions (from OpenWeatherMap API)
     const weatherConditions = await this.getWeatherData(
       gpsCoordinates.lat,
-      gpsCoordinates.lng
+      gpsCoordinates.lng,
     );
 
     // EXIF data from photo
@@ -6824,7 +7483,7 @@ class PhotoMetadataService {
       inspectorLicense,
       propertyAddress,
       sha256Hash,
-      watermarkApplied: false
+      watermarkApplied: false,
     };
   }
 
@@ -6839,11 +7498,11 @@ class PhotoMetadataService {
           resolve({
             lat: position.coords.latitude,
             lng: position.coords.longitude,
-            accuracy: position.coords.accuracy
+            accuracy: position.coords.accuracy,
           });
         },
         error => reject(error),
-        { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
+        { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 },
       );
     });
   }
@@ -6858,7 +7517,7 @@ class PhotoMetadataService {
     return {
       temp: data.main.temp,
       conditions: data.weather[0].main,
-      humidity: data.main.humidity
+      humidity: data.main.humidity,
     };
   }
 
@@ -6868,7 +7527,7 @@ class PhotoMetadataService {
     return {
       camera: 'iPhone Camera',
       iso: 100,
-      shutter: '1/60'
+      shutter: '1/60',
     };
   }
 
@@ -6882,6 +7541,7 @@ export default new PhotoMetadataService();
 ```
 
 **Benefits:**
+
 - ✅ Legal defensibility (proves photo timestamp and location)
 - ✅ Insurance claim support
 - ✅ Dispute resolution
@@ -6906,7 +7566,7 @@ interface ComparisonResult {
 class InspectionComparisonService {
   async compareInspections(
     originalInspectionId: string,
-    followupInspectionId: string
+    followupInspectionId: string,
   ): Promise<ComparisonResult> {
     const original = await this.getInspectionRecords(originalInspectionId);
     const followup = await this.getInspectionRecords(followupInspectionId);
@@ -6922,7 +7582,7 @@ class InspectionComparisonService {
         f =>
           f.section === origRecord.section &&
           f.system === origRecord.system &&
-          f.component === origRecord.component
+          f.component === origRecord.component,
       );
 
       if (!matchingFollowup) {
@@ -6934,7 +7594,12 @@ class InspectionComparisonService {
         // Component found, compare condition
         if (origRecord.condition === matchingFollowup.condition) {
           unchanged.push(origRecord);
-        } else if (this.isConditionBetter(origRecord.condition, matchingFollowup.condition)) {
+        } else if (
+          this.isConditionBetter(
+            origRecord.condition,
+            matchingFollowup.condition,
+          )
+        ) {
           improved.push(matchingFollowup);
         } else {
           // Condition worsened
@@ -6949,7 +7614,7 @@ class InspectionComparisonService {
         o =>
           o.section === followupRecord.section &&
           o.system === followupRecord.system &&
-          o.component === followupRecord.component
+          o.component === followupRecord.component,
       );
 
       if (!wasInOriginal && followupRecord.condition !== 'Acceptable') {
@@ -6960,13 +7625,16 @@ class InspectionComparisonService {
     return { fixed, newIssues, unchanged, improved };
   }
 
-  private isConditionBetter(oldCondition: string, newCondition: string): boolean {
+  private isConditionBetter(
+    oldCondition: string,
+    newCondition: string,
+  ): boolean {
     const severity = {
       'Safety Hazard': 4,
       'Repair/Replace': 3,
-      'Monitor': 2,
-      'Acceptable': 1,
-      'Access Restricted': 0
+      Monitor: 2,
+      Acceptable: 1,
+      'Access Restricted': 0,
     };
 
     return severity[newCondition] < severity[oldCondition];
@@ -6984,37 +7652,41 @@ class InspectionComparisonService {
 // Client Portal Backend API
 app.post('/api/client-portals', async (req, res) => {
   const { inspectionId, clientEmail } = req.body;
-  
+
   // Generate unique access code
   const accessCode = crypto.randomBytes(6).toString('hex').toUpperCase();
-  
+
   // Create portal record
-  const portal = await db.query(`
-    INSERT INTO client_portals 
+  const portal = await db.query(
+    `
+    INSERT INTO client_portals
     (id, inspection_id, inspector_id, client_email, access_code, portal_url, expires_at)
     VALUES (?, ?, ?, ?, ?, ?, ?)
-  `, [
-    uuid(),
-    inspectionId,
-    req.user.id,
-    clientEmail,
-    accessCode,
-    `https://portal.smartinspectorpro.com/${accessCode}`,
-    new Date(Date.now() + 90 * 24 * 60 * 60 * 1000) // 90 days expiration
-  ]);
-  
+  `,
+    [
+      uuid(),
+      inspectionId,
+      req.user.id,
+      clientEmail,
+      accessCode,
+      `https://portal.smartinspectorpro.com/${accessCode}`,
+      new Date(Date.now() + 90 * 24 * 60 * 60 * 1000), // 90 days expiration
+    ],
+  );
+
   // Send email to client
   await sendClientPortalEmail(clientEmail, accessCode);
-  
+
   res.json({ portal, accessCode });
 });
 
 // Public endpoint (no auth required)
 app.get('/api/client-portals/:code', async (req, res) => {
   const { code } = req.params;
-  
-  const portal = await db.query(`
-    SELECT 
+
+  const portal = await db.query(
+    `
+    SELECT
       cp.*,
       i.property_address,
       i.scheduled_date,
@@ -7023,24 +7695,30 @@ app.get('/api/client-portals/:code', async (req, res) => {
     JOIN inspections i ON cp.inspection_id = i.id
     JOIN users u ON cp.inspector_id = u.id
     WHERE cp.access_code = ? AND cp.is_active = TRUE
-  `, [code]);
-  
+  `,
+    [code],
+  );
+
   if (!portal) {
     return res.status(404).json({ error: 'Portal not found or expired' });
   }
-  
+
   // Increment view count
-  await db.query(`
-    UPDATE client_portals 
+  await db.query(
+    `
+    UPDATE client_portals
     SET view_count = view_count + 1, last_viewed_at = ?
     WHERE id = ?
-  `, [new Date(), portal.id]);
-  
+  `,
+    [new Date(), portal.id],
+  );
+
   res.json(portal);
 });
 ```
 
 **Benefits:**
+
 - ✅ Professional client experience
 - ✅ Reduces inspector support calls
 - ✅ Shareable with real estate agents, contractors
@@ -7053,16 +7731,17 @@ app.get('/api/client-portals/:code', async (req, res) => {
 
 All 6 recommendations from Section 2 (User Experience & Feature Enhancements) are now fully integrated into Smart Inspector Pro Build Layout:
 
-| Rec # | Feature | Priority | Status | Integration Points |
-|-------|---------|----------|--------|-------------------|
-| 2.1 | Offline Photo Queue | 🔴 Critical | ✅ Complete | Database schema, API endpoints, PhotoSyncService, UI component |
-| 2.2 | Voice-to-Text Comments | 🟡 High | ✅ Complete | Database schema, API endpoints, VoiceTranscriptionService, VoiceRecorder component |
-| 2.3 | AI Photo Tagging | 🟡 High | ✅ Complete | Database schema, API endpoints, PhotoTaggingService, PhotoSearch component |
-| 2.4 | Enhanced Metadata | 🟡 High | ✅ Complete | Database schema, PhotoMetadataService with GPS, EXIF, weather, SHA-256 hash |
-| 2.5 | Inspection Comparison | 🟢 Medium | ✅ Complete | Database schema, API endpoints, ComparisonService, UI specification |
-| 2.6 | Client Portal | 🟢 Medium | ✅ Complete | Database schema, API endpoints, public portal access, email integration |
+| Rec # | Feature                | Priority    | Status      | Integration Points                                                                 |
+| ----- | ---------------------- | ----------- | ----------- | ---------------------------------------------------------------------------------- |
+| 2.1   | Offline Photo Queue    | 🔴 Critical | ✅ Complete | Database schema, API endpoints, PhotoSyncService, UI component                     |
+| 2.2   | Voice-to-Text Comments | 🟡 High     | ✅ Complete | Database schema, API endpoints, VoiceTranscriptionService, VoiceRecorder component |
+| 2.3   | AI Photo Tagging       | 🟡 High     | ✅ Complete | Database schema, API endpoints, PhotoTaggingService, PhotoSearch component         |
+| 2.4   | Enhanced Metadata      | 🟡 High     | ✅ Complete | Database schema, PhotoMetadataService with GPS, EXIF, weather, SHA-256 hash        |
+| 2.5   | Inspection Comparison  | 🟢 Medium   | ✅ Complete | Database schema, API endpoints, ComparisonService, UI specification                |
+| 2.6   | Client Portal          | 🟢 Medium   | ✅ Complete | Database schema, API endpoints, public portal access, email integration            |
 
 **Development Time Estimate:**
+
 - Rec 2.1 (Offline Queue): 1 week
 - Rec 2.2 (Voice): 1 week
 - Rec 2.3 (AI Tags): 1 week
@@ -7086,6 +7765,7 @@ This phase implements AI cost reduction, accuracy improvements, and intelligent 
 **Solution:** Multi-level caching strategy reduces OpenAI calls by 40-60%, improving response time and profit margins.
 
 #### **Caching Architecture:**
+
 ```
 ┌────────────────┐
 │  Photo Upload  │
@@ -7129,6 +7809,7 @@ This phase implements AI cost reduction, accuracy improvements, and intelligent 
 #### **Implementation Code:**
 
 **1. Multi-Level Caching Service**
+
 ```typescript
 // services/AIPhotoAnalysisService.ts
 import { OpenAI } from 'openai';
@@ -7155,21 +7836,21 @@ class AIPhotoAnalysisService {
 
   constructor() {
     this.openai = new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY
+      apiKey: process.env.OPENAI_API_KEY,
     });
-    
+
     this.redis = new Redis({
       host: process.env.REDIS_HOST,
       port: parseInt(process.env.REDIS_PORT || '6379'),
       password: process.env.REDIS_PASSWORD,
-      db: 0 // Use database 0 for AI cache
+      db: 0, // Use database 0 for AI cache
     });
   }
 
   async analyzePhoto(
     photoBuffer: Buffer,
     userId: string,
-    inspectionId: string
+    inspectionId: string,
   ): Promise<AnalysisResult> {
     console.log('🤖 Starting AI photo analysis with multi-level caching...');
 
@@ -7207,24 +7888,31 @@ class AIPhotoAnalysisService {
   }
 
   // Level 1: Exact SHA-256 Hash Match
-  private async checkExactMatch(photoBuffer: Buffer): Promise<AnalysisResult | null> {
-    const exactHash = crypto.createHash('sha256').update(photoBuffer).digest('hex');
+  private async checkExactMatch(
+    photoBuffer: Buffer,
+  ): Promise<AnalysisResult | null> {
+    const exactHash = crypto
+      .createHash('sha256')
+      .update(photoBuffer)
+      .digest('hex');
     const cacheKey = `analysis:exact:${exactHash}`;
-    
+
     const cached = await this.redis.get(cacheKey);
     if (cached) {
       return JSON.parse(cached);
     }
-    
+
     return null;
   }
 
   // Level 2: Perceptual Hash Match (detects similar images)
-  private async checkPerceptualMatch(photoBuffer: Buffer): Promise<AnalysisResult | null> {
+  private async checkPerceptualMatch(
+    photoBuffer: Buffer,
+  ): Promise<AnalysisResult | null> {
     try {
       const pHash = await phash(photoBuffer);
       const cacheKey = `analysis:phash:${pHash}`;
-      
+
       const cached = await this.redis.get(cacheKey);
       if (cached) {
         return JSON.parse(cached);
@@ -7234,12 +7922,18 @@ class AIPhotoAnalysisService {
       const keys = await this.redis.keys('analysis:phash:*');
       for (const key of keys) {
         const storedHash = key.split(':')[2];
-        const hammingDistance = this.calculateHammingDistance(pHash, storedHash);
-        
-        if (hammingDistance <= 5) { // 95%+ similarity
+        const hammingDistance = this.calculateHammingDistance(
+          pHash,
+          storedHash,
+        );
+
+        if (hammingDistance <= 5) {
+          // 95%+ similarity
           const cached = await this.redis.get(key);
           if (cached) {
-            console.log(`  📊 Perceptual match: Hamming distance = ${hammingDistance}`);
+            console.log(
+              `  📊 Perceptual match: Hamming distance = ${hammingDistance}`,
+            );
             return JSON.parse(cached);
           }
         }
@@ -7247,32 +7941,36 @@ class AIPhotoAnalysisService {
     } catch (error) {
       console.error('Perceptual hash error:', error);
     }
-    
+
     return null;
   }
 
   // Level 3: Component Template Match
-  private async checkTemplateMatch(photoBuffer: Buffer): Promise<AnalysisResult | null> {
+  private async checkTemplateMatch(
+    photoBuffer: Buffer,
+  ): Promise<AnalysisResult | null> {
     // Use GPT-4o mini for quick component identification ($0.001 per image)
     const quickAnalysis = await this.openai.chat.completions.create({
       model: 'gpt-4o-mini', // Cheaper model
-      messages: [{
-        role: 'user',
-        content: [
-          {
-            type: 'text',
-            text: 'Identify the main component in this home inspection photo. Return only the component name (e.g., "Water Heater", "HVAC Unit", "Roof Shingles").'
-          },
-          {
-            type: 'image_url',
-            image_url: {
-              url: `data:image/jpeg;base64,${photoBuffer.toString('base64')}`,
-              detail: 'low' // Low detail for faster, cheaper analysis
-            }
-          }
-        ]
-      }],
-      max_tokens: 50
+      messages: [
+        {
+          role: 'user',
+          content: [
+            {
+              type: 'text',
+              text: 'Identify the main component in this home inspection photo. Return only the component name (e.g., "Water Heater", "HVAC Unit", "Roof Shingles").',
+            },
+            {
+              type: 'image_url',
+              image_url: {
+                url: `data:image/jpeg;base64,${photoBuffer.toString('base64')}`,
+                detail: 'low', // Low detail for faster, cheaper analysis
+              },
+            },
+          ],
+        },
+      ],
+      max_tokens: 50,
     });
 
     const componentName = quickAnalysis.choices[0].message.content?.trim();
@@ -7284,10 +7982,12 @@ class AIPhotoAnalysisService {
 
     if (template) {
       const parsed = JSON.parse(template);
-      
+
       // Only use template if confidence is high (85%+)
       if (parsed.confidence >= 0.85) {
-        console.log(`  📋 Using template for: ${componentName} (confidence: ${parsed.confidence})`);
+        console.log(
+          `  📋 Using template for: ${componentName} (confidence: ${parsed.confidence})`,
+        );
         return parsed;
       }
     }
@@ -7296,15 +7996,18 @@ class AIPhotoAnalysisService {
   }
 
   // Level 4: Full GPT-4 Vision Analysis
-  private async fullGPT4VisionAnalysis(photoBuffer: Buffer): Promise<AnalysisResult> {
+  private async fullGPT4VisionAnalysis(
+    photoBuffer: Buffer,
+  ): Promise<AnalysisResult> {
     const response = await this.openai.chat.completions.create({
       model: 'gpt-4-vision-preview',
-      messages: [{
-        role: 'user',
-        content: [
-          {
-            type: 'text',
-            text: `Analyze this home inspection photo and identify:
+      messages: [
+        {
+          role: 'user',
+          content: [
+            {
+              type: 'text',
+              text: `Analyze this home inspection photo and identify:
             1. Section (Exterior Grounds, Interior, Mechanical, Structure)
             2. System (e.g., Drainage, HVAC, Plumbing, Electrical)
             3. Component (specific item being inspected)
@@ -7322,18 +8025,19 @@ class AIPhotoAnalysisService {
               "condition": "...",
               "confidence": 0.95,
               "comments": ["issue 1", "issue 2"]
-            }`
-          },
-          {
-            type: 'image_url',
-            image_url: {
-              url: `data:image/jpeg;base64,${photoBuffer.toString('base64')}`,
-              detail: 'high' // High detail for accurate analysis
-            }
-          }
-        ]
-      }],
-      max_tokens: 500
+            }`,
+            },
+            {
+              type: 'image_url',
+              image_url: {
+                url: `data:image/jpeg;base64,${photoBuffer.toString('base64')}`,
+                detail: 'high', // High detail for accurate analysis
+              },
+            },
+          ],
+        },
+      ],
+      max_tokens: 500,
     });
 
     const result = JSON.parse(response.choices[0].message.content || '{}');
@@ -7341,15 +8045,21 @@ class AIPhotoAnalysisService {
   }
 
   // Cache results at all levels
-  private async cacheResults(photoBuffer: Buffer, analysis: AnalysisResult): Promise<void> {
+  private async cacheResults(
+    photoBuffer: Buffer,
+    analysis: AnalysisResult,
+  ): Promise<void> {
     const ttl = 30 * 24 * 60 * 60; // 30 days
 
     // Cache exact hash
-    const exactHash = crypto.createHash('sha256').update(photoBuffer).digest('hex');
+    const exactHash = crypto
+      .createHash('sha256')
+      .update(photoBuffer)
+      .digest('hex');
     await this.redis.setex(
       `analysis:exact:${exactHash}`,
       ttl,
-      JSON.stringify(analysis)
+      JSON.stringify(analysis),
     );
 
     // Cache perceptual hash
@@ -7358,21 +8068,23 @@ class AIPhotoAnalysisService {
       await this.redis.setex(
         `analysis:phash:${pHash}`,
         ttl,
-        JSON.stringify(analysis)
+        JSON.stringify(analysis),
       );
     } catch (error) {
       console.error('Failed to cache perceptual hash:', error);
     }
 
     // Update component template if high confidence
-    if (analysis.confidence >= 0.90) {
+    if (analysis.confidence >= 0.9) {
       const templateKey = `template:${analysis.component.toLowerCase()}`;
       const existing = await this.redis.get(templateKey);
 
       // Only update if new confidence is higher
       if (!existing || JSON.parse(existing).confidence < analysis.confidence) {
         await this.redis.setex(templateKey, ttl, JSON.stringify(analysis));
-        console.log(`  📋 Updated template for ${analysis.component} (confidence: ${analysis.confidence})`);
+        console.log(
+          `  📋 Updated template for ${analysis.component} (confidence: ${analysis.confidence})`,
+        );
       }
     }
   }
@@ -7380,7 +8092,7 @@ class AIPhotoAnalysisService {
   // Calculate Hamming distance between two hash strings
   private calculateHammingDistance(hash1: string, hash2: string): number {
     if (hash1.length !== hash2.length) return Infinity;
-    
+
     let distance = 0;
     for (let i = 0; i < hash1.length; i++) {
       if (hash1[i] !== hash2[i]) distance++;
@@ -7394,17 +8106,26 @@ class AIPhotoAnalysisService {
     this.costTracking.set(userId, currentCost + cost);
 
     // Store in database for billing
-    await this.redis.hincrby(`user:${userId}:ai-costs`, 'total', Math.round(cost * 10000)); // Store in 1/10000 dollar increments
+    await this.redis.hincrby(
+      `user:${userId}:ai-costs`,
+      'total',
+      Math.round(cost * 10000),
+    ); // Store in 1/10000 dollar increments
   }
 
   // Get user's AI spending
-  async getUserAICosts(userId: string): Promise<{ total: number; thisMonth: number }> {
+  async getUserAICosts(
+    userId: string,
+  ): Promise<{ total: number; thisMonth: number }> {
     const total = await this.redis.hget(`user:${userId}:ai-costs`, 'total');
-    const thisMonth = await this.redis.hget(`user:${userId}:ai-costs:${new Date().toISOString().slice(0, 7)}`, 'total');
+    const thisMonth = await this.redis.hget(
+      `user:${userId}:ai-costs:${new Date().toISOString().slice(0, 7)}`,
+      'total',
+    );
 
     return {
       total: parseFloat(total || '0') / 10000,
-      thisMonth: parseFloat(thisMonth || '0') / 10000
+      thisMonth: parseFloat(thisMonth || '0') / 10000,
     };
   }
 
@@ -7418,18 +8139,23 @@ class AIPhotoAnalysisService {
     costSavings: number;
   }> {
     const stats = await this.redis.hgetall('cache-stats');
-    
+
     const exactHits = parseInt(stats.exactHits || '0');
     const perceptualHits = parseInt(stats.perceptualHits || '0');
     const templateHits = parseInt(stats.templateHits || '0');
     const fullAnalysis = parseInt(stats.fullAnalysis || '0');
 
-    const totalRequests = exactHits + perceptualHits + templateHits + fullAnalysis;
-    const hitRate = totalRequests > 0 ? (exactHits + perceptualHits + templateHits) / totalRequests : 0;
-    
+    const totalRequests =
+      exactHits + perceptualHits + templateHits + fullAnalysis;
+    const hitRate =
+      totalRequests > 0
+        ? (exactHits + perceptualHits + templateHits) / totalRequests
+        : 0;
+
     // Calculate cost savings
     // Each cache hit saves $0.02 (except template which saves $0.019)
-    const costSavings = (exactHits * 0.02) + (perceptualHits * 0.02) + (templateHits * 0.019);
+    const costSavings =
+      exactHits * 0.02 + perceptualHits * 0.02 + templateHits * 0.019;
 
     return {
       exactHits,
@@ -7437,7 +8163,7 @@ class AIPhotoAnalysisService {
       templateHits,
       fullAnalysis,
       hitRate,
-      costSavings
+      costSavings,
     };
   }
 }
@@ -7446,6 +8172,7 @@ export default new AIPhotoAnalysisService();
 ```
 
 **2. Cache Statistics Dashboard Component**
+
 ```typescript
 // components/admin/AICacheStats.tsx
 import React, { useEffect, useState } from 'react';
@@ -7460,7 +8187,7 @@ export const AICacheStats: React.FC = () => {
     templateHits: 0,
     fullAnalysis: 0,
     hitRate: 0,
-    costSavings: 0
+    costSavings: 0,
   });
 
   useEffect(() => {
@@ -7474,7 +8201,11 @@ export const AICacheStats: React.FC = () => {
     setStats(cacheStats);
   };
 
-  const totalRequests = stats.exactHits + stats.perceptualHits + stats.templateHits + stats.fullAnalysis;
+  const totalRequests =
+    stats.exactHits +
+    stats.perceptualHits +
+    stats.templateHits +
+    stats.fullAnalysis;
 
   return (
     <Card containerStyle={styles.card}>
@@ -7498,7 +8229,10 @@ export const AICacheStats: React.FC = () => {
           <Text style={styles.metricValue}>{stats.exactHits}</Text>
           <Text style={styles.metricLabel}>Exact Hits</Text>
           <Text style={styles.metricPercent}>
-            {totalRequests > 0 ? ((stats.exactHits / totalRequests) * 100).toFixed(1) : 0}%
+            {totalRequests > 0
+              ? ((stats.exactHits / totalRequests) * 100).toFixed(1)
+              : 0}
+            %
           </Text>
         </View>
 
@@ -7506,7 +8240,10 @@ export const AICacheStats: React.FC = () => {
           <Text style={styles.metricValue}>{stats.perceptualHits}</Text>
           <Text style={styles.metricLabel}>Perceptual</Text>
           <Text style={styles.metricPercent}>
-            {totalRequests > 0 ? ((stats.perceptualHits / totalRequests) * 100).toFixed(1) : 0}%
+            {totalRequests > 0
+              ? ((stats.perceptualHits / totalRequests) * 100).toFixed(1)
+              : 0}
+            %
           </Text>
         </View>
 
@@ -7514,7 +8251,10 @@ export const AICacheStats: React.FC = () => {
           <Text style={styles.metricValue}>{stats.templateHits}</Text>
           <Text style={styles.metricLabel}>Template</Text>
           <Text style={styles.metricPercent}>
-            {totalRequests > 0 ? ((stats.templateHits / totalRequests) * 100).toFixed(1) : 0}%
+            {totalRequests > 0
+              ? ((stats.templateHits / totalRequests) * 100).toFixed(1)
+              : 0}
+            %
           </Text>
         </View>
 
@@ -7522,7 +8262,10 @@ export const AICacheStats: React.FC = () => {
           <Text style={styles.metricValue}>{stats.fullAnalysis}</Text>
           <Text style={styles.metricLabel}>Full API</Text>
           <Text style={styles.metricPercent}>
-            {totalRequests > 0 ? ((stats.fullAnalysis / totalRequests) * 100).toFixed(1) : 0}%
+            {totalRequests > 0
+              ? ((stats.fullAnalysis / totalRequests) * 100).toFixed(1)
+              : 0}
+            %
           </Text>
         </View>
       </View>
@@ -7531,7 +8274,9 @@ export const AICacheStats: React.FC = () => {
         <Text style={styles.savingsLabel}>💰 Cost Savings This Month</Text>
         <Text style={styles.savingsValue}>${stats.costSavings.toFixed(2)}</Text>
         <Text style={styles.savingsSubtext}>
-          {stats.hitRate > 0.4 ? '40-60% reduction achieved! 🎉' : 'Keep using AI to improve cache'}
+          {stats.hitRate > 0.4
+            ? '40-60% reduction achieved! 🎉'
+            : 'Keep using AI to improve cache'}
         </Text>
       </View>
     </Card>
@@ -7541,79 +8286,80 @@ export const AICacheStats: React.FC = () => {
 const styles = StyleSheet.create({
   card: {
     borderRadius: 8,
-    marginBottom: 16
+    marginBottom: 16,
   },
   summaryRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 8
+    marginBottom: 8,
   },
   label: {
     fontSize: 16,
-    fontWeight: '600'
+    fontWeight: '600',
   },
   value: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#4CAF50'
+    color: '#4CAF50',
   },
   progressBar: {
     height: 8,
     borderRadius: 4,
-    marginBottom: 20
+    marginBottom: 20,
   },
   metricsGrid: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 20
+    marginBottom: 20,
   },
   metric: {
     alignItems: 'center',
-    flex: 1
+    flex: 1,
   },
   metricValue: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#333'
+    color: '#333',
   },
   metricLabel: {
     fontSize: 12,
     color: '#666',
-    marginTop: 4
+    marginTop: 4,
   },
   metricPercent: {
     fontSize: 14,
     fontWeight: '600',
     color: '#007AFF',
-    marginTop: 2
+    marginTop: 2,
   },
   savings: {
     backgroundColor: '#E8F5E9',
     padding: 16,
     borderRadius: 8,
-    alignItems: 'center'
+    alignItems: 'center',
   },
   savingsLabel: {
     fontSize: 14,
     fontWeight: '600',
     color: '#2E7D32',
-    marginBottom: 4
+    marginBottom: 4,
   },
   savingsValue: {
     fontSize: 32,
     fontWeight: 'bold',
     color: '#1B5E20',
-    marginBottom: 4
+    marginBottom: 4,
   },
   savingsSubtext: {
     fontSize: 12,
     color: '#388E3C',
-    fontStyle: 'italic'
-  }
+    fontStyle: 'italic',
+  },
 });
 ```
 
 **Benefits:**
+
 - ✅ Reduces OpenAI costs by 40-60% ($4/month → $1.60-2.40 per user)
 - ✅ Faster response time (50ms vs 2-5s for cached results)
 - ✅ Increased profit margin: 87% → 92-94%
@@ -7631,6 +8377,7 @@ const styles = StyleSheet.create({
 #### **Implementation:**
 
 **1. Enhanced AI Response with Confidence**
+
 ```typescript
 // services/AIPhotoAnalysisService.ts (addition to previous)
 
@@ -7681,7 +8428,7 @@ async analyzePhotoWithConfidence(
   });
 
   const result = JSON.parse(response.choices[0].message.content || '{}');
-  
+
   // Track predictions for accuracy monitoring
   await this.trackPrediction(userId, result);
 
@@ -7691,18 +8438,19 @@ async analyzePhotoWithConfidence(
 // Track prediction for later accuracy analysis
 private async trackPrediction(userId: string, prediction: AIConfidenceResult): Promise<void> {
   const predictionId = `pred_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-  
+
   await this.redis.hset(`predictions:${predictionId}`, {
     userId,
     timestamp: new Date().toISOString(),
     ...JSON.stringify(prediction)
   });
-  
+
   await this.redis.expire(`predictions:${predictionId}`, 90 * 24 * 60 * 60); // 90 days
 }
 ```
 
 **2. AI Prediction UI Component**
+
 ```typescript
 // components/inspection/AIPredictionCard.tsx
 import React from 'react';
@@ -7719,19 +8467,19 @@ interface PredictionFieldProps {
 
 const getConfidenceColor = (confidence: number): string => {
   if (confidence >= 0.85) return '#4CAF50'; // Green: High confidence
-  if (confidence >= 0.70) return '#FF9800'; // Orange: Medium confidence
+  if (confidence >= 0.7) return '#FF9800'; // Orange: Medium confidence
   return '#F44336'; // Red: Low confidence
 };
 
 const getConfidenceIcon = (confidence: number): string => {
   if (confidence >= 0.85) return 'check-circle';
-  if (confidence >= 0.70) return 'warning';
+  if (confidence >= 0.7) return 'warning';
   return 'error';
 };
 
 const getConfidenceLabel = (confidence: number): string => {
   if (confidence >= 0.85) return 'High Confidence';
-  if (confidence >= 0.70) return 'Medium Confidence';
+  if (confidence >= 0.7) return 'Medium Confidence';
   return 'Low Confidence - Verify';
 };
 
@@ -7740,7 +8488,7 @@ export const PredictionField: React.FC<PredictionFieldProps> = ({
   value,
   confidence,
   onAccept,
-  onOverride
+  onOverride,
 }) => {
   const color = getConfidenceColor(confidence);
   const icon = getConfidenceIcon(confidence);
@@ -7752,13 +8500,17 @@ export const PredictionField: React.FC<PredictionFieldProps> = ({
         <Text style={styles.label}>{label}</Text>
         <View style={[styles.confidenceBadge, { backgroundColor: color }]}>
           <Icon name={icon} type="material" size={16} color="#FFF" />
-          <Text style={styles.confidenceText}>{(confidence * 100).toFixed(0)}%</Text>
+          <Text style={styles.confidenceText}>
+            {(confidence * 100).toFixed(0)}%
+          </Text>
         </View>
       </View>
 
       <View style={styles.valueContainer}>
         <Text style={styles.value}>{value}</Text>
-        <Text style={[styles.confidenceLabel, { color }]}>{confidenceLabel}</Text>
+        <Text style={[styles.confidenceLabel, { color }]}>
+          {confidenceLabel}
+        </Text>
       </View>
 
       <View style={styles.actions}>
@@ -7775,7 +8527,9 @@ export const PredictionField: React.FC<PredictionFieldProps> = ({
           onPress={onOverride}
         >
           <Icon name="edit" type="material" size={20} color="#007AFF" />
-          <Text style={[styles.buttonText, { color: '#007AFF' }]}>Override</Text>
+          <Text style={[styles.buttonText, { color: '#007AFF' }]}>
+            Override
+          </Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -7798,7 +8552,7 @@ interface AIPredictionCardProps {
 export const AIPredictionCard: React.FC<AIPredictionCardProps> = ({
   predictions,
   onAcceptAll,
-  onFieldOverride
+  onFieldOverride,
 }) => {
   const avgConfidence = predictions.overallConfidence;
   const allHighConfidence = Object.values(predictions)
@@ -7810,8 +8564,15 @@ export const AIPredictionCard: React.FC<AIPredictionCardProps> = ({
       <View style={styles.cardHeader}>
         <Icon name="psychology" type="material" size={24} color="#007AFF" />
         <Text style={styles.cardTitle}>AI Analysis</Text>
-        <View style={[styles.overallBadge, { backgroundColor: getConfidenceColor(avgConfidence) }]}>
-          <Text style={styles.overallText}>{(avgConfidence * 100).toFixed(0)}%</Text>
+        <View
+          style={[
+            styles.overallBadge,
+            { backgroundColor: getConfidenceColor(avgConfidence) },
+          ]}
+        >
+          <Text style={styles.overallText}>
+            {(avgConfidence * 100).toFixed(0)}%
+          </Text>
         </View>
       </View>
 
@@ -7866,7 +8627,8 @@ export const AIPredictionCard: React.FC<AIPredictionCardProps> = ({
         <View style={styles.warningBox}>
           <Icon name="info" type="material" size={20} color="#FF9800" />
           <Text style={styles.warningText}>
-            Some predictions have low confidence. Please verify before accepting.
+            Some predictions have low confidence. Please verify before
+            accepting.
           </Text>
         </View>
       )}
@@ -7883,74 +8645,74 @@ const styles = StyleSheet.create({
     shadowColor: '#000',
     shadowOpacity: 0.1,
     shadowRadius: 8,
-    elevation: 4
+    elevation: 4,
   },
   cardHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 16
+    marginBottom: 16,
   },
   cardTitle: {
     fontSize: 18,
     fontWeight: 'bold',
     marginLeft: 8,
-    flex: 1
+    flex: 1,
   },
   overallBadge: {
     paddingHorizontal: 12,
     paddingVertical: 6,
-    borderRadius: 16
+    borderRadius: 16,
   },
   overallText: {
     color: '#FFF',
     fontWeight: 'bold',
-    fontSize: 14
+    fontSize: 14,
   },
   fieldContainer: {
     marginBottom: 16,
     padding: 12,
     backgroundColor: '#F5F5F5',
-    borderRadius: 8
+    borderRadius: 8,
   },
   fieldHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 8
+    marginBottom: 8,
   },
   label: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#666'
+    color: '#666',
   },
   confidenceBadge: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 8,
     paddingVertical: 4,
-    borderRadius: 12
+    borderRadius: 12,
   },
   confidenceText: {
     color: '#FFF',
     fontWeight: 'bold',
     fontSize: 12,
-    marginLeft: 4
+    marginLeft: 4,
   },
   valueContainer: {
-    marginBottom: 12
+    marginBottom: 12,
   },
   value: {
     fontSize: 16,
     fontWeight: 'bold',
-    marginBottom: 4
+    marginBottom: 4,
   },
   confidenceLabel: {
     fontSize: 12,
-    fontWeight: '600'
+    fontWeight: '600',
   },
   actions: {
     flexDirection: 'row',
-    gap: 8
+    gap: 8,
   },
   button: {
     flex: 1,
@@ -7958,20 +8720,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     padding: 10,
-    borderRadius: 8
+    borderRadius: 8,
   },
   acceptButton: {
-    backgroundColor: '#4CAF50'
+    backgroundColor: '#4CAF50',
   },
   overrideButton: {
     backgroundColor: '#FFF',
     borderWidth: 1,
-    borderColor: '#007AFF'
+    borderColor: '#007AFF',
   },
   buttonText: {
     color: '#FFF',
     fontWeight: '600',
-    marginLeft: 6
+    marginLeft: 6,
   },
   acceptAllButton: {
     flexDirection: 'row',
@@ -7980,13 +8742,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#4CAF50',
     padding: 16,
     borderRadius: 8,
-    marginTop: 8
+    marginTop: 8,
   },
   acceptAllText: {
     color: '#FFF',
     fontSize: 16,
     fontWeight: 'bold',
-    marginLeft: 8
+    marginLeft: 8,
   },
   warningBox: {
     flexDirection: 'row',
@@ -7994,18 +8756,19 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFF3E0',
     padding: 12,
     borderRadius: 8,
-    marginTop: 8
+    marginTop: 8,
   },
   warningText: {
     flex: 1,
     marginLeft: 8,
     fontSize: 13,
-    color: '#E65100'
-  }
+    color: '#E65100',
+  },
 });
 ```
 
 **Benefits:**
+
 - ✅ Users know when to trust AI predictions
 - ✅ Reduces frustration with incorrect predictions
 - ✅ Training data: Track which low-confidence predictions users override
@@ -8021,6 +8784,7 @@ const styles = StyleSheet.create({
 **Solution:** Learn from user corrections to continuously improve AI predictions.
 
 #### **Active Learning Architecture:**
+
 ```
 ┌────────────────────┐
 │ AI Makes Prediction│
@@ -8063,6 +8827,7 @@ const styles = StyleSheet.create({
 #### **Implementation:**
 
 **1. Correction Tracking Service**
+
 ```typescript
 // services/ActiveLearningService.ts
 import SQLite from 'react-native-sqlite-storage';
@@ -8128,20 +8893,22 @@ class ActiveLearningService {
     inspectionId: string,
     photoUri: string,
     aiPrediction: AICorrection['aiPrediction'],
-    userCorrection: AICorrection['userCorrection']
+    userCorrection: AICorrection['userCorrection'],
   ): Promise<void> {
-    const id = `correction_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    const id = `correction_${Date.now()}_${Math.random()
+      .toString(36)
+      .substr(2, 9)}`;
 
     const wasOverridden = {
       section: aiPrediction.section !== userCorrection.section,
       system: aiPrediction.system !== userCorrection.system,
       component: aiPrediction.component !== userCorrection.component,
       material: aiPrediction.material !== userCorrection.material,
-      condition: aiPrediction.condition !== userCorrection.condition
+      condition: aiPrediction.condition !== userCorrection.condition,
     };
 
     await this.db.executeSql(
-      `INSERT INTO ai_corrections 
+      `INSERT INTO ai_corrections
        (id, user_id, inspection_id, photo_uri, timestamp, ai_prediction, user_correction, was_overridden)
        VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
       [
@@ -8152,8 +8919,8 @@ class ActiveLearningService {
         new Date().toISOString(),
         JSON.stringify(aiPrediction),
         JSON.stringify(userCorrection),
-        JSON.stringify(wasOverridden)
-      ]
+        JSON.stringify(wasOverridden),
+      ],
     );
 
     console.log('📚 Correction recorded for active learning');
@@ -8164,14 +8931,16 @@ class ActiveLearningService {
 
   private async checkTrainingThreshold(): Promise<void> {
     const [result] = await this.db.executeSql(
-      `SELECT COUNT(*) as count FROM ai_corrections WHERE synced_to_cloud = 0`
+      `SELECT COUNT(*) as count FROM ai_corrections WHERE synced_to_cloud = 0`,
     );
 
     const pendingCorrections = result.rows.item(0).count;
 
     // If we have 10,000+ corrections, trigger fine-tuning
     if (pendingCorrections >= 10000) {
-      console.log('🎓 Training threshold reached! Preparing fine-tuning dataset...');
+      console.log(
+        '🎓 Training threshold reached! Preparing fine-tuning dataset...',
+      );
       await this.exportForFineTuning();
     }
   }
@@ -8201,9 +8970,9 @@ class ActiveLearningService {
           system: { count: 0, rate: 0 },
           component: { count: 0, rate: 0 },
           material: { count: 0, rate: 0 },
-          condition: { count: 0, rate: 0 }
+          condition: { count: 0, rate: 0 },
         },
-        overallAccuracy: 0
+        overallAccuracy: 0,
       };
     }
 
@@ -8212,8 +8981,8 @@ class ActiveLearningService {
 
     for (const field of fields) {
       const [fieldResult] = await this.db.executeSql(`
-        SELECT COUNT(*) as count 
-        FROM ai_corrections 
+        SELECT COUNT(*) as count
+        FROM ai_corrections
         WHERE json_extract(was_overridden, '$.${field}') = 1
       `);
 
@@ -8226,21 +8995,21 @@ class ActiveLearningService {
     // Overall accuracy = 1 - (total overrides / (total predictions × 5 fields))
     const totalOverrides = Object.values(overridesByField).reduce(
       (sum: number, field: any) => sum + field.count,
-      0
+      0,
     );
     const overallAccuracy = 1 - totalOverrides / (totalPredictions * 5);
 
     return {
       totalPredictions,
       overridesByField,
-      overallAccuracy
+      overallAccuracy,
     };
   }
 
   private async exportForFineTuning(): Promise<void> {
     const [results] = await this.db.executeSql(`
-      SELECT * FROM ai_corrections 
-      WHERE synced_to_cloud = 0 
+      SELECT * FROM ai_corrections
+      WHERE synced_to_cloud = 0
       ORDER BY created_at DESC
     `);
 
@@ -8256,7 +9025,7 @@ class ActiveLearningService {
         timestamp: new Date(row.timestamp),
         aiPrediction: JSON.parse(row.ai_prediction),
         userCorrection: JSON.parse(row.user_correction),
-        wasOverridden: JSON.parse(row.was_overridden)
+        wasOverridden: JSON.parse(row.was_overridden),
       });
     }
 
@@ -8268,19 +9037,19 @@ class ActiveLearningService {
           content: [
             {
               type: 'text',
-              text: 'Analyze this home inspection photo and predict: section, system, component, material, condition.'
+              text: 'Analyze this home inspection photo and predict: section, system, component, material, condition.',
             },
             {
               type: 'image_url',
-              image_url: { url: correction.photoUri }
-            }
-          ]
+              image_url: { url: correction.photoUri },
+            },
+          ],
         },
         {
           role: 'assistant',
-          content: JSON.stringify(correction.userCorrection) // Use CORRECT values
-        }
-      ]
+          content: JSON.stringify(correction.userCorrection), // Use CORRECT values
+        },
+      ],
     }));
 
     // TODO: Upload to backend API for fine-tuning
@@ -8291,7 +9060,9 @@ class ActiveLearningService {
       UPDATE ai_corrections SET synced_to_cloud = 1 WHERE synced_to_cloud = 0
     `);
 
-    console.log(`✅ Exported ${corrections.length} corrections for fine-tuning`);
+    console.log(
+      `✅ Exported ${corrections.length} corrections for fine-tuning`,
+    );
   }
 
   async triggerFineTuning(): Promise<void> {
@@ -8303,7 +9074,7 @@ class ActiveLearningService {
     // 5. A/B test against base model
 
     console.log('🎓 Fine-tuning job initiated...');
-    
+
     // Example OpenAI fine-tuning API call
     /*
     const file = await this.openai.files.create({
@@ -8326,6 +9097,7 @@ export default new ActiveLearningService();
 ```
 
 **2. AI Accuracy Dashboard**
+
 ```typescript
 // components/admin/AIAccuracyDashboard.tsx
 import React, { useEffect, useState } from 'react';
@@ -8350,8 +9122,8 @@ export const AIAccuracyDashboard: React.FC = () => {
   }
 
   const getAccuracyColor = (accuracy: number): string => {
-    if (accuracy >= 0.90) return '#4CAF50';
-    if (accuracy >= 0.80) return '#FF9800';
+    if (accuracy >= 0.9) return '#4CAF50';
+    if (accuracy >= 0.8) return '#FF9800';
     return '#F44336';
   };
 
@@ -8366,7 +9138,7 @@ export const AIAccuracyDashboard: React.FC = () => {
           <Text
             style={[
               styles.overallValue,
-              { color: getAccuracyColor(stats.overallAccuracy) }
+              { color: getAccuracyColor(stats.overallAccuracy) },
             ]}
           >
             {(stats.overallAccuracy * 100).toFixed(1)}%
@@ -8384,35 +9156,45 @@ export const AIAccuracyDashboard: React.FC = () => {
 
         <Text style={styles.sectionTitle}>Accuracy by Field</Text>
 
-        {Object.entries(stats.overridesByField).map(([field, data]: [string, any]) => {
-          const accuracy = 1 - data.rate;
-          return (
-            <View key={field} style={styles.fieldRow}>
-              <View style={styles.fieldHeader}>
-                <Text style={styles.fieldName}>
-                  {field.charAt(0).toUpperCase() + field.slice(1)}
-                </Text>
-                <Text style={[styles.fieldAccuracy, { color: getAccuracyColor(accuracy) }]}>
-                  {(accuracy * 100).toFixed(1)}%
+        {Object.entries(stats.overridesByField).map(
+          ([field, data]: [string, any]) => {
+            const accuracy = 1 - data.rate;
+            return (
+              <View key={field} style={styles.fieldRow}>
+                <View style={styles.fieldHeader}>
+                  <Text style={styles.fieldName}>
+                    {field.charAt(0).toUpperCase() + field.slice(1)}
+                  </Text>
+                  <Text
+                    style={[
+                      styles.fieldAccuracy,
+                      { color: getAccuracyColor(accuracy) },
+                    ]}
+                  >
+                    {(accuracy * 100).toFixed(1)}%
+                  </Text>
+                </View>
+                <ProgressBar
+                  value={accuracy}
+                  color={getAccuracyColor(accuracy)}
+                  variant="determinate"
+                  style={styles.fieldProgressBar}
+                />
+                <Text style={styles.overrideCount}>
+                  {data.count} overrides ({(data.rate * 100).toFixed(1)}%
+                  override rate)
                 </Text>
               </View>
-              <ProgressBar
-                value={accuracy}
-                color={getAccuracyColor(accuracy)}
-                variant="determinate"
-                style={styles.fieldProgressBar}
-              />
-              <Text style={styles.overrideCount}>
-                {data.count} overrides ({(data.rate * 100).toFixed(1)}% override rate)
-              </Text>
-            </View>
-          );
-        })}
+            );
+          },
+        )}
 
         {stats.totalPredictions >= 10000 && (
           <View style={styles.trainingAlert}>
             <Text style={styles.trainingAlertText}>
-              🎓 Ready for model fine-tuning! {stats.totalPredictions.toLocaleString()} training samples available.
+              🎓 Ready for model fine-tuning!{' '}
+              {stats.totalPredictions.toLocaleString()} training samples
+              available.
             </Text>
           </View>
         )}
@@ -8439,96 +9221,97 @@ export const AIAccuracyDashboard: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5F5F5'
+    backgroundColor: '#F5F5F5',
   },
   card: {
     borderRadius: 8,
-    margin: 16
+    margin: 16,
   },
   overallSection: {
     alignItems: 'center',
-    marginBottom: 24
+    marginBottom: 24,
   },
   overallLabel: {
     fontSize: 16,
     color: '#666',
-    marginBottom: 8
+    marginBottom: 8,
   },
   overallValue: {
     fontSize: 48,
     fontWeight: 'bold',
-    marginBottom: 12
+    marginBottom: 12,
   },
   progressBar: {
     width: '100%',
     height: 12,
     borderRadius: 6,
-    marginBottom: 8
+    marginBottom: 8,
   },
   totalPredictions: {
     fontSize: 14,
     color: '#999',
-    fontStyle: 'italic'
+    fontStyle: 'italic',
   },
   sectionTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    marginVertical: 16
+    marginVertical: 16,
   },
   fieldRow: {
-    marginBottom: 20
+    marginBottom: 20,
   },
   fieldHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 8
+    marginBottom: 8,
   },
   fieldName: {
     fontSize: 16,
-    fontWeight: '600'
+    fontWeight: '600',
   },
   fieldAccuracy: {
     fontSize: 16,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   },
   fieldProgressBar: {
     height: 8,
     borderRadius: 4,
-    marginBottom: 4
+    marginBottom: 4,
   },
   overrideCount: {
     fontSize: 12,
-    color: '#999'
+    color: '#999',
   },
   trainingAlert: {
     backgroundColor: '#E3F2FD',
     padding: 16,
     borderRadius: 8,
-    marginTop: 16
+    marginTop: 16,
   },
   trainingAlertText: {
     fontSize: 14,
     color: '#1976D2',
     textAlign: 'center',
-    fontWeight: '600'
+    fontWeight: '600',
   },
   progressToTraining: {
-    marginTop: 16
+    marginTop: 16,
   },
   progressLabel: {
     fontSize: 14,
     fontWeight: '600',
-    marginBottom: 8
+    marginBottom: 8,
   },
   progressText: {
     fontSize: 12,
     color: '#666',
-    marginTop: 4
-  }
+    marginTop: 4,
+  },
 });
 ```
 
 **Benefits:**
+
 - ✅ Continuous AI improvement over time
 - ✅ Accuracy increases: 85% → 92-95% (Component)
 - ✅ Reduced override rate = faster workflows
@@ -8536,6 +9319,7 @@ const styles = StyleSheet.create({
 - ✅ Data-driven model improvement
 
 **Expected Accuracy Improvement Timeline:**
+
 - Month 1-3: 85% baseline accuracy
 - Month 4-6: 88% (first fine-tune with 10,000 samples)
 - Month 7-12: 91% (second fine-tune with 50,000 samples)
@@ -8550,6 +9334,7 @@ const styles = StyleSheet.create({
 **Solution:** AI generates complete professional reports section-by-section with intelligently placed photos, captions, and repair recommendations.
 
 #### **Enhanced Report Generation Architecture:**
+
 ```
 ┌─────────────────────────────────────────────────────────┐
 │ Step 1: Inspection Data Collection                      │
@@ -8603,6 +9388,7 @@ const styles = StyleSheet.create({
 #### **Report Structure Generated by AI:**
 
 **Standard Residential Inspection Report:**
+
 1. **Cover Page** (Auto-generated with property details)
 2. **Executive Summary** (AI-written, 250-500 words)
    - Overall property condition
@@ -8642,6 +9428,7 @@ const styles = StyleSheet.create({
 #### **Implementation Code:**
 
 **1. Full Report Generation Service**
+
 ```typescript
 // services/AIReportGenerationService.ts
 import { OpenAI } from 'openai';
@@ -8712,18 +9499,22 @@ class AIReportGenerationService {
 
   constructor() {
     this.openai = new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY
+      apiKey: process.env.OPENAI_API_KEY,
     });
   }
 
-  async generateFullReport(inspectionData: InspectionData): Promise<GeneratedReport> {
+  async generateFullReport(
+    inspectionData: InspectionData,
+  ): Promise<GeneratedReport> {
     console.log('📝 Starting AI-powered full report generation...');
     const startTime = Date.now();
     let totalTokens = 0;
 
     // Step 1: Generate Executive Summary
     console.log('  1️⃣ Generating executive summary...');
-    const executiveSummary = await this.generateExecutiveSummary(inspectionData);
+    const executiveSummary = await this.generateExecutiveSummary(
+      inspectionData,
+    );
     totalTokens += 1000; // Estimated tokens
 
     // Step 2: Group photos by section
@@ -8736,15 +9527,19 @@ class AIReportGenerationService {
       'Exterior Structure',
       'Interior',
       'Mechanical Systems',
-      'Structure & Foundation'
+      'Structure & Foundation',
     ];
 
     for (const sectionName of sectionNames) {
       console.log(`  📄 Generating section: ${sectionName}...`);
       const photos = photosBySection[sectionName] || [];
-      
+
       if (photos.length > 0) {
-        const section = await this.generateSection(sectionName, photos, inspectionData);
+        const section = await this.generateSection(
+          sectionName,
+          photos,
+          inspectionData,
+        );
         sections.push(section);
         totalTokens += 1500; // Estimated tokens per section
       }
@@ -8761,7 +9556,11 @@ class AIReportGenerationService {
     const photosPlaced = inspectionData.photos.length;
 
     console.log(`✅ Report generated in ${generationTime.toFixed(1)}s`);
-    console.log(`   Tokens: ${totalTokens.toLocaleString()}, Cost: $${costUSD.toFixed(2)}`);
+    console.log(
+      `   Tokens: ${totalTokens.toLocaleString()}, Cost: $${costUSD.toFixed(
+        2,
+      )}`,
+    );
     console.log(`   Photos placed: ${photosPlaced}`);
 
     return {
@@ -8774,15 +9573,17 @@ class AIReportGenerationService {
         tokensUsed: totalTokens,
         costUSD,
         generationTimeSeconds: generationTime,
-        photosPlaced
-      }
+        photosPlaced,
+      },
     };
   }
 
-  private async generateExecutiveSummary(data: InspectionData): Promise<string> {
+  private async generateExecutiveSummary(
+    data: InspectionData,
+  ): Promise<string> {
     // Prepare context from all photos and findings
-    const criticalIssues = data.photos.filter(p => 
-      p.condition === 'Safety Hazard' || p.condition === 'Repair/Replace'
+    const criticalIssues = data.photos.filter(
+      p => p.condition === 'Safety Hazard' || p.condition === 'Repair/Replace',
     );
 
     const context = `
@@ -8793,20 +9594,25 @@ Total Photos: ${data.photos.length}
 Critical Issues: ${criticalIssues.length}
 
 Issues Found:
-${criticalIssues.map(p => `- ${p.component} (${p.system}): ${p.condition} - ${p.notes}`).join('\n')}
+${criticalIssues
+  .map(p => `- ${p.component} (${p.system}): ${p.condition} - ${p.notes}`)
+  .join('\n')}
 
 Weather: ${data.weatherConditions}
     `.trim();
 
     const response = await this.openai.chat.completions.create({
       model: 'gpt-4-turbo',
-      messages: [{
-        role: 'system',
-        content: 'You are a professional home inspector writing executive summaries for inspection reports. Write in a clear, professional tone. Focus on key findings and actionable recommendations.'
-      }, {
-        role: 'user',
-        content: `Write a comprehensive executive summary (250-500 words) for this home inspection. Include:
-        
+      messages: [
+        {
+          role: 'system',
+          content:
+            'You are a professional home inspector writing executive summaries for inspection reports. Write in a clear, professional tone. Focus on key findings and actionable recommendations.',
+        },
+        {
+          role: 'user',
+          content: `Write a comprehensive executive summary (250-500 words) for this home inspection. Include:
+
 1. Overall property condition assessment
 2. Major findings summary (prioritize safety hazards and required repairs)
 3. Immediate action items
@@ -8816,10 +9622,11 @@ Weather: ${data.weatherConditions}
 Context:
 ${context}
 
-Write the executive summary as a professional inspector addressing the client.`
-      }],
+Write the executive summary as a professional inspector addressing the client.`,
+        },
+      ],
       max_tokens: 800,
-      temperature: 0.7
+      temperature: 0.7,
     });
 
     return response.choices[0].message.content || '';
@@ -8828,19 +9635,28 @@ Write the executive summary as a professional inspector addressing the client.`
   private async generateSection(
     sectionName: string,
     photos: InspectionPhoto[],
-    inspectionData: InspectionData
+    inspectionData: InspectionData,
   ): Promise<ReportSection> {
     // Group photos by component for detailed analysis
     const componentGroups = this.groupPhotosByComponent(photos);
 
     // Generate introduction
-    const introduction = await this.generateSectionIntroduction(sectionName, photos, inspectionData);
+    const introduction = await this.generateSectionIntroduction(
+      sectionName,
+      photos,
+      inspectionData,
+    );
 
     // Generate findings for each component
     const findings = await Promise.all(
-      Object.entries(componentGroups).map(async ([component, componentPhotos]) => {
-        return await this.generateComponentFinding(component, componentPhotos);
-      })
+      Object.entries(componentGroups).map(
+        async ([component, componentPhotos]) => {
+          return await this.generateComponentFinding(
+            component,
+            componentPhotos,
+          );
+        },
+      ),
     );
 
     // Generate section summary
@@ -8850,32 +9666,36 @@ Write the executive summary as a professional inspector addressing the client.`
       sectionName,
       introduction,
       findings,
-      summary
+      summary,
     };
   }
 
   private async generateSectionIntroduction(
     sectionName: string,
     photos: InspectionPhoto[],
-    inspectionData: InspectionData
+    inspectionData: InspectionData,
   ): Promise<string> {
     const response = await this.openai.chat.completions.create({
       model: 'gpt-4-turbo',
-      messages: [{
-        role: 'system',
-        content: 'You are a professional home inspector writing section introductions for inspection reports.'
-      }, {
-        role: 'user',
-        content: `Write a brief introduction (2-3 sentences) for the "${sectionName}" section of a home inspection report.
+      messages: [
+        {
+          role: 'system',
+          content:
+            'You are a professional home inspector writing section introductions for inspection reports.',
+        },
+        {
+          role: 'user',
+          content: `Write a brief introduction (2-3 sentences) for the "${sectionName}" section of a home inspection report.
 
 Property: ${inspectionData.propertyAddress}
 Weather: ${inspectionData.weatherConditions}
 Components inspected: ${photos.length} items
 
-Provide context about what was inspected in this section and general observations.`
-      }],
+Provide context about what was inspected in this section and general observations.`,
+        },
+      ],
       max_tokens: 200,
-      temperature: 0.7
+      temperature: 0.7,
     });
 
     return response.choices[0].message.content || '';
@@ -8883,23 +9703,29 @@ Provide context about what was inspected in this section and general observation
 
   private async generateComponentFinding(
     component: string,
-    photos: InspectionPhoto[]
+    photos: InspectionPhoto[],
   ): Promise<ReportSection['findings'][0]> {
     // Determine worst condition from photos
     const conditions = photos.map(p => p.condition);
     const condition = this.getWorstCondition(conditions);
 
     // Compile all notes
-    const allNotes = photos.map(p => p.notes).filter(n => n).join(' | ');
+    const allNotes = photos
+      .map(p => p.notes)
+      .filter(n => n)
+      .join(' | ');
 
     const response = await this.openai.chat.completions.create({
       model: 'gpt-4-turbo',
-      messages: [{
-        role: 'system',
-        content: 'You are a professional home inspector writing detailed findings for inspection reports.'
-      }, {
-        role: 'user',
-        content: `Write a detailed finding for: ${component}
+      messages: [
+        {
+          role: 'system',
+          content:
+            'You are a professional home inspector writing detailed findings for inspection reports.',
+        },
+        {
+          role: 'user',
+          content: `Write a detailed finding for: ${component}
 
 Condition: ${condition}
 Number of photos: ${photos.length}
@@ -8912,14 +9738,15 @@ Provide:
 3. Specific recommendations
 4. Estimated repair cost range (if repair needed)
 
-Write as a professional inspector.`
-      }],
+Write as a professional inspector.`,
+        },
+      ],
       max_tokens: 400,
-      temperature: 0.7
+      temperature: 0.7,
     });
 
     const content = response.choices[0].message.content || '';
-    
+
     // Parse response to extract fields (simplified - production would use structured output)
     const priority = this.extractPriority(content, condition);
     const estimatedCost = this.extractCostEstimate(content);
@@ -8931,51 +9758,59 @@ Write as a professional inspector.`
       priority,
       photos: photos.map(p => p.id),
       recommendations: content, // In production, parse out recommendations specifically
-      estimatedCost
+      estimatedCost,
     };
   }
 
   private async generateSectionSummary(
     sectionName: string,
-    findings: ReportSection['findings']
+    findings: ReportSection['findings'],
   ): Promise<string> {
-    const issueCount = findings.filter(f => 
-      f.condition === 'Repair/Replace' || f.condition === 'Safety Hazard'
+    const issueCount = findings.filter(
+      f => f.condition === 'Repair/Replace' || f.condition === 'Safety Hazard',
     ).length;
 
     const response = await this.openai.chat.completions.create({
       model: 'gpt-4-turbo',
-      messages: [{
-        role: 'system',
-        content: 'You are a professional home inspector writing section summaries.'
-      }, {
-        role: 'user',
-        content: `Write a summary (2-3 sentences) for the "${sectionName}" section.
+      messages: [
+        {
+          role: 'system',
+          content:
+            'You are a professional home inspector writing section summaries.',
+        },
+        {
+          role: 'user',
+          content: `Write a summary (2-3 sentences) for the "${sectionName}" section.
 
 Total components inspected: ${findings.length}
 Issues requiring attention: ${issueCount}
 
 Key issues:
-${findings.filter(f => f.priority === 'Immediate' || f.priority === 'Short-term')
+${findings
+  .filter(f => f.priority === 'Immediate' || f.priority === 'Short-term')
   .map(f => `- ${f.component}: ${f.condition}`)
   .join('\n')}
 
-Provide an overall assessment and priority recommendations.`
-      }],
+Provide an overall assessment and priority recommendations.`,
+        },
+      ],
       max_tokens: 200,
-      temperature: 0.7
+      temperature: 0.7,
     });
 
     return response.choices[0].message.content || '';
   }
 
   // Intelligent photo placement algorithm
-  async generatePDFReport(report: GeneratedReport, inspectionData: InspectionData): Promise<string> {
+  async generatePDFReport(
+    report: GeneratedReport,
+    inspectionData: InspectionData,
+  ): Promise<string> {
     console.log('📄 Generating PDF with intelligent photo placement...');
 
     const doc = new PDFDocument({
       size: 'LETTER',
-      margins: { top: 50, bottom: 50, left: 50, right: 50 }
+      margins: { top: 50, bottom: 50, left: 50, right: 50 },
     });
 
     const outputPath = `/tmp/inspection_${report.inspectionId}.pdf`;
@@ -9000,15 +9835,19 @@ Provide an overall assessment and priority recommendations.`
     doc.fontSize(18).text('Table of Contents', { underline: true });
     doc.moveDown();
     report.sections.forEach((section, index) => {
-      doc.fontSize(12).text(`${index + 1}. ${section.sectionName}`, { link: `section-${index}` });
+      doc
+        .fontSize(12)
+        .text(`${index + 1}. ${section.sectionName}`, {
+          link: `section-${index}`,
+        });
     });
 
     // Generate each section with photos
     for (const [index, section] of report.sections.entries()) {
       doc.addPage();
-      doc.fontSize(18).text(section.sectionName, { 
+      doc.fontSize(18).text(section.sectionName, {
         underline: true,
-        destination: `section-${index}`
+        destination: `section-${index}`,
       });
       doc.moveDown();
 
@@ -9024,10 +9863,13 @@ Provide an overall assessment and priority recommendations.`
 
         // Condition badge
         const conditionColor = this.getConditionColor(finding.condition);
-        doc.fontSize(10)
-           .fillColor(conditionColor)
-           .text(`Condition: ${finding.condition} | Priority: ${finding.priority}`)
-           .fillColor('black');
+        doc
+          .fontSize(10)
+          .fillColor(conditionColor)
+          .text(
+            `Condition: ${finding.condition} | Priority: ${finding.priority}`,
+          )
+          .fillColor('black');
         doc.moveDown(0.5);
 
         // Description
@@ -9039,16 +9881,23 @@ Provide an overall assessment and priority recommendations.`
         doc.moveDown();
 
         // Recommendations box
-        if (finding.priority === 'Immediate' || finding.priority === 'Short-term') {
-          doc.rect(doc.x - 10, doc.y - 5, 500, 80)
-             .fillAndStroke('#FFF3E0', '#FF9800');
-          doc.fillColor('black')
-             .fontSize(10)
-             .text('⚠️ Recommendations:', doc.x, doc.y + 5);
+        if (
+          finding.priority === 'Immediate' ||
+          finding.priority === 'Short-term'
+        ) {
+          doc
+            .rect(doc.x - 10, doc.y - 5, 500, 80)
+            .fillAndStroke('#FFF3E0', '#FF9800');
+          doc
+            .fillColor('black')
+            .fontSize(10)
+            .text('⚠️ Recommendations:', doc.x, doc.y + 5);
           doc.fontSize(10).text(finding.recommendations, { align: 'justify' });
-          
+
           if (finding.estimatedCost) {
-            doc.fontSize(10).text(`Estimated Cost: ${finding.estimatedCost}`, { bold: true });
+            doc
+              .fontSize(10)
+              .text(`Estimated Cost: ${finding.estimatedCost}`, { bold: true });
           }
         }
 
@@ -9066,7 +9915,7 @@ Provide an overall assessment and priority recommendations.`
 
     doc.end();
 
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       stream.on('finish', () => {
         console.log(`✅ PDF generated: ${outputPath}`);
         resolve(outputPath);
@@ -9077,7 +9926,7 @@ Provide an overall assessment and priority recommendations.`
   private async placePhotosInPDF(
     doc: PDFKit.PDFDocument,
     photoIds: string[],
-    allPhotos: InspectionPhoto[]
+    allPhotos: InspectionPhoto[],
   ): Promise<void> {
     const photos = allPhotos.filter(p => photoIds.includes(p.id));
 
@@ -9100,36 +9949,38 @@ Provide an overall assessment and priority recommendations.`
       try {
         doc.image(photo1.uri, doc.x, doc.y, {
           width: photoWidth,
-          height: photoHeight
+          height: photoHeight,
         });
 
         // Photo caption
-        doc.fontSize(9)
-           .fillColor('#666')
-           .text(
-             `Photo ${i + 1}: ${photo1.component} - ${photo1.condition}`,
-             doc.x,
-             doc.y + photoHeight + 5,
-             { width: photoWidth, align: 'center' }
-           )
-           .fillColor('black');
+        doc
+          .fontSize(9)
+          .fillColor('#666')
+          .text(
+            `Photo ${i + 1}: ${photo1.component} - ${photo1.condition}`,
+            doc.x,
+            doc.y + photoHeight + 5,
+            { width: photoWidth, align: 'center' },
+          )
+          .fillColor('black');
 
         // Place second photo if exists
         if (photo2) {
           doc.image(photo2.uri, doc.x + photoWidth + spacing, doc.y, {
             width: photoWidth,
-            height: photoHeight
+            height: photoHeight,
           });
 
-          doc.fontSize(9)
-             .fillColor('#666')
-             .text(
-               `Photo ${i + 2}: ${photo2.component} - ${photo2.condition}`,
-               doc.x + photoWidth + spacing,
-               doc.y + photoHeight + 5,
-               { width: photoWidth, align: 'center' }
-             )
-             .fillColor('black');
+          doc
+            .fontSize(9)
+            .fillColor('#666')
+            .text(
+              `Photo ${i + 2}: ${photo2.component} - ${photo2.condition}`,
+              doc.x + photoWidth + spacing,
+              doc.y + photoHeight + 5,
+              { width: photoWidth, align: 'center' },
+            )
+            .fillColor('black');
         }
 
         doc.moveDown(12); // Move past photos
@@ -9139,54 +9990,98 @@ Provide an overall assessment and priority recommendations.`
     }
   }
 
-  private generateCoverPage(doc: PDFKit.PDFDocument, data: InspectionData): void {
+  private generateCoverPage(
+    doc: PDFKit.PDFDocument,
+    data: InspectionData,
+  ): void {
     doc.fontSize(28).text('Home Inspection Report', { align: 'center' });
     doc.moveDown(2);
     doc.fontSize(14).text(data.propertyAddress, { align: 'center' });
     doc.moveDown();
-    doc.fontSize(12).text(`Inspection Date: ${data.inspectionDate.toLocaleDateString()}`, { align: 'center' });
+    doc
+      .fontSize(12)
+      .text(`Inspection Date: ${data.inspectionDate.toLocaleDateString()}`, {
+        align: 'center',
+      });
     doc.moveDown();
-    doc.fontSize(12).text(`Inspector: ${data.inspectorName}`, { align: 'center' });
+    doc
+      .fontSize(12)
+      .text(`Inspector: ${data.inspectorName}`, { align: 'center' });
     doc.moveDown(4);
     doc.fontSize(10).text('Prepared for:', { align: 'center' });
     doc.fontSize(14).text(data.clientName, { align: 'center' });
   }
 
-  private generatePriorityMatrix(doc: PDFKit.PDFDocument, matrix: GeneratedReport['priorityMatrix']): void {
+  private generatePriorityMatrix(
+    doc: PDFKit.PDFDocument,
+    matrix: GeneratedReport['priorityMatrix'],
+  ): void {
     doc.fontSize(14).text('Issues by Priority', { underline: true });
     doc.moveDown();
 
     const tableData = [
-      { label: '🔴 Immediate Action Required', count: matrix.immediate, color: '#F44336' },
-      { label: '🟠 Short-term (6 months)', count: matrix.shortTerm, color: '#FF9800' },
-      { label: '🟡 Long-term (1-2 years)', count: matrix.longTerm, color: '#FFC107' },
-      { label: '🟢 Monitor', count: matrix.monitor, color: '#4CAF50' }
+      {
+        label: '🔴 Immediate Action Required',
+        count: matrix.immediate,
+        color: '#F44336',
+      },
+      {
+        label: '🟠 Short-term (6 months)',
+        count: matrix.shortTerm,
+        color: '#FF9800',
+      },
+      {
+        label: '🟡 Long-term (1-2 years)',
+        count: matrix.longTerm,
+        color: '#FFC107',
+      },
+      { label: '🟢 Monitor', count: matrix.monitor, color: '#4CAF50' },
     ];
 
     tableData.forEach(row => {
-      doc.fontSize(12)
-         .fillColor(row.color)
-         .text(`${row.label}: ${row.count} items`)
-         .fillColor('black');
+      doc
+        .fontSize(12)
+        .fillColor(row.color)
+        .text(`${row.label}: ${row.count} items`)
+        .fillColor('black');
       doc.moveDown(0.5);
     });
   }
 
-  private generateSignaturePage(doc: PDFKit.PDFDocument, data: InspectionData): void {
+  private generateSignaturePage(
+    doc: PDFKit.PDFDocument,
+    data: InspectionData,
+  ): void {
     doc.fontSize(18).text('Inspector Certification', { align: 'center' });
     doc.moveDown(2);
-    doc.fontSize(11).text(
-      `I, ${data.inspectorName}, certify that I have inspected the property located at ${data.propertyAddress} on ${data.inspectionDate.toLocaleDateString()}. This report represents my professional opinion of the property's condition at the time of inspection.`,
-      { align: 'justify' }
-    );
+    doc
+      .fontSize(11)
+      .text(
+        `I, ${
+          data.inspectorName
+        }, certify that I have inspected the property located at ${
+          data.propertyAddress
+        } on ${data.inspectionDate.toLocaleDateString()}. This report represents my professional opinion of the property's condition at the time of inspection.`,
+        { align: 'justify' },
+      );
     doc.moveDown(3);
-    doc.fontSize(12).text('_________________________________', { align: 'center' });
-    doc.fontSize(10).text(`${data.inspectorName}, Professional Home Inspector`, { align: 'center' });
-    doc.fontSize(10).text(`Date: ${new Date().toLocaleDateString()}`, { align: 'center' });
+    doc
+      .fontSize(12)
+      .text('_________________________________', { align: 'center' });
+    doc
+      .fontSize(10)
+      .text(`${data.inspectorName}, Professional Home Inspector`, {
+        align: 'center',
+      });
+    doc
+      .fontSize(10)
+      .text(`Date: ${new Date().toLocaleDateString()}`, { align: 'center' });
   }
 
   // Helper methods
-  private groupPhotosBySection(photos: InspectionPhoto[]): Record<string, InspectionPhoto[]> {
+  private groupPhotosBySection(
+    photos: InspectionPhoto[],
+  ): Record<string, InspectionPhoto[]> {
     return photos.reduce((acc, photo) => {
       if (!acc[photo.section]) {
         acc[photo.section] = [];
@@ -9196,7 +10091,9 @@ Provide an overall assessment and priority recommendations.`
     }, {} as Record<string, InspectionPhoto[]>);
   }
 
-  private groupPhotosByComponent(photos: InspectionPhoto[]): Record<string, InspectionPhoto[]> {
+  private groupPhotosByComponent(
+    photos: InspectionPhoto[],
+  ): Record<string, InspectionPhoto[]> {
     return photos.reduce((acc, photo) => {
       if (!acc[photo.component]) {
         acc[photo.component] = [];
@@ -9207,14 +10104,23 @@ Provide an overall assessment and priority recommendations.`
   }
 
   private getWorstCondition(conditions: string[]): string {
-    const priority = ['Safety Hazard', 'Repair/Replace', 'Monitor', 'Acceptable', 'Access Restricted'];
+    const priority = [
+      'Safety Hazard',
+      'Repair/Replace',
+      'Monitor',
+      'Acceptable',
+      'Access Restricted',
+    ];
     for (const condition of priority) {
       if (conditions.includes(condition)) return condition;
     }
     return 'Acceptable';
   }
 
-  private extractPriority(content: string, condition: string): 'Immediate' | 'Short-term' | 'Long-term' | 'Monitor' {
+  private extractPriority(
+    content: string,
+    condition: string,
+  ): 'Immediate' | 'Short-term' | 'Long-term' | 'Monitor' {
     if (condition === 'Safety Hazard') return 'Immediate';
     if (condition === 'Repair/Replace') return 'Short-term';
     if (condition === 'Monitor') return 'Monitor';
@@ -9227,7 +10133,9 @@ Provide an overall assessment and priority recommendations.`
     return costMatch ? costMatch[0] : undefined;
   }
 
-  private calculatePriorityMatrix(sections: ReportSection[]): GeneratedReport['priorityMatrix'] {
+  private calculatePriorityMatrix(
+    sections: ReportSection[],
+  ): GeneratedReport['priorityMatrix'] {
     const matrix = { immediate: 0, shortTerm: 0, longTerm: 0, monitor: 0 };
 
     sections.forEach(section => {
@@ -9254,8 +10162,10 @@ Provide an overall assessment and priority recommendations.`
 
   private calculateTotalCost(sections: ReportSection[]): string {
     // Simplified - in production, parse all cost estimates
-    const hasSignificantIssues = sections.some(s => 
-      s.findings.some(f => f.priority === 'Immediate' || f.priority === 'Short-term')
+    const hasSignificantIssues = sections.some(s =>
+      s.findings.some(
+        f => f.priority === 'Immediate' || f.priority === 'Short-term',
+      ),
     );
 
     return hasSignificantIssues ? '$5,000 - $25,000' : '$0 - $2,000';
@@ -9263,11 +10173,16 @@ Provide an overall assessment and priority recommendations.`
 
   private getConditionColor(condition: string): string {
     switch (condition) {
-      case 'Safety Hazard': return '#F44336';
-      case 'Repair/Replace': return '#FF9800';
-      case 'Monitor': return '#FFC107';
-      case 'Acceptable': return '#4CAF50';
-      default: return '#9E9E9E';
+      case 'Safety Hazard':
+        return '#F44336';
+      case 'Repair/Replace':
+        return '#FF9800';
+      case 'Monitor':
+        return '#FFC107';
+      case 'Acceptable':
+        return '#4CAF50';
+      default:
+        return '#9E9E9E';
     }
   }
 }
@@ -9276,10 +10191,17 @@ export default new AIReportGenerationService();
 ```
 
 **2. Report Generation UI Component**
+
 ```typescript
 // components/reports/AIReportGenerator.tsx
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  ActivityIndicator,
+} from 'react-native';
 import { Button, Card, ProgressBar } from 'react-native-elements';
 import AIReportGenerationService from '../../services/AIReportGenerationService';
 
@@ -9292,7 +10214,7 @@ interface Props {
 export const AIReportGenerator: React.FC<Props> = ({
   inspectionId,
   inspectionData,
-  onReportGenerated
+  onReportGenerated,
 }) => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -9310,8 +10232,10 @@ export const AIReportGenerator: React.FC<Props> = ({
       setCurrentStep('Analyzing inspection data...');
       setProgress(0.1);
 
-      const report = await AIReportGenerationService.generateFullReport(inspectionData);
-      
+      const report = await AIReportGenerationService.generateFullReport(
+        inspectionData,
+      );
+
       setCurrentStep('Writing executive summary...');
       setProgress(0.3);
 
@@ -9331,7 +10255,10 @@ export const AIReportGenerator: React.FC<Props> = ({
       setCurrentStep('Creating PDF document...');
       setProgress(0.8);
 
-      const pdfPath = await AIReportGenerationService.generatePDFReport(report, inspectionData);
+      const pdfPath = await AIReportGenerationService.generatePDFReport(
+        report,
+        inspectionData,
+      );
 
       setCurrentStep('Finalizing report...');
       setProgress(1.0);
@@ -9341,7 +10268,6 @@ export const AIReportGenerator: React.FC<Props> = ({
 
       setIsGenerating(false);
       setCurrentStep('Report generated successfully! 🎉');
-
     } catch (err: any) {
       console.error('Report generation error:', err);
       setError(err.message || 'Failed to generate report');
@@ -9358,14 +10284,18 @@ export const AIReportGenerator: React.FC<Props> = ({
         {!generatedReport && !isGenerating && (
           <>
             <Text style={styles.description}>
-              Generate a comprehensive professional inspection report with AI-written content and
-              intelligently placed photos.
+              Generate a comprehensive professional inspection report with
+              AI-written content and intelligently placed photos.
             </Text>
 
             <View style={styles.featureList}>
               <Text style={styles.feature}>✅ Executive summary generated</Text>
-              <Text style={styles.feature}>✅ Section-by-section detailed analysis</Text>
-              <Text style={styles.feature}>✅ Photos placed near relevant text</Text>
+              <Text style={styles.feature}>
+                ✅ Section-by-section detailed analysis
+              </Text>
+              <Text style={styles.feature}>
+                ✅ Photos placed near relevant text
+              </Text>
               <Text style={styles.feature}>✅ Priority repair matrix</Text>
               <Text style={styles.feature}>✅ Cost estimates included</Text>
               <Text style={styles.feature}>✅ Professional PDF formatting</Text>
@@ -9373,7 +10303,9 @@ export const AIReportGenerator: React.FC<Props> = ({
 
             <View style={styles.stats}>
               <View style={styles.statItem}>
-                <Text style={styles.statValue}>{inspectionData.photos.length}</Text>
+                <Text style={styles.statValue}>
+                  {inspectionData.photos.length}
+                </Text>
                 <Text style={styles.statLabel}>Photos to Include</Text>
               </View>
               <View style={styles.statItem}>
@@ -9394,7 +10326,8 @@ export const AIReportGenerator: React.FC<Props> = ({
             />
 
             <Text style={styles.costNote}>
-              💰 Report generation cost: $0.30 - $0.60 (based on photos and complexity)
+              💰 Report generation cost: $0.30 - $0.60 (based on photos and
+              complexity)
             </Text>
           </>
         )}
@@ -9409,36 +10342,43 @@ export const AIReportGenerator: React.FC<Props> = ({
               variant="determinate"
               style={styles.progressBar}
             />
-            <Text style={styles.progressPercent}>{(progress * 100).toFixed(0)}%</Text>
+            <Text style={styles.progressPercent}>
+              {(progress * 100).toFixed(0)}%
+            </Text>
           </View>
         )}
 
         {generatedReport && !isGenerating && (
           <View style={styles.successContainer}>
-            <Text style={styles.successTitle}>✅ Report Generated Successfully!</Text>
-            
+            <Text style={styles.successTitle}>
+              ✅ Report Generated Successfully!
+            </Text>
+
             <View style={styles.metricsGrid}>
               <View style={styles.metric}>
                 <Text style={styles.metricValue}>
-                  {generatedReport.generationMetrics.generationTimeSeconds.toFixed(1)}s
+                  {generatedReport.generationMetrics.generationTimeSeconds.toFixed(
+                    1,
+                  )}
+                  s
                 </Text>
                 <Text style={styles.metricLabel}>Generation Time</Text>
               </View>
-              
+
               <View style={styles.metric}>
                 <Text style={styles.metricValue}>
                   {generatedReport.generationMetrics.photosPlaced}
                 </Text>
                 <Text style={styles.metricLabel}>Photos Placed</Text>
               </View>
-              
+
               <View style={styles.metric}>
                 <Text style={styles.metricValue}>
                   ${generatedReport.generationMetrics.costUSD.toFixed(2)}
                 </Text>
                 <Text style={styles.metricLabel}>Cost</Text>
               </View>
-              
+
               <View style={styles.metric}>
                 <Text style={styles.metricValue}>
                   {generatedReport.generationMetrics.tokensUsed.toLocaleString()}
@@ -9450,24 +10390,42 @@ export const AIReportGenerator: React.FC<Props> = ({
             <View style={styles.priorityMatrix}>
               <Text style={styles.matrixTitle}>Issues by Priority</Text>
               <View style={styles.matrixRow}>
-                <Text style={[styles.matrixLabel, { color: '#F44336' }]}>🔴 Immediate</Text>
-                <Text style={styles.matrixValue}>{generatedReport.priorityMatrix.immediate}</Text>
+                <Text style={[styles.matrixLabel, { color: '#F44336' }]}>
+                  🔴 Immediate
+                </Text>
+                <Text style={styles.matrixValue}>
+                  {generatedReport.priorityMatrix.immediate}
+                </Text>
               </View>
               <View style={styles.matrixRow}>
-                <Text style={[styles.matrixLabel, { color: '#FF9800' }]}>🟠 Short-term</Text>
-                <Text style={styles.matrixValue}>{generatedReport.priorityMatrix.shortTerm}</Text>
+                <Text style={[styles.matrixLabel, { color: '#FF9800' }]}>
+                  🟠 Short-term
+                </Text>
+                <Text style={styles.matrixValue}>
+                  {generatedReport.priorityMatrix.shortTerm}
+                </Text>
               </View>
               <View style={styles.matrixRow}>
-                <Text style={[styles.matrixLabel, { color: '#FFC107' }]}>🟡 Long-term</Text>
-                <Text style={styles.matrixValue}>{generatedReport.priorityMatrix.longTerm}</Text>
+                <Text style={[styles.matrixLabel, { color: '#FFC107' }]}>
+                  🟡 Long-term
+                </Text>
+                <Text style={styles.matrixValue}>
+                  {generatedReport.priorityMatrix.longTerm}
+                </Text>
               </View>
               <View style={styles.matrixRow}>
-                <Text style={[styles.matrixLabel, { color: '#4CAF50' }]}>🟢 Monitor</Text>
-                <Text style={styles.matrixValue}>{generatedReport.priorityMatrix.monitor}</Text>
+                <Text style={[styles.matrixLabel, { color: '#4CAF50' }]}>
+                  🟢 Monitor
+                </Text>
+                <Text style={styles.matrixValue}>
+                  {generatedReport.priorityMatrix.monitor}
+                </Text>
               </View>
             </View>
 
-            <Text style={styles.executiveSummaryLabel}>Executive Summary Preview:</Text>
+            <Text style={styles.executiveSummaryLabel}>
+              Executive Summary Preview:
+            </Text>
             <Text style={styles.executiveSummary} numberOfLines={5}>
               {generatedReport.executiveSummary}
             </Text>
@@ -9476,7 +10434,9 @@ export const AIReportGenerator: React.FC<Props> = ({
               title="View Full Report"
               icon={{ name: 'description', type: 'material', color: 'white' }}
               buttonStyle={styles.viewButton}
-              onPress={() => {/* Open PDF viewer */}}
+              onPress={() => {
+                /* Open PDF viewer */
+              }}
             />
 
             <Button
@@ -9507,28 +10467,28 @@ export const AIReportGenerator: React.FC<Props> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5F5F5'
+    backgroundColor: '#F5F5F5',
   },
   card: {
     borderRadius: 12,
-    margin: 16
+    margin: 16,
   },
   description: {
     fontSize: 14,
     color: '#666',
     marginBottom: 16,
-    lineHeight: 20
+    lineHeight: 20,
   },
   featureList: {
     backgroundColor: '#F5F5F5',
     padding: 12,
     borderRadius: 8,
-    marginBottom: 16
+    marginBottom: 16,
   },
   feature: {
     fontSize: 13,
     color: '#333',
-    marginBottom: 6
+    marginBottom: 6,
   },
   stats: {
     flexDirection: 'row',
@@ -9536,156 +10496,157 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     paddingVertical: 16,
     backgroundColor: '#E3F2FD',
-    borderRadius: 8
+    borderRadius: 8,
   },
   statItem: {
-    alignItems: 'center'
+    alignItems: 'center',
   },
   statValue: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#1976D2'
+    color: '#1976D2',
   },
   statLabel: {
     fontSize: 12,
     color: '#666',
-    marginTop: 4
+    marginTop: 4,
   },
   generateButton: {
     backgroundColor: '#007AFF',
     borderRadius: 8,
     paddingVertical: 12,
-    marginBottom: 12
+    marginBottom: 12,
   },
   costNote: {
     fontSize: 12,
     color: '#999',
     textAlign: 'center',
-    fontStyle: 'italic'
+    fontStyle: 'italic',
   },
   progressContainer: {
     alignItems: 'center',
-    paddingVertical: 32
+    paddingVertical: 32,
   },
   progressText: {
     fontSize: 16,
     fontWeight: '600',
     marginVertical: 16,
-    color: '#333'
+    color: '#333',
   },
   progressBar: {
     width: '100%',
     height: 12,
     borderRadius: 6,
-    marginBottom: 8
+    marginBottom: 8,
   },
   progressPercent: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#007AFF'
+    color: '#007AFF',
   },
   successContainer: {
-    alignItems: 'center'
+    alignItems: 'center',
   },
   successTitle: {
     fontSize: 18,
     fontWeight: 'bold',
     color: '#4CAF50',
-    marginBottom: 20
+    marginBottom: 20,
   },
   metricsGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-around',
     width: '100%',
-    marginBottom: 20
+    marginBottom: 20,
   },
   metric: {
     width: '45%',
     alignItems: 'center',
-    marginBottom: 16
+    marginBottom: 16,
   },
   metricValue: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#333'
+    color: '#333',
   },
   metricLabel: {
     fontSize: 12,
     color: '#666',
-    marginTop: 4
+    marginTop: 4,
   },
   priorityMatrix: {
     width: '100%',
     backgroundColor: '#F5F5F5',
     padding: 16,
     borderRadius: 8,
-    marginBottom: 20
+    marginBottom: 20,
   },
   matrixTitle: {
     fontSize: 16,
     fontWeight: 'bold',
-    marginBottom: 12
+    marginBottom: 12,
   },
   matrixRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 8
+    marginBottom: 8,
   },
   matrixLabel: {
     fontSize: 14,
-    fontWeight: '600'
+    fontWeight: '600',
   },
   matrixValue: {
     fontSize: 14,
     fontWeight: 'bold',
-    color: '#333'
+    color: '#333',
   },
   executiveSummaryLabel: {
     fontSize: 14,
     fontWeight: '600',
     marginBottom: 8,
-    alignSelf: 'flex-start'
+    alignSelf: 'flex-start',
   },
   executiveSummary: {
     fontSize: 13,
     color: '#666',
     lineHeight: 20,
     marginBottom: 20,
-    fontStyle: 'italic'
+    fontStyle: 'italic',
   },
   viewButton: {
     backgroundColor: '#4CAF50',
     borderRadius: 8,
     paddingVertical: 12,
     width: '100%',
-    marginBottom: 12
+    marginBottom: 12,
   },
   regenerateButton: {
     borderRadius: 8,
     paddingVertical: 12,
     width: '100%',
-    borderColor: '#007AFF'
+    borderColor: '#007AFF',
   },
   errorContainer: {
     alignItems: 'center',
-    paddingVertical: 20
+    paddingVertical: 20,
   },
   errorText: {
     fontSize: 14,
     color: '#F44336',
     marginBottom: 16,
-    textAlign: 'center'
+    textAlign: 'center',
   },
   retryButton: {
     borderRadius: 8,
     paddingVertical: 12,
-    borderColor: '#F44336'
-  }
+    borderColor: '#F44336',
+  },
 });
 ```
 
 **Benefits:**
+
 - ✅ **Time savings**: 2-3 hours → 3-5 minutes per report
 - ✅ **Professional quality**: Consistent, well-written reports every time
 - ✅ **Intelligent photo placement**: Photos near relevant descriptions
@@ -9695,12 +10656,14 @@ const styles = StyleSheet.create({
 - ✅ **Profitable**: $0.30-0.60 cost, charge $9.99-19.99 (94-97% profit margin)
 
 **Pricing Strategy:**
+
 - **Residential Report**: $9.99 (Professional), $8.99 (Business), $7.99 (Enterprise)
 - **Commercial Report**: $19.99 (Professional), $17.99 (Business), $15.99 (Enterprise)
 - **Cost per report**: $0.30-0.60 (3,000-6,000 tokens × $0.01/1k)
 - **Profit margin**: 94-97%
 
 **Token Usage Breakdown:**
+
 - Executive Summary: ~1,000 tokens ($0.01)
 - Section Introductions (5): ~1,000 tokens ($0.01)
 - Component Findings (20-30): ~7,500 tokens ($0.075)
@@ -9709,6 +10672,7 @@ const styles = StyleSheet.create({
 - **Total**: 3,000-6,000 tokens = $0.30-0.60 per report
 
 **Competitive Advantage:**
+
 - Most competitors: Manual report writing (2-3 hours)
 - Smart Inspector Pro: AI-generated (3-5 minutes) with intelligent photo placement
 - Unique differentiator: "AI writes your entire report and places photos automatically"
@@ -9719,14 +10683,15 @@ const styles = StyleSheet.create({
 
 All 4 AI optimization recommendations from Section 3 are now fully integrated:
 
-| Rec # | Feature | Priority | Status | Key Metrics |
-|-------|---------|----------|--------|-------------|
-| 3.1 | Intelligent Caching | 🟡 High | ✅ Complete | 40-60% cost reduction, 92-94% profit margin |
-| 3.2 | Confidence Scores | 🟡 High | ✅ Complete | Color-coded UI, user trust improved |
-| 3.3 | Active Learning | 🟡 High | ✅ Complete | 85% → 93-95% accuracy over time |
-| 3.5 | AI Report Generation | 🔥 Premium | ✅ Complete | 2-3 hrs → 3-5 min, 94-97% profit margin |
+| Rec # | Feature              | Priority   | Status      | Key Metrics                                 |
+| ----- | -------------------- | ---------- | ----------- | ------------------------------------------- |
+| 3.1   | Intelligent Caching  | 🟡 High    | ✅ Complete | 40-60% cost reduction, 92-94% profit margin |
+| 3.2   | Confidence Scores    | 🟡 High    | ✅ Complete | Color-coded UI, user trust improved         |
+| 3.3   | Active Learning      | 🟡 High    | ✅ Complete | 85% → 93-95% accuracy over time             |
+| 3.5   | AI Report Generation | 🔥 Premium | ✅ Complete | 2-3 hrs → 3-5 min, 94-97% profit margin     |
 
 **Development Time Estimate:**
+
 - Rec 3.1 (Intelligent Caching): 2 weeks
 - Rec 3.2 (Confidence Scores): 3 days
 - Rec 3.3 (Active Learning): 3 weeks
@@ -9734,6 +10699,7 @@ All 4 AI optimization recommendations from Section 3 are now fully integrated:
 - **Total: 10 weeks** (can be done in parallel with other features)
 
 **Cost Impact:**
+
 - **Photo Analysis (Before optimization)**: $0.02 per analysis, 87% profit margin
 - **Photo Analysis (After optimization)**: $0.008-0.012 average per analysis (caching), 92-94% profit margin
 - **Report Generation**: $0.30-0.60 per report, charge $9.99-19.99, 94-97% profit margin
@@ -9741,10 +10707,12 @@ All 4 AI optimization recommendations from Section 3 are now fully integrated:
 - **Annual revenue from reports** (500 users, 4 reports/year each): $19,980-39,960
 
 **Accuracy Improvement:**
+
 - **Baseline**: 85% (Component), 88% (Material), 75% (Condition)
 - **After active learning**: 93-95% (Component), 92-94% (Material), 88-90% (Condition)
 
 **Report Generation Capabilities:**
+
 - **Time savings**: 2-3 hours manual → 3-5 minutes AI-generated
 - **Content generated**: Executive summary + 5-7 sections + priority matrix + recommendations
 - **Photo placement**: Intelligent algorithm matches photos to relevant text sections
@@ -9752,4 +10720,3 @@ All 4 AI optimization recommendations from Section 3 are now fully integrated:
 - **Professional output**: PDF with cover page, table of contents, photos with captions, signature page
 
 ---
-

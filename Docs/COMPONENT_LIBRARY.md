@@ -1149,6 +1149,290 @@ const styles = StyleSheet.create({
 
 ---
 
+### MenuCard Component (Navigation Cards)
+
+**File**: Implemented inline in `src/screens/home/HomeScreen.tsx` (Phase 8, Task P8-T02)
+
+**Purpose**: Primary navigation card pattern with signature accent stripe design from legacy app. Use for all menu/navigation list items across the application.
+
+**Visual Signature**: 4px colored accent stripe on left edge + tinted icon circle
+
+```
+┌────────────────────────────────────────┐
+│█ [○] Menu Card Title             [>] │ ← 4px accent stripe
+└────────────────────────────────────────┘
+```
+
+**TypeScript Interface**:
+
+```typescript
+interface MenuCardProps {
+  title: string; // Card title text
+  icon: string; // Material Community Icon name
+  iconColor?: string; // Hex color for icon and accent (defaults to theme.colors.primary)
+  badge?: string; // Optional badge text (e.g., "3")
+  onPress: () => void; // Navigation callback
+  fullWidth?: boolean; // Full width vs 48.5% (default: false)
+}
+```
+
+**Implementation**:
+
+```typescript
+import { useState } from 'react';
+import { TouchableOpacity, View, StyleSheet } from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { useTheme } from '@/theme';
+import ThemedText from '@/components/common/ThemedText';
+
+const MenuCard: React.FC<MenuCardProps> = ({
+  title,
+  icon,
+  iconColor,
+  badge,
+  onPress,
+  fullWidth = false,
+}) => {
+  const { theme } = useTheme();
+  const [pressed, setPressed] = useState(false);
+  const accentColor = iconColor || theme.colors.primary;
+
+  return (
+    <TouchableOpacity
+      style={[
+        styles.menuCard,
+        {
+          backgroundColor: pressed
+            ? theme.colors.background
+            : theme.colors.surface,
+          borderColor: theme.colors.border,
+          width: fullWidth ? '100%' : '48.5%',
+        },
+      ]}
+      onPress={onPress}
+      onPressIn={() => setPressed(true)}
+      onPressOut={() => setPressed(false)}
+      activeOpacity={1}
+      accessibilityRole="button"
+      accessibilityLabel={title}
+    >
+      {/* Accent Stripe - Signature feature from old app */}
+      <View style={[styles.accentStripe, { backgroundColor: accentColor }]} />
+
+      <View style={styles.iconColumn}>
+        <View
+          style={[
+            styles.menuIconCircle,
+            { backgroundColor: `${accentColor}22` }, // 13% opacity tint
+          ]}
+        >
+          <Icon name={icon} size={24} color={accentColor} />
+        </View>
+      </View>
+
+      <View style={styles.menuCardContent}>
+        <ThemedText
+          variant="body1"
+          style={styles.menuCardTitle}
+          numberOfLines={1}
+          ellipsizeMode="tail"
+        >
+          {title}
+        </ThemedText>
+      </View>
+
+      {badge && (
+        <View
+          style={[styles.menuBadge, { backgroundColor: theme.colors.error }]}
+        >
+          <ThemedText variant="caption" style={styles.menuBadgeText}>
+            {badge}
+          </ThemedText>
+        </View>
+      )}
+
+      <Icon
+        name="chevron-right"
+        size={20}
+        color={theme.colors.textSecondary}
+        style={styles.menuChevron}
+      />
+    </TouchableOpacity>
+  );
+};
+
+const styles = StyleSheet.create({
+  menuCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 11, // Reduced from standard 14px
+    paddingRight: 14,
+    paddingLeft: 18, // After accent stripe
+    borderRadius: 12,
+    borderWidth: 1,
+    shadowOpacity: 0, // No shadow for cleaner look
+    overflow: 'hidden', // Clips accent stripe at corners
+    position: 'relative',
+    marginBottom: 10,
+  },
+  accentStripe: {
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    bottom: 0,
+    width: 4,
+  },
+  iconColumn: {
+    width: 44,
+    alignItems: 'center',
+  },
+  menuIconCircle: {
+    width: 34, // Smaller than standard 44px
+    height: 34,
+    borderRadius: 17,
+    justifyContent: 'center',
+    alignItems: 'center',
+    // Background uses 22 hex alpha (13% opacity)
+  },
+  menuCardContent: {
+    flex: 1,
+    paddingRight: 4,
+  },
+  menuCardTitle: {
+    fontWeight: '600',
+    fontSize: 16, // Larger than standard 14px
+    marginBottom: 2,
+  },
+  menuBadge: {
+    minWidth: 22,
+    height: 22,
+    borderRadius: 11,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 6,
+  },
+  menuBadgeText: {
+    color: '#FFFFFF',
+    fontSize: 11,
+    fontWeight: '700',
+  },
+  menuChevron: {
+    marginLeft: 4,
+  },
+});
+```
+
+**Design Specifications**:
+
+| Property                | Value                                | Notes                                      |
+| ----------------------- | ------------------------------------ | ------------------------------------------ |
+| **Accent Stripe Width** | 4px                                  | Position: absolute, left edge, full height |
+| **Icon Circle Size**    | 34x34px                              | Border radius: 17px                        |
+| **Icon Size**           | 24px                                 | Material Community Icons                   |
+| **Icon Background**     | `${accentColor}22`                   | 13% opacity (22 hex alpha)                 |
+| **Title Font Size**     | 16px                                 | Increased from standard 14px               |
+| **Title Font Weight**   | 600                                  | Semi-bold                                  |
+| **Card Padding**        | 11px vertical, 18px left, 14px right | Asymmetric for stripe                      |
+| **Border Radius**       | 12px                                 | Rounded corners                            |
+| **Border Width**        | 1px                                  | theme.colors.border                        |
+| **Shadow**              | None                                 | Cleaner appearance                         |
+| **Spacing**             | 10px marginBottom                    | Between cards                              |
+| **Pressed State**       | Background → theme.colors.background | Subtle feedback                            |
+
+**Color Coding System** (use consistently across app):
+
+| Color             | Hex     | Use Cases                                                 |
+| ----------------- | ------- | --------------------------------------------------------- |
+| 🟢 **Green**      | #4CAF50 | Success actions, workflow editor, calendar, membership    |
+| 🔵 **Blue**       | #2196F3 | Primary actions, my inspections, contacts, help, schedule |
+| 🟠 **Orange**     | #FF9800 | In-progress items, continue inspection, accounting        |
+| 🟣 **Purple**     | #9C27B0 | Team/collaboration features, store                        |
+| 🔴 **Red**        | #F44336 | Notifications, alerts, urgent items                       |
+| 🟠 **Orange-Red** | #FF5722 | Report templates                                          |
+| 🔵 **Cyan**       | #00BCD4 | Forms, data management                                    |
+| ⚫ **Gray**       | #607D8B | Settings, system tools, inspection data                   |
+
+**Usage Examples**:
+
+```typescript
+// Full-width navigation card
+<MenuCard
+  title="My Inspections"
+  icon="clipboard-list-outline"
+  iconColor="#2196F3"
+  onPress={() => navigation.navigate('MyInspections')}
+  fullWidth
+/>
+
+// Card with badge notification
+<MenuCard
+  title="Notifications"
+  icon="bell-outline"
+  iconColor="#F44336"
+  badge="3"
+  onPress={() => navigation.navigate('Notifications')}
+  fullWidth
+/>
+
+// Card with in-progress status
+<MenuCard
+  title="Continue Inspection"
+  icon="progress-clock"
+  iconColor="#FF9800"
+  badge="2"
+  onPress={() => navigation.navigate('ContinueInspection')}
+  fullWidth
+/>
+
+// Half-width card for grid layouts (if needed)
+<View style={{ flexDirection: 'row', gap: 12 }}>
+  <MenuCard
+    title="Calendar"
+    icon="calendar-month"
+    iconColor="#4CAF50"
+    onPress={() => navigation.navigate('Calendar')}
+    fullWidth={false}
+  />
+  <MenuCard
+    title="Contacts"
+    icon="account-multiple-outline"
+    iconColor="#2196F3"
+    onPress={() => navigation.navigate('Contacts')}
+    fullWidth={false}
+  />
+</View>
+```
+
+**Accessibility**:
+
+- `accessibilityRole="button"` for screen reader compatibility
+- `accessibilityLabel` uses title prop
+- Badge numbers announced for notification counts
+- High contrast maintained in both light/dark themes
+- Touch target minimum: 44x48px (entire card)
+
+**Best Practices**:
+
+1. **Always use color coding**: Match icon colors to feature categories
+2. **Consistent icon family**: Material Community Icons only
+3. **Full-width default**: Use fullWidth=true for navigation menus
+4. **Badge for counts**: Show notification/item counts when relevant
+5. **Theme integration**: Always use useTheme() hook, never hardcoded colors
+6. **Pressed state**: Use onPressIn/onPressOut for instant visual feedback
+7. **Section grouping**: Group related cards under section headers
+
+**When to Use**:
+
+- ✅ Main navigation menus
+- ✅ Settings screen options
+- ✅ Feature dashboards
+- ✅ Action lists with icons
+- ❌ Data tables (use CSVDataTable)
+- ❌ Inspection records (use InspectionCard)
+- ❌ Photo galleries (use PhotoThumbnail)
+
+---
+
 ### Modal Component
 
 **File**: `src/components/common/Modal/Modal.tsx`

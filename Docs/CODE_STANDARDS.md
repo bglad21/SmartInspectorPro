@@ -1,8 +1,8 @@
 # Smart Inspector Pro - Code Standards
 
-**Version**: 1.0.0  
-**Last Updated**: October 17, 2025  
-**Enforcement**: ESLint + Prettier + TypeScript  
+**Version**: 1.0.0
+**Last Updated**: October 17, 2025
+**Enforcement**: ESLint + Prettier + TypeScript
 **Compliance**: Mandatory for all pull requests
 
 ---
@@ -27,6 +27,7 @@
 ## General Principles
 
 ### Core Values
+
 1. **Readability over Cleverness** - Code is read 10x more than written
 2. **Consistency over Personal Preference** - Follow team standards
 3. **Explicit over Implicit** - Make intentions clear
@@ -34,6 +35,7 @@
 5. **DRY (Don't Repeat Yourself)** - But avoid premature abstraction
 
 ### Code Quality Metrics
+
 - **Line Length**: Max 100 characters (enforced by Prettier)
 - **File Length**: Max 300 lines (split if larger)
 - **Function Length**: Max 50 lines (extract smaller functions)
@@ -48,6 +50,7 @@
 ### TypeScript Configuration
 
 **tsconfig.json** (strict mode enabled):
+
 ```json
 {
   "compilerOptions": {
@@ -88,6 +91,7 @@
 ### Type Definitions
 
 #### Use Interfaces for Object Shapes
+
 ```typescript
 // ✅ Good: Interface for object shape
 interface Inspection {
@@ -107,6 +111,7 @@ type Inspection = {
 ```
 
 #### Use Type Aliases for Unions, Primitives, Tuples
+
 ```typescript
 // ✅ Good: Type alias for union
 type InspectionStatus = 'scheduled' | 'in-progress' | 'completed' | 'cancelled';
@@ -115,10 +120,16 @@ type InspectionStatus = 'scheduled' | 'in-progress' | 'completed' | 'cancelled';
 type OnInspectionComplete = (inspectionId: string) => void;
 
 // ✅ Good: Type alias for complex union
-type ConditionType = 'Acceptable' | 'Monitor' | 'Repair/Replace' | 'Safety Hazard' | 'Access Restricted';
+type ConditionType =
+  | 'Acceptable'
+  | 'Monitor'
+  | 'Repair/Replace'
+  | 'Safety Hazard'
+  | 'Access Restricted';
 ```
 
 #### Always Export Types/Interfaces
+
 ```typescript
 // ✅ Good: Export for reuse
 export interface User {
@@ -135,6 +146,7 @@ interface User {
 ```
 
 #### Avoid `any` - Use `unknown` if Type is Truly Unknown
+
 ```typescript
 // ❌ Bad: Using any
 function processData(data: any) {
@@ -155,12 +167,13 @@ function isValidData(data: unknown): data is { value: string } {
 ```
 
 #### Use Enums Sparingly - Prefer String Literal Unions
+
 ```typescript
 // ❌ Avoid: Enum (adds runtime code)
 enum InspectionStatus {
   Scheduled = 'SCHEDULED',
   InProgress = 'IN_PROGRESS',
-  Completed = 'COMPLETED'
+  Completed = 'COMPLETED',
 }
 
 // ✅ Good: String literal union (zero runtime cost)
@@ -174,10 +187,12 @@ export const INSPECTION_STATUS = {
   CANCELLED: 'cancelled',
 } as const;
 
-type InspectionStatus = typeof INSPECTION_STATUS[keyof typeof INSPECTION_STATUS];
+type InspectionStatus =
+  (typeof INSPECTION_STATUS)[keyof typeof INSPECTION_STATUS];
 ```
 
 #### Use Utility Types
+
 ```typescript
 // Partial<T> - Make all properties optional
 type PartialInspection = Partial<Inspection>;
@@ -186,7 +201,10 @@ type PartialInspection = Partial<Inspection>;
 type RequiredInspection = Required<Partial<Inspection>>;
 
 // Pick<T, K> - Select specific properties
-type InspectionPreview = Pick<Inspection, 'id' | 'propertyAddress' | 'scheduledDate'>;
+type InspectionPreview = Pick<
+  Inspection,
+  'id' | 'propertyAddress' | 'scheduledDate'
+>;
 
 // Omit<T, K> - Exclude specific properties
 type InspectionWithoutRecords = Omit<Inspection, 'records'>;
@@ -203,6 +221,7 @@ type ApiResponse = ReturnType<typeof fetchInspection>;
 ## File & Folder Naming
 
 ### General Rules
+
 - **React Components**: PascalCase (e.g., `InspectionCard.tsx`)
 - **Non-component files**: camelCase (e.g., `csvParser.ts`)
 - **Test files**: Match source file with `.test.ts(x)` suffix
@@ -211,6 +230,7 @@ type ApiResponse = ReturnType<typeof fetchInspection>;
 - **Constants files**: UPPER_SNAKE_CASE (e.g., `API_ENDPOINTS.ts`)
 
 ### File Structure
+
 ```
 src/
 ├── components/              # Reusable UI components
@@ -276,6 +296,7 @@ src/
 ```
 
 ### Component Folder Structure (Recommended)
+
 ```
 Button/
 ├── Button.tsx           # Component implementation
@@ -286,6 +307,7 @@ Button/
 ```
 
 **index.ts** (Barrel Export):
+
 ```typescript
 export { Button } from './Button';
 export type { ButtonProps } from './Button.types';
@@ -296,6 +318,7 @@ export type { ButtonProps } from './Button.types';
 ## React Component Standards
 
 ### Functional Components Only
+
 ```typescript
 // ✅ Good: Functional component with TypeScript
 interface ProfileProps {
@@ -305,12 +328,8 @@ interface ProfileProps {
 
 export const Profile: React.FC<ProfileProps> = ({ userId, onUpdate }) => {
   const [loading, setLoading] = useState(false);
-  
-  return (
-    <View>
-      {/* Component content */}
-    </View>
-  );
+
+  return <View>{/* Component content */}</View>;
 };
 
 // ❌ Bad: Class component (avoid)
@@ -320,6 +339,7 @@ export class Profile extends React.Component<ProfileProps> {
 ```
 
 ### Props Interface Pattern
+
 ```typescript
 // ✅ Good: Descriptive props interface
 interface InspectionCardProps {
@@ -350,6 +370,7 @@ export const InspectionCard: React.FC<{
 ```
 
 ### Destructure Props
+
 ```typescript
 // ✅ Good: Destructure in function signature
 export const UserProfile: React.FC<UserProfileProps> = ({
@@ -361,7 +382,7 @@ export const UserProfile: React.FC<UserProfileProps> = ({
 };
 
 // ❌ Bad: Using props object
-export const UserProfile: React.FC<UserProfileProps> = (props) => {
+export const UserProfile: React.FC<UserProfileProps> = props => {
   return <View>{props.user.name}</View>;
 };
 ```
@@ -372,14 +393,14 @@ export const UserProfile: React.FC<UserProfileProps> = (props) => {
 
 ```typescript
 // ✅ Good: Use theme hook
-import { useTheme } from '../theme/ThemeProvider';
+import { useTheme } from '@/theme';
 
 export const MyComponent: React.FC = () => {
   const { theme } = useTheme();
-  
+
   return (
-    <View style={{ backgroundColor: theme.colors.background.primary }}>
-      <Text style={{ color: theme.colors.text.primary }}>Hello</Text>
+    <View style={{ backgroundColor: theme.colors.background }}>
+      <ThemedText variant="body1">Hello</ThemedText>
     </View>
   );
 };
@@ -394,13 +415,236 @@ export const MyComponent: React.FC = () => {
 };
 ```
 
+**Use ThemedText and ThemedView components**:
+
+```typescript
+// ✅ Good: Use themed components
+import ThemedText from '@/components/common/ThemedText';
+import ThemedView from '@/components/common/ThemedView';
+
+export const MyScreen: React.FC = () => {
+  return (
+    <ThemedView style={styles.container}>
+      <ThemedText variant="h1">Title</ThemedText>
+      <ThemedText variant="body1">Description text</ThemedText>
+    </ThemedView>
+  );
+};
+
+// ❌ Bad: Manual styling with hardcoded colors
+export const MyScreen: React.FC = () => {
+  return (
+    <View style={{ backgroundColor: '#FFFFFF' }}>
+      <Text style={{ fontSize: 24, color: '#000000' }}>Title</Text>
+      <Text style={{ fontSize: 16, color: '#666666' }}>Description</Text>
+    </View>
+  );
+};
+```
+
+### MenuCard Pattern (Navigation Lists)
+
+**CRITICAL**: Use MenuCard pattern for all navigation menus across the app.
+
+**Implementation**: See `src/screens/home/HomeScreen.tsx` for reference implementation.
+
+```typescript
+// ✅ Good: MenuCard pattern with accent stripe
+import { useState } from 'react';
+import { TouchableOpacity, View } from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { useTheme } from '@/theme';
+import ThemedText from '@/components/common/ThemedText';
+
+interface MenuCardProps {
+  title: string;
+  icon: string;
+  iconColor?: string;
+  badge?: string;
+  onPress: () => void;
+  fullWidth?: boolean;
+}
+
+const MenuCard: React.FC<MenuCardProps> = ({
+  title,
+  icon,
+  iconColor,
+  badge,
+  onPress,
+  fullWidth = false,
+}) => {
+  const { theme } = useTheme();
+  const [pressed, setPressed] = useState(false);
+  const accentColor = iconColor || theme.colors.primary;
+
+  return (
+    <TouchableOpacity
+      style={[
+        styles.menuCard,
+        {
+          backgroundColor: pressed
+            ? theme.colors.background
+            : theme.colors.surface,
+          borderColor: theme.colors.border,
+          width: fullWidth ? '100%' : '48.5%',
+        },
+      ]}
+      onPress={onPress}
+      onPressIn={() => setPressed(true)}
+      onPressOut={() => setPressed(false)}
+      activeOpacity={1}
+      accessibilityRole="button"
+      accessibilityLabel={title}
+    >
+      {/* Accent Stripe - 4px colored left edge */}
+      <View style={[styles.accentStripe, { backgroundColor: accentColor }]} />
+
+      {/* Icon with tinted background circle */}
+      <View style={styles.iconColumn}>
+        <View
+          style={[
+            styles.menuIconCircle,
+            { backgroundColor: `${accentColor}22` }, // 13% opacity
+          ]}
+        >
+          <Icon name={icon} size={24} color={accentColor} />
+        </View>
+      </View>
+
+      {/* Title content */}
+      <View style={styles.menuCardContent}>
+        <ThemedText variant="body1" style={styles.menuCardTitle}>
+          {title}
+        </ThemedText>
+      </View>
+
+      {/* Optional badge */}
+      {badge && (
+        <View
+          style={[styles.menuBadge, { backgroundColor: theme.colors.error }]}
+        >
+          <ThemedText variant="caption" style={styles.menuBadgeText}>
+            {badge}
+          </ThemedText>
+        </View>
+      )}
+
+      {/* Chevron indicator */}
+      <Icon name="chevron-right" size={20} color={theme.colors.textSecondary} />
+    </TouchableOpacity>
+  );
+};
+
+const styles = StyleSheet.create({
+  menuCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 11,
+    paddingRight: 14,
+    paddingLeft: 18,
+    borderRadius: 12,
+    borderWidth: 1,
+    shadowOpacity: 0,
+    overflow: 'hidden',
+    position: 'relative',
+    marginBottom: 10,
+  },
+  accentStripe: {
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    bottom: 0,
+    width: 4,
+  },
+  iconColumn: {
+    width: 44,
+    alignItems: 'center',
+  },
+  menuIconCircle: {
+    width: 34,
+    height: 34,
+    borderRadius: 17,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  menuCardContent: {
+    flex: 1,
+    paddingRight: 4,
+  },
+  menuCardTitle: {
+    fontWeight: '600',
+    fontSize: 16,
+    marginBottom: 2,
+  },
+  menuBadge: {
+    minWidth: 22,
+    height: 22,
+    borderRadius: 11,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 6,
+  },
+  menuBadgeText: {
+    color: '#FFFFFF',
+    fontSize: 11,
+    fontWeight: '700',
+  },
+});
+```
+
+**Color Coding System** (use consistently):
+
+```typescript
+// Standard color palette for MenuCard icons
+const MENU_COLORS = {
+  success: '#4CAF50', // Green: workflow, calendar, membership
+  primary: '#2196F3', // Blue: inspections, contacts, help
+  inProgress: '#FF9800', // Orange: continue inspection, accounting
+  team: '#9C27B0', // Purple: team features, store
+  alert: '#F44336', // Red: notifications, urgent
+  template: '#FF5722', // Orange-red: report templates
+  data: '#00BCD4', // Cyan: forms, data management
+  system: '#607D8B', // Gray: settings, system tools
+};
+
+// Usage
+<MenuCard
+  title="My Inspections"
+  icon="clipboard-list-outline"
+  iconColor={MENU_COLORS.primary}
+  onPress={() => navigation.navigate('MyInspections')}
+  fullWidth
+/>;
+```
+
+**MenuCard Rules**:
+
+1. **Always use 4px accent stripe** on left edge
+2. **Icon circle**: 34x34px with 13% opacity background (`${color}22`)
+3. **Icon size**: 24px Material Community Icons
+4. **Title font**: 16px (larger than standard 14px), fontWeight 600
+5. **Full width default**: Use `fullWidth` prop for navigation menus
+6. **Pressed state**: Background changes to theme.colors.background
+7. **No shadow**: shadowOpacity: 0 for cleaner look
+8. **Badge placement**: Right side before chevron
+9. **Color consistency**: Use color coding system above
+
+**When to Use MenuCard**:
+
+- ✅ Navigation menus (Home, Settings, etc.)
+- ✅ Feature dashboards
+- ✅ Action lists with icons
+- ❌ Data tables (use CSVDataTable)
+- ❌ Inspection records (use InspectionCard)
+- ❌ Photo galleries (use PhotoThumbnail)
+
 **Create styles inside component for dynamic theming**:
 
 ```typescript
 // ✅ Good: Dynamic styles with theme
 export const Card: React.FC<CardProps> = ({ children }) => {
   const { theme } = useTheme();
-  
+
   const styles = StyleSheet.create({
     card: {
       backgroundColor: theme.colors.background.secondary,
@@ -410,7 +654,7 @@ export const Card: React.FC<CardProps> = ({ children }) => {
       padding: 16,
     },
   });
-  
+
   return <View style={styles.card}>{children}</View>;
 };
 
@@ -455,7 +699,7 @@ import { useTheme } from '../theme/ThemeProvider';
 
 export const Screen: React.FC = () => {
   const { isDark } = useTheme();
-  
+
   return (
     <>
       <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} />
@@ -466,6 +710,7 @@ export const Screen: React.FC = () => {
 ```
 
 ### Use Custom Hooks for Logic
+
 ```typescript
 // ✅ Good: Extract logic to custom hook
 function useInspectionForm(inspectionId?: string) {
@@ -492,18 +737,19 @@ function useInspectionForm(inspectionId?: string) {
 }
 
 // Component uses hook
-export const InspectionForm: React.FC<InspectionFormProps> = ({ inspectionId }) => {
-  const { formData, setFormData, errors, loading, submitForm } = useInspectionForm(inspectionId);
+export const InspectionForm: React.FC<InspectionFormProps> = ({
+  inspectionId,
+}) => {
+  const { formData, setFormData, errors, loading, submitForm } =
+    useInspectionForm(inspectionId);
 
-  return (
-    <View>
-      {/* Form UI */}
-    </View>
-  );
+  return <View>{/* Form UI */}</View>;
 };
 
 // ❌ Bad: All logic in component
-export const InspectionForm: React.FC<InspectionFormProps> = ({ inspectionId }) => {
+export const InspectionForm: React.FC<InspectionFormProps> = ({
+  inspectionId,
+}) => {
   const [formData, setFormData] = useState<InspectionFormData>({});
   const [errors, setErrors] = useState<FormErrors>({});
   // ... 100 lines of logic in component
@@ -511,9 +757,13 @@ export const InspectionForm: React.FC<InspectionFormProps> = ({ inspectionId }) 
 ```
 
 ### Memoization Guidelines
+
 ```typescript
 // ✅ Good: Memoize expensive computations
-const InspectionList: React.FC<InspectionListProps> = ({ inspections, filters }) => {
+const InspectionList: React.FC<InspectionListProps> = ({
+  inspections,
+  filters,
+}) => {
   // Memoize filtered list (only recalculates when dependencies change)
   const filteredInspections = useMemo(() => {
     return inspections.filter(inspection => {
@@ -523,15 +773,21 @@ const InspectionList: React.FC<InspectionListProps> = ({ inspections, filters })
   }, [inspections, filters]);
 
   // Memoize callback (stable reference)
-  const handleInspectionPress = useCallback((id: string) => {
-    navigation.navigate('InspectionDetail', { id });
-  }, [navigation]);
+  const handleInspectionPress = useCallback(
+    (id: string) => {
+      navigation.navigate('InspectionDetail', { id });
+    },
+    [navigation],
+  );
 
   return (
     <FlatList
       data={filteredInspections}
       renderItem={({ item }) => (
-        <InspectionCard inspection={item} onPress={() => handleInspectionPress(item.id)} />
+        <InspectionCard
+          inspection={item}
+          onPress={() => handleInspectionPress(item.id)}
+        />
       )}
     />
   );
@@ -545,14 +801,17 @@ export const InspectionCard = React.memo<InspectionCardProps>(
   (prevProps, nextProps) => {
     // Custom comparison (optional)
     return prevProps.inspection.id === nextProps.inspection.id;
-  }
+  },
 );
 ```
 
 ### Conditional Rendering
+
 ```typescript
 // ✅ Good: Early return for loading/error states
-export const InspectionDetail: React.FC<InspectionDetailProps> = ({ inspectionId }) => {
+export const InspectionDetail: React.FC<InspectionDetailProps> = ({
+  inspectionId,
+}) => {
   const { data: inspection, loading, error } = useInspection(inspectionId);
 
   if (loading) {
@@ -567,15 +826,13 @@ export const InspectionDetail: React.FC<InspectionDetailProps> = ({ inspectionId
     return <NotFound />;
   }
 
-  return (
-    <View>
-      {/* Main content */}
-    </View>
-  );
+  return <View>{/* Main content */}</View>;
 };
 
 // ❌ Bad: Nested ternaries
-export const InspectionDetail: React.FC<InspectionDetailProps> = ({ inspectionId }) => {
+export const InspectionDetail: React.FC<InspectionDetailProps> = ({
+  inspectionId,
+}) => {
   const { data, loading, error } = useInspection(inspectionId);
 
   return (
@@ -631,7 +888,7 @@ export const fetchInspections = createAsyncThunk(
     } catch (error) {
       return rejectWithValue(getErrorMessage(error));
     }
-  }
+  },
 );
 
 // Slice
@@ -643,15 +900,15 @@ const inspectionsSlice = createSlice({
     selectInspection: (state, action: PayloadAction<string>) => {
       state.selectedId = action.payload;
     },
-    clearSelectedInspection: (state) => {
+    clearSelectedInspection: state => {
       state.selectedId = null;
     },
     resetInspections: () => initialState,
   },
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     // Async action handlers
     builder
-      .addCase(fetchInspections.pending, (state) => {
+      .addCase(fetchInspections.pending, state => {
         state.loading = true;
         state.error = null;
       })
@@ -666,7 +923,8 @@ const inspectionsSlice = createSlice({
   },
 });
 
-export const { selectInspection, clearSelectedInspection, resetInspections } = inspectionsSlice.actions;
+export const { selectInspection, clearSelectedInspection, resetInspections } =
+  inspectionsSlice.actions;
 export default inspectionsSlice.reducer;
 ```
 
@@ -688,7 +946,7 @@ export const store = configureStore({
     marketplace: marketplaceReducer,
     [api.reducerPath]: api.reducer,
   },
-  middleware: (getDefaultMiddleware) =>
+  middleware: getDefaultMiddleware =>
     getDefaultMiddleware().concat(api.middleware),
 });
 
@@ -729,7 +987,7 @@ export const api = createApi({
     },
   }),
   tagTypes: ['Inspection', 'User', 'MarketplaceProduct'],
-  endpoints: (builder) => ({
+  endpoints: builder => ({
     // Endpoints defined in separate files and injected
   }),
 });
@@ -739,17 +997,17 @@ import { api } from './base.api';
 import type { Inspection, CreateInspectionDto } from '@types/inspection.types';
 
 export const inspectionsApi = api.injectEndpoints({
-  endpoints: (builder) => ({
+  endpoints: builder => ({
     getInspections: builder.query<Inspection[], void>({
       query: () => '/inspections',
       providesTags: ['Inspection'],
     }),
     getInspection: builder.query<Inspection, string>({
-      query: (id) => `/inspections/${id}`,
+      query: id => `/inspections/${id}`,
       providesTags: (result, error, id) => [{ type: 'Inspection', id }],
     }),
     createInspection: builder.mutation<Inspection, CreateInspectionDto>({
-      query: (body) => ({
+      query: body => ({
         url: '/inspections',
         method: 'POST',
         body,
@@ -795,25 +1053,25 @@ class ApiClient {
   private setupInterceptors() {
     // Request interceptor
     this.client.interceptors.request.use(
-      async (config) => {
+      async config => {
         const token = await getAuthToken();
         if (token) {
           config.headers.Authorization = `Bearer ${token}`;
         }
         return config;
       },
-      (error) => Promise.reject(error)
+      error => Promise.reject(error),
     );
 
     // Response interceptor
     this.client.interceptors.response.use(
-      (response) => response,
-      async (error) => {
+      response => response,
+      async error => {
         if (error.response?.status === 401) {
           // Handle token refresh or logout
         }
         return Promise.reject(error);
-      }
+      },
     );
   }
 
@@ -822,12 +1080,20 @@ class ApiClient {
     return response.data;
   }
 
-  async post<T>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<T> {
+  async post<T>(
+    url: string,
+    data?: unknown,
+    config?: AxiosRequestConfig,
+  ): Promise<T> {
     const response = await this.client.post<T>(url, data, config);
     return response.data;
   }
 
-  async put<T>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<T> {
+  async put<T>(
+    url: string,
+    data?: unknown,
+    config?: AxiosRequestConfig,
+  ): Promise<T> {
     const response = await this.client.put<T>(url, data, config);
     return response.data;
   }
@@ -846,7 +1112,11 @@ export const apiClient = new ApiClient(process.env.API_BASE_URL!);
 ```typescript
 // src/services/inspections.service.ts
 import { apiClient } from './api/client';
-import type { Inspection, CreateInspectionDto, UpdateInspectionDto } from '@types/inspection.types';
+import type {
+  Inspection,
+  CreateInspectionDto,
+  UpdateInspectionDto,
+} from '@types/inspection.types';
 
 export class InspectionsService {
   private readonly basePath = '/inspections';
@@ -888,7 +1158,7 @@ export class AppError extends Error {
     message: string,
     public code: string,
     public statusCode: number = 500,
-    public isOperational: boolean = true
+    public isOperational: boolean = true,
   ) {
     super(message);
     this.name = this.constructor.name;
@@ -932,24 +1202,24 @@ export function getErrorMessage(error: unknown): string {
   if (error instanceof AppError) {
     return error.message;
   }
-  
+
   if (error instanceof Error) {
     return error.message;
   }
-  
+
   if (typeof error === 'string') {
     return error;
   }
-  
+
   return 'An unexpected error occurred';
 }
 
 export function handleError(error: unknown): void {
   const message = getErrorMessage(error);
-  
+
   // Log to error tracking service (e.g., Sentry)
   console.error('Error:', error);
-  
+
   // Show user-friendly message
   Alert.alert('Error', message, [{ text: 'OK' }]);
 }
@@ -977,12 +1247,12 @@ async function loadInspection(id: string): Promise<Inspection | null> {
       console.log('Inspection not found');
       return null;
     }
-    
+
     if (isNetworkError(error)) {
       // Try loading from local cache
       return await loadFromCache(id);
     }
-    
+
     handleError(error);
     throw error; // Re-throw if can't recover
   }
@@ -1015,8 +1285,10 @@ import { mockInspection } from '@test/fixtures/inspections';
 
 describe('InspectionCard', () => {
   it('renders inspection details correctly', () => {
-    const { getByText } = render(<InspectionCard inspection={mockInspection} />);
-    
+    const { getByText } = render(
+      <InspectionCard inspection={mockInspection} />,
+    );
+
     expect(getByText(mockInspection.propertyAddress)).toBeTruthy();
     expect(getByText('Scheduled')).toBeTruthy();
   });
@@ -1024,18 +1296,18 @@ describe('InspectionCard', () => {
   it('calls onPress when card is pressed', () => {
     const onPress = jest.fn();
     const { getByTestId } = render(
-      <InspectionCard inspection={mockInspection} onPress={onPress} />
+      <InspectionCard inspection={mockInspection} onPress={onPress} />,
     );
-    
+
     fireEvent.press(getByTestId('inspection-card'));
     expect(onPress).toHaveBeenCalledTimes(1);
   });
 
   it('shows action buttons when showActions is true', () => {
     const { getByText } = render(
-      <InspectionCard inspection={mockInspection} showActions={true} />
+      <InspectionCard inspection={mockInspection} showActions={true} />,
     );
-    
+
     expect(getByText('Edit')).toBeTruthy();
     expect(getByText('Delete')).toBeTruthy();
   });
@@ -1043,6 +1315,7 @@ describe('InspectionCard', () => {
 ```
 
 ### Coverage Requirements
+
 - **Overall**: 80%+ code coverage
 - **Critical paths** (auth, payments, data sync): 95%+
 - **Business logic**: 90%+
@@ -1151,14 +1424,14 @@ const debouncedSearch = useDebouncedCallback(handleSearch, 5000);
 // ✅ Good: Document complex business logic
 /**
  * Calculates inspection score based on condition distribution.
- * 
+ *
  * Score formula:
  * - Acceptable: +10 points
  * - Monitor: +5 points
  * - Repair/Replace: -5 points
  * - Safety Hazard: -15 points
  * - Access Restricted: 0 points (not counted)
- * 
+ *
  * @param records - Array of inspection records
  * @returns Score from -100 to 100
  */
@@ -1181,13 +1454,13 @@ setLoading(true);
 
 ### JSDoc for Public APIs
 
-```typescript
+````typescript
 /**
  * Custom hook for managing inspection form state and validation.
- * 
+ *
  * @param inspectionId - Optional ID for editing existing inspection
  * @returns Form state, handlers, and validation status
- * 
+ *
  * @example
  * ```tsx
  * const { formData, errors, submitForm } = useInspectionForm('inspection-123');
@@ -1196,7 +1469,7 @@ setLoading(true);
 export function useInspectionForm(inspectionId?: string) {
   // Implementation
 }
-```
+````
 
 ---
 
@@ -1207,6 +1480,7 @@ export function useInspectionForm(inspectionId?: string) {
 Format: `<type>(<scope>): <subject>`
 
 **Types**:
+
 - `feat`: New feature
 - `fix`: Bug fix
 - `docs`: Documentation changes
@@ -1218,6 +1492,7 @@ Format: `<type>(<scope>): <subject>`
 - `ci`: CI/CD changes
 
 **Examples**:
+
 ```bash
 feat(inspections): add photo carousel to inspection detail screen
 fix(auth): resolve token refresh infinite loop
@@ -1321,13 +1596,21 @@ release/v1.0.0
   "parser": "@typescript-eslint/parser",
   "plugins": ["@typescript-eslint", "react-hooks", "import"],
   "rules": {
-    "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      { "argsIgnorePattern": "^_" }
+    ],
     "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/no-explicit-any": "error",
     "@typescript-eslint/consistent-type-imports": "error",
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "warn",
-    "import/order": ["error", { /* config from Import Order section */ }],
+    "import/order": [
+      "error",
+      {
+        /* config from Import Order section */
+      }
+    ],
     "no-console": ["warn", { "allow": ["warn", "error"] }],
     "prefer-const": "error",
     "no-var": "error"
@@ -1355,6 +1638,7 @@ release/v1.0.0
 ## Version History
 
 ### v1.0.0 (October 17, 2025)
+
 - Initial code standards document
 - TypeScript, React, Redux standards
 - Testing and commit standards
@@ -1365,6 +1649,7 @@ release/v1.0.0
 ## Enforcement
 
 All standards are enforced through:
+
 1. **Automated Tools**: ESLint, Prettier, TypeScript compiler
 2. **Pre-commit Hooks**: Husky + lint-staged
 3. **CI/CD Pipeline**: Fails on linting errors or test failures
@@ -1380,5 +1665,5 @@ All standards are enforced through:
 - Discuss in #engineering Slack channel
 - Propose changes via PR to this document
 
-**Maintainer**: Engineering Team  
+**Maintainer**: Engineering Team
 **Last Review**: October 17, 2025
